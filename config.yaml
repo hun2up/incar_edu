@@ -1,0 +1,13 @@
+cookie:
+  expiry_days: 0
+  key: random_signature_key # Must be string
+  name: random_cookie_name
+credentials:
+  usernames:
+    incar_edu:
+      email: incar_edu@incar.co.kr
+      name: incar edu
+      password: $2b$12$nD8TMPnVMp136cVTBB.FI..BKlJ6WpMt9z756XZBjnVlL8uvDUuvu # To be replaced with hashed password
+preauthorized:
+  emails:
+  - hun2up@gmail.com
