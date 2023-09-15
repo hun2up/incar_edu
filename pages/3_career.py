@@ -63,10 +63,10 @@ if authentication_status:
     # -------------------------------------------------  barchart 제작  ------------------------------------------------------
     # 차트에 필요한 리스트 제작
     lst_crr = [
-        [df_crr_stat, '소속부문', '신청인원', '신청누계', 'group', 'h', crr_colors, crr_outsides, orders_crr_bar, '부문별 교육신청 현황'],
-        [df_crr_stat, '소속부문', '수료인원', '수료누계', 'group', 'h', crr_colors, crr_outsides, orders_crr_bar, '부문별 교육수료 현황'],
-        [df_crr_stat, '소속부문', '수료율', '', 'single', 'h', crr_colors, crr_outsides, orders_crr_bar, '부문별 수료율'],
-        [df_crr_stat, '소속부문', 'IMO신청률', '', 'single', 'h', crr_colors, crr_outsides, orders_crr_bar, '부문별 IMO신청률']
+        [df_crr_stat, '소속부문', '신청인원', '신청누계', 'group', 'h', crr_colors, crr_outsides, '', '부문별 교육신청 현황'],
+        [df_crr_stat, '소속부문', '수료인원', '수료누계', 'group', 'h', crr_colors, crr_outsides, '', '부문별 교육수료 현황'],
+        [df_crr_stat, '소속부문', '수료율', '', 'single', 'h', crr_colors, crr_outsides, '', '부문별 수료율'],
+        [df_crr_stat, '소속부문', 'IMO신청률', '', 'single', 'h', crr_colors, crr_outsides, '', '부문별 IMO신청률']
         ]
     
     # 막대그래프 (부문별 신청인원)
