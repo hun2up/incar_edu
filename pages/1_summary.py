@@ -67,7 +67,7 @@ if authentication_status:
     
     st.markdown("<hr>", unsafe_allow_html=True)
     
-    df_online = df_all.groupby(['온라인'])['온라인'].count().reset_index(name="개수")
+    df_online = fn_trends(df_all, '온라인')
     cols = st.columns((1))
     cols[0].metric("온라인", df_online['개수'], "1")
 
