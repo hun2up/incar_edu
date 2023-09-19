@@ -66,7 +66,7 @@ if authentication_status:
     st.header("교육운영 현황요약")
     
     st.markdown("<hr>", unsafe_allow_html=True)
-    st.dataframe(df_all_trnd)
+    st.dataframe(df_all)
     
     #cols = st.columns((1))
     #cols[0].metric(df_all.groupby(['온라인'])['사원번호'])
