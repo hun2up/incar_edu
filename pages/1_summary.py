@@ -2,17 +2,35 @@
 ##############################################     라이브러리 호출하기     ##################################################
 ########################################################################################################################
 import streamlit as st
-import plotly as pl
 import streamlit_authenticator as stauth
 hashed_passwords = stauth.Hasher(['XXX']).generate()
 import yaml
 from yaml.loader import SafeLoader
 with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
+from utils import fn_sidebar, fn_status, fn_trends, generate_colors, generate_outsides, fig_hbarchart, fig_linechart
+from utils import df_atd as df_all
 
 ########################################################################################################################
 ################################################     인증페이지 설정     ###################################################
 ########################################################################################################################
+# -----------------------------------------------------  사이드바  ---------------------------------------------------------
+# 사이드바 헤더
+st.sidebar.header("원하는 옵션을 선택하세요")
+#사이드바 제작
+month = fn_sidebar(df_all,'월') # 월도 선택 사이드바
+region = fn_sidebar(df_all,'지역') # 지역 선택 사이드바
+partner = fn_sidebar(df_all,'보험사') # 보험사 선택 사이드바
+line = fn_sidebar(df_all,'과정형태') # 과정 온오프라인 선택 사이드바
+theme = fn_sidebar(df_all,'과정분류') # 과정 테마 선택 사이드바
+name = fn_sidebar(df_all,'과정명') # 세부과정 선택 사이드바
+channel = fn_sidebar(df_all,'소속부문') # 소속부문 선택 사이드바
+career = fn_sidebar(df_all,'입사연차') # 입사연차 선택 사이드바
+# 데이터와 사이드바 연결
+df_all = df_all.query(
+    "월 == @month & 지역 == @region & 보험사 == @partner & 과정형태 == @line & 과정분류 == @theme & 과정명 == @name & 소속부문 == @channel & 입사연차 == @career"
+)
+
 authenticator = stauth.Authenticate(
     config['credentials'],
     config['cookie']['name'],
@@ -33,7 +51,10 @@ if authentication_status:
     authenticator.logout('Logout', 'sidebar')
     # 메인페이지 타이틀
     st.header("교육운영 현황요약")
-    st.markdown("---")
+    
+    st.markdown("<hr>", unsafe_allow_html=True)
+    st.dataframe(df_all)
+
 
     ########################################################################################################################
     ###########################################     stremalit 워터마크 숨기기     ##############################################
