@@ -67,7 +67,7 @@ if authentication_status:
     
     st.markdown("<hr>", unsafe_allow_html=True)
     
-    df_online = df_all.groupby('과정형태','과정코드')
+    df_online = df_all.groupby(['과정형태','과정코드'])
     df_online = df_online.groupby(['과정형태'])['과정코드'].count().reset_index(name="횟수")
     st.dataframe(df_online)
     cols = st.columns((1))
