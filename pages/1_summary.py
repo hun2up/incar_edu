@@ -68,6 +68,7 @@ if authentication_status:
     st.markdown("<hr>", unsafe_allow_html=True)
     
     df_online = df_all.groupby(['과정형태','과정코드']).size().reset_index(name='홧수')
+    df_online = df_online.groupby(['과정형태'])['과정코드'].count().reset_index(name='횟수')
     st.dataframe(df_online)
     cols = st.columns((1))
     cols[0].metric("온라인", df_online.loc[df_online['과정형태'] == '온라인', '횟수'].values[0])
