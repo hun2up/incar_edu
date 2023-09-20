@@ -5,6 +5,7 @@ from datetime import datetime
 import pandas as pd
 import streamlit as st
 import streamlit_authenticator as stauth
+st.set_page_config(page_title="교육관리 대시보드", layout='wide')
 hashed_passwords = stauth.Hasher(['XXX']).generate()
 import yaml
 from yaml.loader import SafeLoader
@@ -16,7 +17,6 @@ from utils import df_apl
 ########################################################################################################################
 ################################################     인증페이지 설정     ###################################################
 ########################################################################################################################
-st.set_page_config(page_title="교육관리 대시보드", layout='wide')
 
 authenticator = stauth.Authenticate(
     config['credentials'],
