@@ -118,10 +118,13 @@ if authentication_status:
     r3_c2.plotly_chart(bc_chn_imorate, use_container_width=True)
 
     # 추이그래프 (신청누계, 수료누계, 수료율, IMO신청률)
-    st.plotly_chart(lc_chn_apply, use_container_width=True)
-    st.plotly_chart(lc_chn_attend, use_container_width=True)
-    st.plotly_chart(lc_chn_atdrate, use_container_width=True)
-    st.plotly_chart(lc_chn_imorate, use_container_width=True)
+    r4_c1, r4_c2 = st.columns(2)
+    r4_c1.plotly_chart(lc_chn_apply, use_container_width=True)
+    r4_c2.plotly_chart(lc_chn_attend, use_container_width=True)
+
+    r5_c1, r5_c2 = st.columns(2)
+    r5_c1.plotly_chart(lc_chn_atdrate, use_container_width=True)
+    r5_c2.plotly_chart(lc_chn_imorate, use_container_width=True)
 
     ########################################################################################################################
     ###########################################     stremalit 워터마크 숨기기     ##############################################
