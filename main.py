@@ -71,12 +71,14 @@ if authentication_status:
     st.header(":bar_chart: 인카금융서비스 교육과정 대시보드")
 
     # -------------------------------------------  차트 노출 (당일 교육신청 현황)  ----------------------------------------------
+    st.subheader("당월 교육과정 신청형환")
     # 첫번째 행 (신청인원)
     r1_c1, r1_c2 = st.columns(2)
     r1_c1.plotly_chart(bc_apl, use_container_width=True)
     r1_c2.plotly_chart(lc_apl, use_container_width=True)
 
     # -----------------------------------------------  차트 노출 (월별 요약)  ---------------------------------------------------
+    st.subheader("2023년 현황요약")
     st.markdown("<hr>", unsafe_allow_html=True)
     cols = st.columns((1))
     cols[0].metric("온라인", df_online.loc[df_online['과정형태'] == '온라인', '횟수'].values[0])
