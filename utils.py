@@ -272,7 +272,7 @@ def fig_linechart(list_linechart):
     return fig_line
 
 def fig_piechart(label, value):
-    fig_pchart = pl.graph_objs.Figure(data=[pl.graph_objs.Pie(labels=label, values=value, hole=3)])
+    fig_pchart = pl.graph_objs.Figure(data=[pl.graph_objs.Pie(labels=label, values=value, hole=.3)])
     return fig_pchart
 
 ########################################################################################################################
