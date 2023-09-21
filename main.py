@@ -12,7 +12,7 @@ from yaml.loader import SafeLoader
 with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
 from utils import fn_status, fn_trends, generate_colors, generate_outsides, fig_vbarchart, fig_linechart
-from utils import df_apl, df_atd
+from utils import df_apl
 
 ########################################################################################################################
 ################################################     인증페이지 설정     ###################################################
@@ -43,15 +43,6 @@ if authentication_status:
     month_today = pd.to_datetime(df_apl_bar.iloc[-1]['날짜'], format="%Y. %m. %d").month
     df_apl_bar = df_apl_bar.groupby(['날짜','과정명','목표인원'])['신청인원'].sum().reset_index(name='신청인원')
     ##### df_apl_bar = ['날짜','과정명','목표인원','신청인원']
-    
-    # -----------------------------------------------  월별 요약 (자료 호출)  ------------------------------------------------
-    # barchart 제작을 위한 현황 dataframe (소속부문별)
-    df_atd_stats = fn_status(df_atd, '소속부문')
-    # linechart 제작을 위한 추세 dataframe (월별 & 소속부문별)
-    df_atd_trnds = fn_trends(df_atd, '소속부문')
-    # -----------------------------------------------  월별 요약 (자료 제작)  ------------------------------------------------
-    df_online = df_atd.groupby(['과정형태','과정코드']).size().reset_index(name='홧수')
-    df_online = df_online.groupby(['과정형태'])['과정코드'].count().reset_index(name='횟수')
 
     # ------------------------------------------  차트 제작에 필요한 리스트 제작  ---------------------------------------------
     apl_colors = generate_colors(df_apl_bar.shape[0])
@@ -77,13 +68,6 @@ if authentication_status:
     r1_c1, r1_c2 = st.columns(2)
     r1_c1.plotly_chart(bc_apl, use_container_width=True)
     r1_c2.plotly_chart(lc_apl, use_container_width=True)
-
-    # -----------------------------------------------  차트 노출 (월별 요약)  ---------------------------------------------------
-    st.markdown("<hr>", unsafe_allow_html=True)
-    st.subheader("2023년 현황요약")
-    cols = st.columns((1))
-    cols[0].metric("온라인", df_online.loc[df_online['과정형태'] == '온라인', '횟수'].values[0])
-    cols[0].metric('집합', df_online.loc[df_online['과정형태'] == '집합', '횟수'].values[0])
 
     ###########################################################################################################################
     ###########################################     stremalit 워터마크 숨기기     ##############################################
