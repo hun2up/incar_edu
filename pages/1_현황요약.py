@@ -1,6 +1,7 @@
 ########################################################################################################################
 ##############################################     라이브러리 호출하기     ##################################################
 ########################################################################################################################
+import pandas as pd
 import streamlit as st
 import streamlit_authenticator as stauth
 hashed_passwords = stauth.Hasher(['XXX']).generate()
@@ -60,15 +61,17 @@ if authentication_status:
     # linechart 제작을 위한 추세 dataframe (월별 & 소속부문별)
     df_all_trnd = fn_trends(df_all, '소속부문')
 
-    '''
+    # 영수/환급보험료 데이터를 숫자로 변환
+    df_course['수강료'] = pd.to_numeric(df_course['수강료'])
+    
     # 유무료
     for modify_fee in range(df_course.shape[0]):
         if df_course.iloc[modify_fee,6] == 0:
-            st.write(df_course.iloc[modify_fee,6])
+            
             df_course.iloc[modify_fee,6] = "무료"
         else:
             df_course.iloc[modify_fee,6] = "유료"
-    '''
+    
     st.dataframe(df_course)
     
     # 온오프라인
