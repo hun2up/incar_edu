@@ -83,7 +83,7 @@ if authentication_status:
 
     # ---------------------------------------------------  chart 제작  ------------------------------------------------------
     cols = st.columns((3))
-    cols[0].metric(df_sums.iloc[0,'비고'],df_sums.iloc[0,'고유인원'])
+    cols[0].metric(df_sums.loc[0,'비고'],df_sums.loc[0,'고유인원'])
     # 온오프라인
     fig_line = fig_piechart(df_line['과정형태'], df_line['횟수'])
     # 유무료
