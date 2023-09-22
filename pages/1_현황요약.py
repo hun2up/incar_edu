@@ -58,9 +58,9 @@ if authentication_status:
     # ------------------------------------------------  dataframe 제작  -----------------------------------------------------     
     # 신청수료인원
     df_stats = fn_status(df_all, '소속부문')
-    df_sums = df_stats.sum(axis=0)
+    df_sums = df_stats.sum(axis=0).transpose()
     df_sums.name = '합계'
-    df_sums = df_sums.transpose()
+    # df_sums = df_sums.transpose()
     st.dataframe(df_sums)
 
     
