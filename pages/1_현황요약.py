@@ -82,8 +82,6 @@ if authentication_status:
     df_fee = df_fee.groupby(['유무료'])['과정코드'].count().reset_index(name='횟수')
 
     # ---------------------------------------------------  chart 제작  ------------------------------------------------------
-    cols = st.columns((3))
-    cols[0].metric(str(df_sums.loc[0,'비고']),str(df_sums.loc[0,'고유인원']))
     # 온오프라인
     fig_line = fig_piechart(df_line['과정형태'], df_line['횟수'])
     # 유무료
@@ -95,6 +93,9 @@ if authentication_status:
     # 메인페이지 타이틀
     st.header("교육운영 현황요약")
     st.markdown("<hr>", unsafe_allow_html=True)
+
+    cols = st.columns(1)
+    cols[0].metric(str(df_sums.loc[0,'비고']),str(df_sums.loc[0,'고유인원']))
 
     r1_c1, r1_c2, r1_c3, r1_c4 = st.columns(4)
     r1_c1.plotly_chart(fig_line, use_container_width=True)
