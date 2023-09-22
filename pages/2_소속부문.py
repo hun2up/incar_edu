@@ -68,7 +68,7 @@ if authentication_status:
     # 차트에 필요한 리스트 제작
     barlist_chn = [
         [df_chn_stat, '소속부문', '신청인원', '신청누계', 'group', 'h', chn_colors, chn_outsides, orders_chn_bar, '부문별 교육신청 현황','색상 차트는 누적인원(중복포함), 회색 차트는 고유인원(중복제거)'],
-        [df_chn_stat, '소속부문', '수료인원', '수료누계', 'group', 'h', chn_colors, chn_outsides, orders_chn_bar, '부문별 교육수료 현황',''],
+        [df_chn_stat, '소속부문', '수료인원', '수료누계', 'group', 'h', chn_colors, chn_outsides, orders_chn_bar, '부문별 교육수료 현황','색상 차트는 누적인원(중복포함), 회색 차트는 고유인원(중복제거)'],
         [df_chn_stat, '소속부문', '수료율', '', 'single', 'h', chn_colors, chn_outsides, orders_chn_bar, '부문별 수료율',''],
         [df_chn_stat, '소속부문', 'IMO신청률', '', 'single', 'h', chn_colors, chn_outsides, orders_chn_bar, '부문별 IMO신청률','']
         ]
