@@ -60,14 +60,14 @@ if authentication_status:
     df_stats = fn_status(df_all, '소속부문')
     df_sums = df_stats.sum(axis=0)
     df_sums = pd.DataFrame({'합계':df_sums}).transpose().drop(columns='소속부문')
-    df_sums_apl = df_sums.drop(columns=['수료인원','수료누계','수료율','IMO신청인원','IMO신청누계','IMO신청률']).rename(columns={'신청인원':'목표인원','신청누계':'신청인원'})
+    df_sums_apl = df_sums.drop(columns=['수료인원','수료누계','수료율','IMO신청인원','IMO신청누계','IMO신청률']).rename(columns={'신청인원':'고유인원','신청누계':'누계인원'})
     df_sums_apl.index = ['신청']
     df_sums_apl = df_sums_apl.reset_index()
     df_sums_apl = df_sums_apl.rename(columns={'index':'과정명'})
-    df_sums_atd = df_sums.drop(columns=['신청인원','신청누계','수료율','IMO신청인원','IMO신청누계','IMO신청률']).rename(columns={'수료인원':'목표인원','수료누계':'신청인원'})
+    df_sums_atd = df_sums.drop(columns=['신청인원','신청누계','수료율','IMO신청인원','IMO신청누계','IMO신청률']).rename(columns={'수료인원':'고유인원','수료누계':'누계인원'})
     df_sums_atd.index = ['수료']
     df_sums_atd = df_sums_atd.reset_index()
-    df_sums_atd = df_sums_atd.rename(columns={'index':'과정명'})
+    df_sums_atd = df_sums_atd.rename(columns={'index':'비고'})
     df_sums = pd.concat([df_sums_atd, df_sums_apl], axis=0)
     st.dataframe(df_sums)
 
@@ -84,11 +84,25 @@ if authentication_status:
     # ------------------------------------------  차트 제작에 필요한 리스트 제작  ---------------------------------------------
     sums_colors = generate_colors(df_sums.shape[0])
     sums_outsides = generate_outsides(df_sums.shape[0])
+    sums_orders = ['신청','수료'][::-1]
 
     # ---------------------------------------------------  chart 제작  ------------------------------------------------------
+    '''
+    list_hbarchart[0]: dataframe (df_stat, df_trnd)
+    list_hbarchart[1]: 참조 컬럼 (소속부문, 입사연차)
+    list_hbarchart[2]: 고유값 (신청인원, 수료인원)
+    list_hbarchart[3]: 누계값 (신청누계, 수료누계)
+    list_hbarchart[4]: 차트 형태 (single, group)
+    list_hbarchart[5]: 차트 방향 (horizontal, vertical)
+    list_hbarchart[6]: 색상 리스트 ()
+    list_hbarchart[7]: outside 리스트 ()
+    list_hbarchart[8]: 항목 순서
+    list_hbarchart[9]: 차트 제목
+    list_hbarchart[10]: 캡션
+    '''
     # 신청수료
-    barlist_sums = [df_sums, sums_colors, sums_outsides, '신청인원 및 수료인원']
-    fig_sums = fig_vbarchart(barlist_sums)
+    barlist_sums = [df_sums, '비고', '고유인원', '누계인원', 'group', 'h', sums_colors, sums_outsides, sums_orders, '', '']
+    fig_sums = fig_hbarchart(barlist_sums)
     # 온오프라인
     fig_line = fig_piechart(df_line['과정형태'], df_line['횟수'])
     # 유무료
