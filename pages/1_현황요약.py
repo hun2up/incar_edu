@@ -62,7 +62,7 @@ if authentication_status:
     df_all_trnd = fn_trends(df_all, '소속부문')
 
     # 영수/환급보험료 데이터를 숫자로 변환
-    df_course['수강료'] = pd.to_numeric(df_course['수강료'].str)
+    df_course['수강료'] = pd.to_numeric(df_course['수강료'].astype(str), errors='coerce')
     
     # 유무료
     for modify_fee in range(df_course.shape[0]):
