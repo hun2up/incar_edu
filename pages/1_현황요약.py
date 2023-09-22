@@ -64,7 +64,7 @@ if authentication_status:
     df_sums_apl.name = '신청'
     df_sums_atd = df_sums.drop(columns=['신청인원','신청누계','수료율','IMO신청인원','IMO신청누계','IMO신청률'])
     df_sums_atd.name = '수료'
-    df_sum = pd.merge([df_sums_atd, df_sums_apl], axis=0)
+    df_sum = pd.concat([df_sums_atd, df_sums_apl], axis=0)
     st.dataframe(df_sum)
 
     
