@@ -63,7 +63,7 @@ if authentication_status:
     df_sums_apl = df_sums.drop(columns=['수료인원','수료누계','수료율','IMO신청인원','IMO신청누계','IMO신청률']).rename(columns={'신청인원':'고유인원','신청누계':'누계인원'})
     df_sums_apl.index = ['신청']
     df_sums_apl = df_sums_apl.reset_index()
-    df_sums_apl = df_sums_apl.rename(columns={'index':'과정명'})
+    df_sums_apl = df_sums_apl.rename(columns={'index':'비고'})
     df_sums_atd = df_sums.drop(columns=['신청인원','신청누계','수료율','IMO신청인원','IMO신청누계','IMO신청률']).rename(columns={'수료인원':'고유인원','수료누계':'누계인원'})
     df_sums_atd.index = ['수료']
     df_sums_atd = df_sums_atd.reset_index()
@@ -87,19 +87,6 @@ if authentication_status:
     sums_orders = ['신청','수료'][::-1]
 
     # ---------------------------------------------------  chart 제작  ------------------------------------------------------
-    '''
-    list_hbarchart[0]: dataframe (df_stat, df_trnd)
-    list_hbarchart[1]: 참조 컬럼 (소속부문, 입사연차)
-    list_hbarchart[2]: 고유값 (신청인원, 수료인원)
-    list_hbarchart[3]: 누계값 (신청누계, 수료누계)
-    list_hbarchart[4]: 차트 형태 (single, group)
-    list_hbarchart[5]: 차트 방향 (horizontal, vertical)
-    list_hbarchart[6]: 색상 리스트 ()
-    list_hbarchart[7]: outside 리스트 ()
-    list_hbarchart[8]: 항목 순서
-    list_hbarchart[9]: 차트 제목
-    list_hbarchart[10]: 캡션
-    '''
     # 신청수료
     barlist_sums = [df_sums, '비고', '고유인원', '누계인원', 'group', 'h', sums_colors, sums_outsides, sums_orders, '', '']
     fig_sums = fig_hbarchart(barlist_sums)
