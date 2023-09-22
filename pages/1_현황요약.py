@@ -71,7 +71,7 @@ if authentication_status:
     df_line = df_all.groupby(['과정형태','과정코드']).size().reset_index(name='홧수')
     df_line = df_line.groupby(['과정형태'])['과정코드'].count().reset_index(name='횟수')
     # 유무료
-    df_fee = df_all.groupby(['수강료','과정코드']).size().reset_index(name='홧수')
+    df_fee = df_course.groupby(['수강료','과정코드']).size().reset_index(name='홧수')
     df_fee = df_fee.groupby(['수강료'])['과정코드'].count().reset_index(name='횟수')
 
     fig_line = fig_piechart(df_line['과정형태'], df_line['횟수'])
