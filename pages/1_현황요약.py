@@ -64,11 +64,11 @@ if authentication_status:
     st.dataframe(df_all)
         
     # 온오프라인
-    df_line = df_course.groupby(['과정형태','과정코드']).size().reset_index(name='홧수')
+    df_line = df_all.groupby(['과정형태','과정코드']).size().reset_index(name='홧수')
     df_line = df_line.groupby(['과정형태'])['과정코드'].count().reset_index(name='횟수')
     # 유무료
-    df_course['유무료'] = df_course['수강료'].apply(lambda x: '무료' if x == 0 else '유료')
-    df_fee = df_course.groupby(['유무료','과정코드']).size().reset_index(name='홧수')
+    df_all['유무료'] = df_all['수강료'].apply(lambda x: '무료' if x == 0 else '유료')
+    df_fee = df_all.groupby(['유무료','과정코드']).size().reset_index(name='홧수')
     df_fee = df_fee.groupby(['유무료'])['과정코드'].count().reset_index(name='횟수')
 
     # ---------------------------------------------------  chart 제작  ------------------------------------------------------
