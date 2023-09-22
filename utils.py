@@ -206,7 +206,7 @@ def fig_hbarchart(list_hbarchart):
             orientation=list_hbarchart[5]
         )
         data_groupbar = [fig_groupbar1, fig_groupbar2]
-        layout_groupbar = pl.graph_objs.Layout(title=list_hbarchart[9],yaxis={'categoryorder':'array', 'categoryarray':list_hbarchart[8]}, annotations=[dict(text=list_hbarchart[10],showarrow=False,xref='paper',yref='paper',x=0,y=1.05)])
+        layout_groupbar = pl.graph_objs.Layout(title=list_hbarchart[9],yaxis={'categoryorder':'array', 'categoryarray':list_hbarchart[8]}, annotations=[dict(text=list_hbarchart[10],showarrow=False,xref='paper',yref='paper',x=0,y=1.1)])
         return_groupbar = pl.graph_objs.Figure(data=data_groupbar,layout=layout_groupbar)
         return_groupbar.update_traces(textposition=list_hbarchart[7])
         return_groupbar.update_layout(showlegend=False)
