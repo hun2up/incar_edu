@@ -10,6 +10,7 @@ with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
 from utils import fn_sidebar, fn_status, fn_trends, fig_piechart ,generate_colors, generate_outsides, fig_hbarchart, fig_linechart
 from utils import df_atd as df_all
+from utils import df_course
 
 ########################################################################################################################
 ################################################     인증페이지 설정     ###################################################
@@ -69,10 +70,14 @@ if authentication_status:
     
     df_online = df_all.groupby(['과정형태','과정코드']).size().reset_index(name='홧수')
     df_online = df_online.groupby(['과정형태'])['과정코드'].count().reset_index(name='횟수')
-    st.dataframe(df_online)
-    cols = st.columns((1))
-    cols[0].metric("온라인", df_online.loc[df_online['과정형태'] == '온라인', '횟수'].values[0])
-    cols[0].metric('집합', df_online.loc[df_online['과정형태'] == '집합', '횟수'].values[0])
+
+    st.dataframe(df_course)
+
+    '''
+    # 유무료
+    for modify_fee in range(df_course.shape[0]):
+        df_course.iloc[modify_fee,1] = dfv_apply.iloc[modify_apply,0].split(")")[0].replace('(','')
+    '''
 
     fig_course = fig_piechart(df_online['과정형태'], df_online['횟수'])
     st.plotly_chart(fig_course, use_container_width=True)
