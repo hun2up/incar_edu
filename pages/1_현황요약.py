@@ -62,7 +62,7 @@ if authentication_status:
 
     # 유무료
     for modify_fee in range(df_course.shape[0]):
-        if df_course.iloc[modify_fee,6] == 0:
+        if df_course.iloc[modify_fee,6] == "0":
             df_course.iloc[modify_fee,6] = "무료"
         else:
             df_course.iloc[modify_fee,6] = "유료"
