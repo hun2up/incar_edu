@@ -62,11 +62,13 @@ if authentication_status:
 
     # 유무료
     for modify_fee in range(df_course.shape[0]):
-        if df_course.iloc[modify_fee,6] == "0":
+        if df_course.iloc[modify_fee,6] == 0:
             df_course.iloc[modify_fee,6] = "무료"
         else:
             df_course.iloc[modify_fee,6] = "유료"
 
+    st.dataframe(df_course)
+    
     # 온오프라인
     df_line = df_all.groupby(['과정형태','과정코드']).size().reset_index(name='홧수')
     df_line = df_line.groupby(['과정형태'])['과정코드'].count().reset_index(name='횟수')
@@ -83,7 +85,7 @@ if authentication_status:
     # 메인페이지 타이틀
     st.header("교육운영 현황요약")
     st.markdown("<hr>", unsafe_allow_html=True)
-    st.dataframe(df_course)
+    
 
     r1_c1, r1_c2, r1_c3, r1_c4 = st.columns(4)
     r1_c1.plotly_chart(fig_line, use_container_width=True)
