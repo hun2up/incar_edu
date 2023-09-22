@@ -94,8 +94,9 @@ if authentication_status:
     st.header("교육운영 현황요약")
     st.markdown("<hr>", unsafe_allow_html=True)
 
-    cols = st.columns(1)
+    cols = st.columns(2)
     cols[0].metric(str(df_sums.loc[0,'비고']),str(df_sums.loc[0,'고유인원']),"")
+    cols[1].metric(str(df_sums.loc[1,'비고']),str(df_sums.loc[1,'고유인원']),"")
 
     r1_c1, r1_c2, r1_c3, r1_c4 = st.columns(4)
     r1_c1.plotly_chart(fig_line, use_container_width=True)
