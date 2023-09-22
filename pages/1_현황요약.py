@@ -61,7 +61,7 @@ if authentication_status:
     df_all_trnd = fn_trends(df_all, '소속부문')
 
     # 유무료
-    for modify_fee in range(df_course.shape[0]):
+    for modify_fee in range(76):
         if df_course.iloc[modify_fee,6] == 0:
             st.write(df_course.iloc[modify_fee,6])
             df_course.iloc[modify_fee,6] = "무료"
