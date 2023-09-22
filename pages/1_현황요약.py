@@ -71,13 +71,14 @@ if authentication_status:
     df_online = df_all.groupby(['과정형태','과정코드']).size().reset_index(name='홧수')
     df_online = df_online.groupby(['과정형태'])['과정코드'].count().reset_index(name='횟수')
 
-    st.dataframe(df_course)
-
-    '''
     # 유무료
     for modify_fee in range(df_course.shape[0]):
-        df_course.iloc[modify_fee,1] = dfv_apply.iloc[modify_apply,0].split(")")[0].replace('(','')
-    '''
+        if df_course.iloc[modify_fee,6] == 0:
+            df_course.iloc[modify_fee,6] = "무료"
+        else:
+            df_course.iloc[modify_fee,6] = "유료"
+
+    st.dataframe(df_course)
 
     fig_course = fig_piechart(df_online['과정형태'], df_online['횟수'])
     st.plotly_chart(fig_course, use_container_width=True)
