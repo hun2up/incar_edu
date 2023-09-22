@@ -59,8 +59,7 @@ if authentication_status:
     # 신청수료인원
     df_stats = fn_status(df_all, '소속부문')
     df_sums = df_stats.sum(axis=0)
-    df_sums = pd.DataFrame({'합계':df_sums}).transpose()
-    df_sums.drop(columns='소속부무문')
+    df_sums = pd.DataFrame({'합계':df_sums}).transpose().drop(columns='소속부문')
     # df_sums.name = '합계'
     # df_sums = df_sums.transpose()
     st.dataframe(df_sums)
