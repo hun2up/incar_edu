@@ -58,8 +58,9 @@ if authentication_status:
     # ------------------------------------------------  dataframe 제작  -----------------------------------------------------     
     # 신청수료인원
     df_stats = fn_status(df_all, '소속부문')
-
-    st.dataframe(df_stats)
+    df_sums = df_stats.sum(axis=0)
+    df_sums.name = '합계'
+    st.dataframe(df_sums)
 
     
     # 온오프라인
