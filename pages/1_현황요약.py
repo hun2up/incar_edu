@@ -11,7 +11,7 @@ with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
 from utils import fn_sidebar, fn_status, fn_trends, fig_piechart ,generate_colors, generate_outsides, fig_hbarchart, fig_linechart
 from utils import df_atd as df_all
-from utils import df_course
+
 
 ########################################################################################################################
 ################################################     인증페이지 설정     ###################################################
@@ -55,16 +55,13 @@ if authentication_status:
     ########################################################################################################################
     ##################################################     자료 제작     #####################################################
     ########################################################################################################################
-    # ------------------------------------------------  dataframe 제작  -----------------------------------------------------
-    '''
-    # barchart 제작을 위한 현황 dataframe (소속부문별)
-    df_all_stat = fn_status(df_all, '소속부문')
-    # linechart 제작을 위한 추세 dataframe (월별 & 소속부문별)
-    df_all_trnd = fn_trends(df_all, '소속부문')
-    '''
+    # ------------------------------------------------  dataframe 제작  -----------------------------------------------------     
+    # 신청수료인원
+    df_stats = fn_status(df_all, '소속부문')
 
-    st.dataframe(df_all)
-        
+    st.dataframe(df_stats)
+
+    
     # 온오프라인
     df_line = df_all.groupby(['과정형태','과정코드']).size().reset_index(name='홧수')
     df_line = df_line.groupby(['과정형태'])['과정코드'].count().reset_index(name='횟수')
