@@ -60,6 +60,7 @@ if authentication_status:
     df_stats = fn_status(df_all, '소속부문')
     df_sums = df_stats.sum(axis=0)
     df_sums.name = '합계'
+    df_sums = df_sums.transpose()
     st.dataframe(df_sums)
 
     
