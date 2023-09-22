@@ -60,6 +60,8 @@ if authentication_status:
     df_all_stat = fn_status(df_all, '소속부문')
     # linechart 제작을 위한 추세 dataframe (월별 & 소속부문별)
     df_all_trnd = fn_trends(df_all, '소속부문')
+
+    st.dataframe(df_all)
         
     # 온오프라인
     df_line = df_course.groupby(['과정형태','과정코드']).size().reset_index(name='홧수')
