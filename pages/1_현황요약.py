@@ -61,7 +61,7 @@ if authentication_status:
     df_sums = df_stats.sum(axis=0).transpose()
     # df_sums.name = '합계'
     # df_sums = df_sums.transpose()
-    st.wirte(type(df_sums))
+    st.write(type(df_sums))
 
     
     # 온오프라인
