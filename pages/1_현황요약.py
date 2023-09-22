@@ -81,15 +81,7 @@ if authentication_status:
     df_fee = df_all.groupby(['유무료','과정코드']).size().reset_index(name='홧수')
     df_fee = df_fee.groupby(['유무료'])['과정코드'].count().reset_index(name='횟수')
 
-    # ------------------------------------------  차트 제작에 필요한 리스트 제작  ---------------------------------------------
-    sums_colors = generate_colors(df_sums.shape[0])
-    sums_outsides = generate_outsides(df_sums.shape[0])
-    sums_orders = ['신청','수료'][::-1]
-
     # ---------------------------------------------------  chart 제작  ------------------------------------------------------
-    # 신청수료
-    barlist_sums = [df_sums, '비고', '고유인원', '누계인원', 'group', 'h', sums_colors, sums_outsides, sums_orders, '', '']
-    fig_sums = fig_hbarchart(barlist_sums)
     # 온오프라인
     fig_line = fig_piechart(df_line['과정형태'], df_line['횟수'])
     # 유무료
@@ -102,10 +94,9 @@ if authentication_status:
     st.header("교육운영 현황요약")
     st.markdown("<hr>", unsafe_allow_html=True)
 
-    r1_c1, r1_c2, r1_c3, r1_c4, r1_c5 = st.columns(5)
-    r1_c1.plotly_chart(fig_sums, use_container_width=True)
-    r1_c2.plotly_chart(fig_line, use_container_width=True)
-    r1_c3.plotly_chart(fig_fee, use_container_width=True)
+    r1_c1, r1_c2, r1_c3, r1_c4 = st.columns(4)
+    r1_c1.plotly_chart(fig_line, use_container_width=True)
+    r1_c2.plotly_chart(fig_fee, use_container_width=True)
     
     ########################################################################################################################
     ###########################################     stremalit 워터마크 숨기기     ##############################################
