@@ -60,17 +60,6 @@ if authentication_status:
     # linechart 제작을 위한 추세 dataframe (월별 & 소속부문별)
     df_all_trnd = fn_trends(df_all, '소속부문')
 
-    ########################################################################################################################
-    ################################################     페이지 노출     ####################################################
-    ########################################################################################################################
-    # 메인페이지 타이틀
-    st.header("교육운영 현황요약")
-    
-    st.markdown("<hr>", unsafe_allow_html=True)
-    
-    df_online = df_all.groupby(['과정형태','과정코드']).size().reset_index(name='홧수')
-    df_online = df_online.groupby(['과정형태'])['과정코드'].count().reset_index(name='횟수')
-
     # 유무료
     for modify_fee in range(df_course.shape[0]):
         if df_course.iloc[modify_fee,6] == 0:
@@ -78,10 +67,28 @@ if authentication_status:
         else:
             df_course.iloc[modify_fee,6] = "유료"
 
+    # 온오프라인
+    df_line = df_all.groupby(['과정형태','과정코드']).size().reset_index(name='홧수')
+    df_line = df_line.groupby(['과정형태'])['과정코드'].count().reset_index(name='횟수')
+    # 유무료
+    df_fee = df_all.groupby(['수강료','과정코드']).size().reset_index(name='홧수')
+    df_fee = df_fee.groupby(['수강료'])['과정코드'].count().reset_index(name='횟수')
+
+    fig_line = fig_piechart(df_line['과정형태'], df_line['횟수'])
+    fig_fee = fig_piechart(df_fee['수강료'], df_fee['횟수'])
+
+    ########################################################################################################################
+    ################################################     페이지 노출     ####################################################
+    ########################################################################################################################
+    # 메인페이지 타이틀
+    st.header("교육운영 현황요약")
+    st.markdown("<hr>", unsafe_allow_html=True)
     st.dataframe(df_course)
 
-    fig_course = fig_piechart(df_online['과정형태'], df_online['횟수'])
-    st.plotly_chart(fig_course, use_container_width=True)
+    r1_c1, r1_c2, r1_c3, r1_c4 = st.columns(4)
+    r1_c1.plotly_chart(fig_line, use_container_width=True)
+    r1_c2.plotly_chart(fig_fee, use_container_width=True)
+    
     
 
 
