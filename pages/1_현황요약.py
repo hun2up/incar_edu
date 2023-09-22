@@ -60,8 +60,11 @@ if authentication_status:
     df_stats = fn_status(df_all, '소속부문')
     df_sums = df_stats.sum(axis=0)
     df_sums = pd.DataFrame({'합계':df_sums}).transpose().drop(columns='소속부문')
-    # df_sums.name = '합계'
-    # df_sums = df_sums.transpose()
+    df_sums_apl = df_sums.drop(columns=['수료인원','수료누계','수료율','IMO신청인원','IMO신청누계','IMO신청률'])
+    df_sums_apl.name = '신청'
+    df_sums_atd = df_sums.drop(columns=['신청인원','신청누계','수료율','IMO신청인원','IMO신청누계','IMO신청률'])
+    df_sums_atd.name = '수료'
+    df_sum = df_sums_apl.append(df_sums_atd)
     st.dataframe(df_sums)
 
     
