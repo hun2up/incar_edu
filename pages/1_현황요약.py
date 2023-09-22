@@ -78,7 +78,7 @@ if authentication_status:
     st.dataframe(df_course)
     
     # 온오프라인
-    df_line = df_all.groupby(['과정형태','과정코드']).size().reset_index(name='홧수')
+    df_line = df_course.groupby(['과정형태','과정코드']).size().reset_index(name='홧수')
     df_line = df_line.groupby(['과정형태'])['과정코드'].count().reset_index(name='횟수')
     # 유무료
     df_fee = df_course.groupby(['유무료','과정코드']).size().reset_index(name='홧수')
