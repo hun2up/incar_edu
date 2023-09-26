@@ -84,7 +84,7 @@ if authentication_status:
     df_comrate = pd.DataFrame(comrate)
     
     # IMO신청률
-    df_all['IMO'] = df_all['IMO신청여부'].apply(lambda x: 'IMO' if x == 1 else 'IIMS')
+    # df_all['IMO'] = df_all['IMO신청여부'].apply(lambda x: 'IMO' if x == 1 else 'IIMS')
     imo = {'구분':['IMO','IIMS'],'신청률':[df_all['IMO'].sum()/df_all.shape[0]*100, 100-df_all['IMO'].sum()/df_all.shape[0]*100]}
     df_imo = pd.DataFrame(imo)
     st.dataframe(df_imo)
