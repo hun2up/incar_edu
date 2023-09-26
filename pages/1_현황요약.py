@@ -71,10 +71,8 @@ if authentication_status:
     df_sums = pd.concat([df_sums_atd, df_sums_apl], axis=0)
 
     # 수료율
-    comrate = {'수료율':[df_sums.iloc[0,1]/df_sums.iloc[1,1]*100, 100-df_sums.iloc[0,1]/df_sums.iloc[1,1]*100]}
+    comrate = {'구분':['수료','미수료'],'수료율':[df_sums.iloc[0,1]/df_sums.iloc[1,1]*100, 100-df_sums.iloc[0,1]/df_sums.iloc[1,1]*100]}
     df_comrate = pd.DataFrame(comrate)
-    df_comrate.index = ['수료', '미수료']
-    df_comrate = df_comrate.rename(columns={'index':'구분'})
     # comrate = df_sums.iloc[0,1]/df_sums.iloc[1,1]*100
     st.dataframe(df_comrate)
 
