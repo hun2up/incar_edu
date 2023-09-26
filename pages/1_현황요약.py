@@ -97,7 +97,7 @@ if authentication_status:
     # 수료율
     fig_comrate = fig_piechart(df_comrate['구분'], df_comrate['수료율'])
     # IMO 신청률
-    fig_imo = fig_piechart(df_imo['IMO'], df_imo['신청률'])
+    fig_imo = fig_piechart(df_imo['구분'], df_imo['신청률'])
 
     # 신청인원 및 수료인원
     # 색상(hexcode) 제작
