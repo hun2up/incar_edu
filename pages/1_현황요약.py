@@ -69,6 +69,7 @@ if authentication_status:
     df_sums_atd = df_sums_atd.reset_index()
     df_sums_atd = df_sums_atd.rename(columns={'index':'비고'})
     df_sums = pd.concat([df_sums_atd, df_sums_apl], axis=0)
+    df_sums['수료율'] = (df_sums['고유인원']/df_sums['누계인원']*100).round(1)
     st.dataframe(df_sums)
 
     
@@ -80,6 +81,8 @@ if authentication_status:
     df_all['유무료'] = df_all['수강료'].apply(lambda x: '무료' if x == 0 else '유료')
     df_fee = df_all.groupby(['유무료','과정코드']).size().reset_index(name='홧수')
     df_fee = df_fee.groupby(['유무료'])['과정코드'].count().reset_index(name='횟수')
+
+    # 수료율
 
     # ---------------------------------------------------  chart 제작  ------------------------------------------------------
     # 온오프라인
