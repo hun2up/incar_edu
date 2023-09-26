@@ -85,7 +85,7 @@ if authentication_status:
     
     # IMO신청률
     # df_all['IMO'] = df_all['IMO신청여부'].apply(lambda x: 'IMO' if x == 1 else 'IIMS')
-    imo = {'구분':['IMO','IIMS'],'신청률':[df_all['IMO신청여부'].sum()/df_all.shape[0]*100, 100-df_all['IMO신청여부'].sum()/df_all.shape[0]*100]}
+    imo = {'구분':['IMO','IIMS'],'신청률':[(df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1), (100-df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1)]}
     df_imo = pd.DataFrame(imo)
     st.dataframe(df_imo)
 
