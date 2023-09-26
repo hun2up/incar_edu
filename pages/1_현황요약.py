@@ -69,7 +69,7 @@ if authentication_status:
     df_sums_atd = df_sums_atd.reset_index()
     df_sums_atd = df_sums_atd.rename(columns={'index':'비고'})
     df_sums = pd.concat([df_sums_atd, df_sums_apl], axis=0)
-    comrate = df_sums.loc[0,'누계인원']/df_sums.loc[1,'누계인원']*100
+    comrate = df_sums.iloc[0,1]/df_sums.iloc[1,1]*100
     st.write(comrate)
 
     
