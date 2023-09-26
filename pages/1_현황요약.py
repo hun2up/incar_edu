@@ -9,7 +9,7 @@ import yaml
 from yaml.loader import SafeLoader
 with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
-from utils import fn_sidebar, fn_status, fn_trends, fig_piechart ,generate_colors, generate_outsides, fig_hbarchart, fig_vbarchart ,fig_linechart
+from utils import fn_sidebar, fn_status, fn_trends, fig_piechart, generate_colors, generate_outsides, fig_hbarchart, fig_vbarchart
 from utils import df_atd as df_all
 
 
@@ -87,6 +87,16 @@ if authentication_status:
     # 유무료
     fig_fee = fig_piechart(df_fee['유무료'], df_fee['횟수'])
 
+    # 신청인원 및 수료인원
+    # 색상(hexcode) 제작
+    sums_colors = generate_colors(df_sums.shape[0])
+    # 텍스트위치(outsides) 제작
+    sums_outsides = generate_outsides(df_sums.shape[0])
+    # barchart 항목 순서 지정
+    orders_sums = ['신청', '수료'][::-1]
+    sums_list = [df_sums, '비고', '누계인원', '고유인원', 'group', 'h', sums_colors, sums_outsides, orders_sums, '', ''],
+    fig_sums = fig_hbarchart(sums_list)
+
     ########################################################################################################################
     ################################################     페이지 노출     ####################################################
     ########################################################################################################################
@@ -94,13 +104,12 @@ if authentication_status:
     st.header("교육운영 현황요약")
     st.markdown("<hr>", unsafe_allow_html=True)
 
-    cols = st.columns(2)
-    cols[0].metric(str(df_sums.loc[0,'비고']),str(df_sums.loc[0,'고유인원']),"")
-    cols[1].metric(str(df_sums.loc[1,'비고']),str(df_sums.loc[1,'고유인원']),"")
-
     r1_c1, r1_c2, r1_c3, r1_c4 = st.columns(4)
     r1_c1.plotly_chart(fig_line, use_container_width=True)
     r1_c2.plotly_chart(fig_fee, use_container_width=True)
+
+    r2_c1, r2_c2, r2_c3, r2_c4 = st.columns(4)
+    r2_c1.plotly_chart(fig_sums, use_container_width=True)
     
     ########################################################################################################################
     ###########################################     stremalit 워터마크 숨기기     ##############################################
