@@ -94,7 +94,7 @@ if authentication_status:
     sums_outsides = generate_outsides(df_sums.shape[0])
     # barchart 항목 순서 지정
     orders_sums = ['신청', '수료'][::-1]
-    sums_list = [df_sums, '비고', '누계인원', '고유인원', 'group', 'h', sums_colors, sums_outsides, orders_sums, '', '']
+    sums_list = [df_sums, '비고', '고유인원', '누계인원', 'group', 'h', sums_colors, sums_outsides, orders_sums, '', '']
     fig_sums = fig_hbarchart(sums_list)
 
     ########################################################################################################################
