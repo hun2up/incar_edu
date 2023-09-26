@@ -69,9 +69,13 @@ if authentication_status:
     df_sums_atd = df_sums_atd.reset_index()
     df_sums_atd = df_sums_atd.rename(columns={'index':'비고'})
     df_sums = pd.concat([df_sums_atd, df_sums_apl], axis=0)
+
     # 수료율
-    comrate = df_sums.iloc[0,1]/df_sums.iloc[1,1]*100
-    st.write(comrate)
+    comrate = {'수료':[df_sums.iloc[0,1]/df_sums.iloc[1,1]*100], '미수료':[100-df_sums.iloc[0,1]/df_sums.iloc[1,1]*100]}
+    df_comrate = pd.DataFrame(comrate)
+    df_comrate.index = ['수료율']
+    # comrate = df_sums.iloc[0,1]/df_sums.iloc[1,1]*100
+    st.dataframe(df_comrate)
 
     
     # 온오프라인
@@ -89,7 +93,7 @@ if authentication_status:
     # 유무료
     fig_fee = fig_piechart(df_fee['유무료'], df_fee['횟수'])
     # 수료율
-    fig_comrate = fig_piechart(comrate)
+    fig_comrate = fig_piechart(df_comrate['수료'], df_sums['미수료'])
 
     # 신청인원 및 수료인원
     # 색상(hexcode) 제작
@@ -111,7 +115,7 @@ if authentication_status:
     r1_c1, r1_c2, r1_c3, r1_c4 = st.columns(4)
     r1_c1.plotly_chart(fig_line, use_container_width=True)
     r1_c2.plotly_chart(fig_fee, use_container_width=True)
-    r1_c3.plotly_chart(comrate, use_container_width=True)
+    r1_c3.plotly_chart(fig_comrate, use_container_width=True)
 
     r2_c1, r2_c2, r2_c3, r2_c4 = st.columns(4)
     r2_c1.plotly_chart(fig_sums, use_container_width=True)
