@@ -71,9 +71,10 @@ if authentication_status:
     df_sums = pd.concat([df_sums_atd, df_sums_apl], axis=0)
 
     # 수료율
-    comrate = {'수료':[df_sums.iloc[0,1]/df_sums.iloc[1,1]*100], '미수료':[100-df_sums.iloc[0,1]/df_sums.iloc[1,1]*100]}
+    comrate = {'수료율':[df_sums.iloc[0,1]/df_sums.iloc[1,1]*100, 100-df_sums.iloc[0,1]/df_sums.iloc[1,1]*100]}
     df_comrate = pd.DataFrame(comrate)
-    df_comrate.index = ['수료율']
+    df_comrate.index = ['수료', '미수료']
+    df_comrate = df_comrate.rename(columns={'index':'구분'})
     # comrate = df_sums.iloc[0,1]/df_sums.iloc[1,1]*100
     st.dataframe(df_comrate)
 
@@ -93,7 +94,7 @@ if authentication_status:
     # 유무료
     fig_fee = fig_piechart(df_fee['유무료'], df_fee['횟수'])
     # 수료율
-    fig_comrate = fig_piechart(df_comrate['수료'], df_sums['미수료'])
+    fig_comrate = fig_piechart(df_comrate['구분'], df_comrate['수료율'])
 
     # 신청인원 및 수료인원
     # 색상(hexcode) 제작
