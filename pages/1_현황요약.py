@@ -69,25 +69,19 @@ if authentication_status:
     df_sums_atd = df_sums_atd.reset_index()
     df_sums_atd = df_sums_atd.rename(columns={'index':'비고'})
     df_sums = pd.concat([df_sums_atd, df_sums_apl], axis=0)
-    
     # 온오프라인
     df_line = df_all.groupby(['과정형태','과정코드']).size().reset_index(name='홧수')
     df_line = df_line.groupby(['과정형태'])['과정코드'].count().reset_index(name='횟수')
-    
     # 유무료
     df_all['유무료'] = df_all['수강료'].apply(lambda x: '무료' if x == 0 else '유료')
     df_fee = df_all.groupby(['유무료','과정코드']).size().reset_index(name='홧수')
     df_fee = df_fee.groupby(['유무료'])['과정코드'].count().reset_index(name='횟수')
-
     # 수료율
     comrate = {'구분':['수료','미수료'],'수료율':[df_sums.iloc[0,1]/df_sums.iloc[1,1]*100, 100-df_sums.iloc[0,1]/df_sums.iloc[1,1]*100]}
     df_comrate = pd.DataFrame(comrate)
-    
     # IMO신청률
-    # df_all['IMO'] = df_all['IMO신청여부'].apply(lambda x: 'IMO' if x == 1 else 'IIMS')
     imo = {'구분':['IMO','IIMS'],'신청률':[(df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1), (100-df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1)]}
     df_imo = pd.DataFrame(imo)
-    st.dataframe(df_imo)
 
     # ---------------------------------------------------  chart 제작  ------------------------------------------------------
     # 온오프라인
