@@ -50,7 +50,7 @@ if authentication_status:
     apl_orders = generate_orders(df_apl_bar)
 
     # -------------------------------------------------  barchart 제작  ------------------------------------------------------    
-    barlist_apl = [df_apl_bar, '과정명', '목표인원', '신청인원', 'group', 'v', apl_colors, apl_outsides, apl_orders, f'{month_today}월 신청인원 현황', '']
+    barlist_apl = [df_apl_bar, '목표인원', '과정명', '신청인원', 'group', 'v', apl_colors, apl_outsides, apl_orders, f'{month_today}월 신청인원 현황', '']
     # barlist_apl = [df_apl_bar, apl_colors, apl_outsides, f'{month_today}월 신청인원 현황']
     bc_apl = fig_hbarchart(barlist_apl)
     linelist_apl = [df_apl_line, '과정명', '신청인원', f'{month_today}월 신청인원 추이', '날짜']
