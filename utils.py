@@ -154,6 +154,12 @@ def generate_outsides(shape):
         text_outsides.append('outside')
         i += 1
     return text_outsides
+def generate_orders(shape):
+    text_orders = []
+    for i in range(shape.shape[0]):
+        text_orders.append(shape.index[0])
+        i += 1
+    return text_orders
 
 # ---------------------------------------------  Bar Chart 제작 함수 정의  --------------------------------------------------
 '''
