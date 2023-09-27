@@ -11,7 +11,7 @@ import yaml
 from yaml.loader import SafeLoader
 with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
-from utils import fn_status, fn_trends, generate_colors, generate_outsides, fig_vbarchart, fig_linechart
+from utils import fn_status, fn_trends, generate_colors, generate_outsides, fig_hbarchart, fig_vbarchart, fig_linechart
 from utils import df_apl
 
 ########################################################################################################################
@@ -49,8 +49,9 @@ if authentication_status:
     apl_outsides = generate_outsides(df_apl_bar.shape[0])
 
     # -------------------------------------------------  barchart 제작  ------------------------------------------------------
-    barlist_apl = [df_apl_bar, apl_colors, apl_outsides, f'{month_today}월 신청인원 현황']
-    bc_apl = fig_vbarchart(barlist_apl)
+    barlist_apl = [df_apl_bar, '과정명', '목표인원', '신청인원', 'group', 'v', apl_colors, apl_outsides, '', f'{month_today}월 신청인원 현황', '']
+    # barlist_apl = [df_apl_bar, apl_colors, apl_outsides, f'{month_today}월 신청인원 현황']
+    bc_apl = fig_hbarchart(barlist_apl)
     linelist_apl = [df_apl_line, '과정명', '신청인원', f'{month_today}월 신청인원 추이', '날짜']
     lc_apl = fig_linechart(linelist_apl)
 
