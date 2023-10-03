@@ -84,7 +84,7 @@ if authentication_status:
     df_imo = pd.DataFrame(imo)
 
 
-    df_rank = fn_rank(df_all)
+    df_rank = fn_status(df_all, ['소속부문','파트너','성명'])
     st.dataframe(df_rank)
     # ---------------------------------------------------  chart 제작  ------------------------------------------------------
     # 온오프라인
