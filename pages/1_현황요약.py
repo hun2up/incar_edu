@@ -9,7 +9,7 @@ import yaml
 from yaml.loader import SafeLoader
 with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
-from utils import fn_sidebar, fn_status, fn_trends, fig_piechart, generate_colors, generate_outsides, fig_hbarchart, fig_vbarchart, fn_rank
+from utils import fn_sidebar, fn_status, fn_trends, fig_piechart, generate_colors, generate_outsides, fig_hbarchart, fig_vbarchart, fn_rank_fa, fn_rank_partner, fn_rank_channel
 from utils import df_atd as df_all
 
 
@@ -83,8 +83,9 @@ if authentication_status:
     imo = {'구분':['IMO','IIMS'],'신청률':[(df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1), (100-df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1)]}
     df_imo = pd.DataFrame(imo)
 
-    df_rank = fn_rank(df_all)
-    st.dataframe(df_rank)
+    df_rank_fa = fn_rank_fa(df_all)
+    df_rank_partner = fn_rank_partner(df_all)
+    df_rank_channel = fn_rank_channel(df_all)
     # ---------------------------------------------------  chart 제작  ------------------------------------------------------
     # 온오프라인
     fig_line = fig_piechart(df_line['과정형태'], df_line['횟수'])
@@ -120,7 +121,10 @@ if authentication_status:
 
     r2_c1, r2_c2, r2_c3, r2_c4 = st.columns(4)
     r2_c1.plotly_chart(fig_sums, use_container_width=True)
-    
+
+    df_rank_fa = df_rank_fa.sort_values(by='신청누계', ascending=True)
+    cols_rank = st.columns([1,1,1,1,1])
+    cols_rank[0].metric(df_rank_fa.iat[0,0], df_rank_fa.iat[0,3])
     ########################################################################################################################
     ###########################################     stremalit 워터마크 숨기기     ##############################################
     ########################################################################################################################
