@@ -122,10 +122,10 @@ if authentication_status:
     r2_c1, r2_c2, r2_c3, r2_c4 = st.columns(4)
     r2_c1.plotly_chart(fig_sums, use_container_width=True)
 
-    df_rank_fa = df_rank_fa.sort_values(by='신청누계', ascending=True)
+    df_rank_fa = df_rank_fa.sort_values(by='신청누계', ascending=False)
     st.dataframe(df_rank_fa)
     cols_rank = st.columns([1,1,1,1,1])
-    cols_rank[0].metric(df_rank_fa.iat[0,0]+df_rank_fa.iat[0,1]+df_rank_fa.iat[0,2], df_rank_fa.iat[0,3])
+    cols_rank[0].metric(df_rank_fa.iat[0,1]+df_rank_fa.iat[0,2], df_rank_fa.iat[0,3])
     ########################################################################################################################
     ###########################################     stremalit 워터마크 숨기기     ##############################################
     ########################################################################################################################
