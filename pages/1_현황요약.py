@@ -112,6 +112,7 @@ if authentication_status:
     # 메인페이지 타이틀
     st.header("교육운영 현황요약")
     st.markdown("<hr>", unsafe_allow_html=True)
+    st.dataframe(df_rank_fa)
 
     r1_c1, r1_c2, r1_c3, r1_c4 = st.columns(4)
     r1_c1.plotly_chart(fig_line, use_container_width=True)
@@ -124,7 +125,7 @@ if authentication_status:
 
     df_rank_fa = df_rank_fa.sort_values(by='신청누계', ascending=True)
     cols_rank = st.columns([1,1,1,1,1])
-    cols_rank[0].metric(df_rank_fa.iat[0,0], df_rank_fa.iat[0,3])
+    cols_rank[0].metric(df_rank_fa.iat[0,0]+df_rank_fa.iat[0,1]+df_rank_fa.iat[0,2], df_rank_fa.iat[0,3])
     ########################################################################################################################
     ###########################################     stremalit 워터마크 숨기기     ##############################################
     ########################################################################################################################
