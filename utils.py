@@ -145,7 +145,7 @@ def fn_trends(dfv_atd, colv_reference):
 # 소속부문, 파트너, FA 별 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률
 def fn_rank(dfv_atd):
     # dfv_atd를 '소속부문', '사원번호' 칼럼으로 묶고, 누적개수 구하기
-    dfv_rank = dfv_atd.groupby(['소속부문','파트너','성명'])['사원번호'].size().reset_index(name='신청누계')
+    dfv_rank = dfv_atd.groupby(['소속부문','파트너','성명','사원번호']).size().reset_index(name='신청누계')
     '''
     # df_func_number에서 묶여있는 '사원번호' 카운트 (중복값 제거한 인원)
     dfv_rank_unique = dfv_rank.groupby(['소속부문','파트너','성명'])['사원번호'].count().reset_index(name='신청인원')
