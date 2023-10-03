@@ -141,6 +141,13 @@ def fn_trends(dfv_atd, colv_reference):
     # 다 합쳐서 반환
     return dfv_trends_apply
 
+'''
+# ------------------------------------------  소속부문, 파트너, FA 별 누계값  -----------------------------------------------
+def fn_rank(dfv_atd):
+    dfv_rank = dfv_atd.groupby(['소속부문','파트너','성함','사원번호']).size().reset_index(name='신청누계')
+    return dfv_rank
+'''
+
 # ------------------------------------  차트 제작에 필요한 색상과 outside 생성 함수  ------------------------------------------
 def generate_colors(shape):
     color_preset = ['#636efa', '#ef553b', '#00cc96', '#ab63fa', '#ffa15a', '#19d3f3', '#ff6692', '#b6e880', '#ff97ff', '#fecb52']

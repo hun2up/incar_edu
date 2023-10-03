@@ -84,8 +84,8 @@ if authentication_status:
     df_imo = pd.DataFrame(imo)
 
 
-    df_rank = fn_rank(df_stats)
-    st.dataframe(df_rank)
+    # df_rank = fn_rank(df_stats)
+    st.dataframe(df_stats)
     # ---------------------------------------------------  chart 제작  ------------------------------------------------------
     # 온오프라인
     fig_line = fig_piechart(df_line['과정형태'], df_line['횟수'])
