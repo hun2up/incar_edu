@@ -9,7 +9,7 @@ import yaml
 from yaml.loader import SafeLoader
 with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
-from utils import fn_sidebar, fn_status, fn_trends, fig_piechart, generate_colors, generate_outsides, fig_hbarchart, fig_vbarchart
+from utils import fn_sidebar, fn_status, fn_trends, fig_piechart, generate_colors, generate_outsides, fig_hbarchart, fig_vbarchart, fn_rank
 from utils import df_atd as df_all
 
 
@@ -55,7 +55,7 @@ if authentication_status:
     ########################################################################################################################
     ##################################################     자료 제작     #####################################################
     ########################################################################################################################
-    # ------------------------------------------------  dataframe 제작  -----------------------------------------------------     
+    # ------------------------------------------------  dataframe 제작  -----------------------------------------------------
     # 신청수료인원
     df_stats = fn_status(df_all, '소속부문')
     df_sums = df_stats.sum(axis=0)
@@ -83,6 +83,9 @@ if authentication_status:
     imo = {'구분':['IMO','IIMS'],'신청률':[(df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1), (100-df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1)]}
     df_imo = pd.DataFrame(imo)
 
+
+    df_rank = fn_rank(df_stats)
+    st.dataframe(df_rank)
     # ---------------------------------------------------  chart 제작  ------------------------------------------------------
     # 온오프라인
     fig_line = fig_piechart(df_line['과정형태'], df_line['횟수'])
