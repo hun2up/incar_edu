@@ -83,8 +83,8 @@ if authentication_status:
     imo = {'구분':['IMO','IIMS'],'신청률':[(df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1), (100-df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1)]}
     df_imo = pd.DataFrame(imo)
 
-
-    df_rank = fn_status(df_all, ['소속부문','파트너','성명'])
+    rank_referenc = ['\'소속부문\',\'파트너\',\'성명\'']
+    df_rank = fn_status(df_all, rank_referenc[0])
     st.dataframe(df_rank)
     # ---------------------------------------------------  chart 제작  ------------------------------------------------------
     # 온오프라인
