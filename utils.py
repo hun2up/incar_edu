@@ -166,7 +166,7 @@ def fn_rank(dfv_atd):
         # 수료율/IMO신청률 합치기
         dfv_rank_attend = pd.merge(dfv_rank_attend, dfv_rank_attend_total, on=['소속부문','파트너','성명'])
         dfv_rank = pd.merge(dfv_rank, dfv_rank_attend, on=['소속부문','파트너','성명'])
-        dfv_rank = dfv_rank.drop(columns=['수료인원','IMO신청인원'])
+    dfv_rank = dfv_rank.drop(columns=['수료인원','IMO신청인원'])
     # 다 합쳐서 반환
     return dfv_rank
 
