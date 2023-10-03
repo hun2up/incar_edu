@@ -141,12 +141,42 @@ def fn_trends(dfv_atd, colv_reference):
     # 다 합쳐서 반환
     return dfv_trends_apply
 
-'''
-# ------------------------------------------  소속부문, 파트너, FA 별 누계값  -----------------------------------------------
+# -------------------------------------------  소속부문별 고유값 및 누계값  --------------------------------------------------
+# 소속부문, 파트너, FA 별 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률
 def fn_rank(dfv_atd):
+    # dfv_atd를 '소속부문', '사원번호' 칼럼으로 묶고, 누적개수 구하기
     dfv_rank = dfv_atd.groupby(['소속부문','파트너','성함','사원번호']).size().reset_index(name='신청누계')
+    '''
+    # df_func_number에서 묶여있는 '사원번호' 카운트 (중복값 제거한 인원)
+    dfv_rank_unique = dfv_rank.groupby([colv_reference])['사원번호'].count().reset_index(name='신청인원')
+    # df_func_number에서 '누적개수' 카운트 (중복값 더한 인원)
+    dfv_rank_total = dfv_rank.groupby([colv_reference])['신청누계'].sum().reset_index(name='신청누계')
+    # 위에서 중복값을 제거한 데이터프레임과 모두 더한 데이터프레임 병합
+    dfv_rank = pd.merge(dfv_rank_unique, dfv_rank_total)
+    # 소속부문별 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률
+    for groups in range(len(basic_index)):
+        # 수료현황, IMO신청여부 1로 묶기
+        dfv_status_attend = dfv_atd.groupby(basic_index[groups][0]).get_group(1)
+        # 수료현황 전체 더하기 (수료누계)
+        dfv_status_attend_total = dfv_atd.groupby([colv_reference])[basic_index[groups][0]].sum().reset_index(name=basic_index[groups][2])
+        # 수료현황(1,0)별 사원번호 개수 (수료인원)
+        dfv_status_attend_unique = dfv_atd.groupby([colv_reference,basic_index[groups][0]])['사원번호'].nunique().reset_index(name=basic_index[groups][1])
+        # 수료현항 0인 row 날리기
+        dfv_status_attend_unique = dfv_status_attend_unique[dfv_status_attend_unique[basic_index[groups][0]] != 0]
+        # 수료현황 column 날리기
+        dfv_status_attend_unique = dfv_status_attend_unique.drop(columns=[basic_index[groups][0]])
+        # 수료인원이랑 수료누계 합치기
+        dfv_status_attend = pd.merge(dfv_status_attend_unique, dfv_status_attend_total, on=[colv_reference])
+        # 수료율
+        dfv_status_attend_total[basic_index[groups][3]] = (dfv_status_attend_total[basic_index[groups][2]]/dfv_rank['신청누계']*100).round(1)
+        dfv_status_attend_total = dfv_status_attend_total.drop(columns=[basic_index[groups][2]])
+        # 수료율/IMO신청률 합치기
+        dfv_status_attend = pd.merge(dfv_status_attend, dfv_status_attend_total, on=[colv_reference])
+        dfv_rank = pd.merge(dfv_rank, dfv_status_attend, on=[colv_reference])
+    '''
+    # 다 합쳐서 반환
     return dfv_rank
-'''
+
 
 # ------------------------------------  차트 제작에 필요한 색상과 outside 생성 함수  ------------------------------------------
 def generate_colors(shape):

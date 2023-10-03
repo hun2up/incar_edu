@@ -9,7 +9,7 @@ import yaml
 from yaml.loader import SafeLoader
 with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
-from utils import fn_sidebar, fn_status, fn_trends, fig_piechart, generate_colors, generate_outsides, fig_hbarchart, fig_vbarchart
+from utils import fn_sidebar, fn_status, fn_trends, fig_piechart, generate_colors, generate_outsides, fig_hbarchart, fig_vbarchart, fn_rank
 from utils import df_atd as df_all
 
 
@@ -84,8 +84,8 @@ if authentication_status:
     df_imo = pd.DataFrame(imo)
 
 
-    # df_rank = fn_rank(df_stats)
-    st.dataframe(df_stats)
+    df_rank = fn_rank(df_all)
+    st.dataframe(df_rank)
     # ---------------------------------------------------  chart 제작  ------------------------------------------------------
     # 온오프라인
     fig_line = fig_piechart(df_line['과정형태'], df_line['횟수'])
