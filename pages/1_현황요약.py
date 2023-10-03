@@ -5,6 +5,7 @@ import pandas as pd
 import streamlit as st
 import streamlit_authenticator as stauth
 hashed_passwords = stauth.Hasher(['XXX']).generate()
+from streamlit_extras.metric_cards import style_metric_cards
 import yaml
 from yaml.loader import SafeLoader
 with open('config.yaml') as file:
@@ -126,6 +127,7 @@ if authentication_status:
     st.dataframe(df_rank_fa)
     cols_rank = st.columns([1,1,1,1,1])
     cols_rank[0].metric(df_rank_fa.iat[0,1] + ' ' + df_rank_fa.iat[0,2], df_rank_fa.iat[0,3])
+    style_metric_cards()
     ########################################################################################################################
     ###########################################     stremalit 워터마크 숨기기     ##############################################
     ########################################################################################################################
