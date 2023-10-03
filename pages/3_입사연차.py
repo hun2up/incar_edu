@@ -59,14 +59,18 @@ if authentication_status:
     crr_colors = generate_colors(df_crr_stat.shape[0])
     # 텍스트위치(outsides) 제작
     crr_outsides = generate_outsides(df_crr_stat.shape[0])   
+    # barchart 항목 순서 지정
+    orders_crr_bar = []
+    for index_career in df_crr_stat.index:
+        orders_crr_bar.append(f'{index_career}년차')
 
     # -------------------------------------------------  barchart 제작  ------------------------------------------------------
     # 차트에 필요한 리스트 제작
     lst_crr = [
-        [df_crr_stat, '입사연차', '신청인원', '신청누계', 'group', 'h', crr_colors, crr_outsides, '', '입사연차별 교육신청 현황', '색상 차트는 누적인원(중복포함), 회색 차트는 고유인원(중복제거)'],
-        [df_crr_stat, '입사연차', '수료인원', '수료누계', 'group', 'h', crr_colors, crr_outsides, '', '입사연차별 교육수료 현황', '색상 차트는 누적인원(중복포함), 회색 차트는 고유인원(중복제거)'],
-        [df_crr_stat, '입사연차', '수료율', '', 'single', 'h', crr_colors, crr_outsides, '', '입사연차별 수료율', ''],
-        [df_crr_stat, '입사연차', 'IMO신청률', '', 'single', 'h', crr_colors, crr_outsides, '', '입사연차별 IMO신청률', '']
+        [df_crr_stat, '입사연차', '신청인원', '신청누계', 'group', 'h', crr_colors, crr_outsides, orders_crr_bar, '입사연차별 교육신청 현황', '색상 차트는 누적인원(중복포함), 회색 차트는 고유인원(중복제거)'],
+        [df_crr_stat, '입사연차', '수료인원', '수료누계', 'group', 'h', crr_colors, crr_outsides, orders_crr_bar, '입사연차별 교육수료 현황', '색상 차트는 누적인원(중복포함), 회색 차트는 고유인원(중복제거)'],
+        [df_crr_stat, '입사연차', '수료율', '', 'single', 'h', crr_colors, crr_outsides, orders_crr_bar, '입사연차별 수료율', ''],
+        [df_crr_stat, '입사연차', 'IMO신청률', '', 'single', 'h', crr_colors, crr_outsides, orders_crr_bar, '입사연차별 IMO신청률', '']
         ]
     
     # 막대그래프 (부문별 신청인원)
