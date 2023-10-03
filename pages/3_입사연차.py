@@ -63,7 +63,6 @@ if authentication_status:
     orders_crr_bar = []
     for index_career in df_crr_stat.index:
         orders_crr_bar.append(f'{index_career}년차')
-    orders_crr_bar = orders_crr_bar[::-1]
 
     # -------------------------------------------------  barchart 제작  ------------------------------------------------------
     # 차트에 필요한 리스트 제작
