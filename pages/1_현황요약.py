@@ -125,11 +125,7 @@ if authentication_status:
     # ----------------------------------------------------  랭킹  -----------------------------------------------------------
     container_st_style = """
                         <style>
-                        .st-xyz .stContainer {
-                            border: 1px solid #000000;
-                            padding: 10px;
-                            margin: 10px;
-                            }
+                        .stContainer {border: 1px solid #000000; padding: 10px; margin: 10px;}
                         </style>
                         """
     st.markdown(container_st_style, unsafe_allow_html=True)
