@@ -128,7 +128,7 @@ if authentication_status:
     """
     <style>
     .stContainer {
-        border: 2px solid #ffffff;
+        border: 2px solid #000000;
         padding: 20px;
     }
     </style>
