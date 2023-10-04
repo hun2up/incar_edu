@@ -377,7 +377,7 @@ def style_metric_cards(
     border_radius_px: int = 5,
     border_left_color: str = "rgb(179,205,227)",
     box_shadow: bool = True,
-    label_color: str = "black",
+    label_color: str = "white",
     # text_color: str = "white",
 ):
 
