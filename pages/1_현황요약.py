@@ -127,9 +127,8 @@ if authentication_status:
 
     df_rank_fa = df_rank_fa.sort_values(by='신청누계', ascending=False)
     st.dataframe(df_rank_fa)
-    r3_c1, r3_c2 = st.columns(2)
-    rankfa_apply1, rankfa_apply2, rankfa_apply3, rankfa_apply4, rankfa_apply5 = r3_c1.columns(5)
-    rankfa_apply1.metric(df_rank_fa.iat[0,1] + ' ' + df_rank_fa.iat[0,2], df_rank_fa.iat[0,3])
+    r3_c1, r3_c2, r3_c3, r3_c4, r3_c5 = st.columns(5)
+    r3_c1.metric(df_rank_fa.iat[0,1] + ' ' + df_rank_fa.iat[0,2], df_rank_fa.iat[0,3])
     style_metric_cards()
 
     ########################################################################################################################
