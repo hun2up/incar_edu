@@ -12,6 +12,24 @@ with open('config.yaml') as file:
 from utils import fn_sidebar, fn_status, fn_trends, fig_piechart, generate_colors, generate_outsides, fig_hbarchart, fig_vbarchart, fn_rank_fa, fn_rank_partner, fn_rank_channel
 from utils import df_atd as df_all
 
+def container_style():
+    st.markdown(
+        """
+        <style>
+        .stContainer {border: 5px solid red; padding: 10px; margin: 10px;}
+        </style>
+        """, unsafe_allow_html=True
+    )
+
+'''
+container_st_style = """
+                    <style>
+                    .stContainer {border: 5px solid red; padding: 10px; margin: 10px;}
+                    </style>
+                    """
+st.markdown(container_st_style, unsafe_allow_html=True)
+'''
+
 ########################################################################################################################
 ################################################     인증페이지 설정     ###################################################
 ########################################################################################################################
@@ -123,25 +141,14 @@ if authentication_status:
     r2_c1.plotly_chart(fig_sums, use_container_width=True)
 
     # ----------------------------------------------------  랭킹  -----------------------------------------------------------
-    # 컨테이너 CSS
-    st.markdown(
-    """
-    <style>
-    .stContainer {
-        border: 2px solid #000000;
-        padding: 20px;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-    )
 
     df_rank_fa = df_rank_fa.sort_values(by='신청누계', ascending=False)
     st.dataframe(df_rank_fa)
     r3_c1, r3_c2 = st.columns(2)
     rankfa_apply1, rankfa_apply2, rankfa_apply3, rankfa_apply4, rankfa_apply5 = r3_c1.columns(5)
-    with rankfa_apply1:
+    with rankfa_apply1.container():
         st.metric(df_rank_fa.iat[0,1] + ' ' + df_rank_fa.iat[0,2], df_rank_fa.iat[0,3])
+    container_style()
     ########################################################################################################################
     ###########################################     stremalit 워터마크 숨기기     ##############################################
     ########################################################################################################################
