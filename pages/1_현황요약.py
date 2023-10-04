@@ -124,14 +124,14 @@ if authentication_status:
 
     # ----------------------------------------------------  랭킹  -----------------------------------------------------------
     container_st_style = """
-    <style>
-    .stColumn {
-        border: 1px solid #000000;
-        padding: 10px;
-        margin: 10px;
-        }
-        </style>
-        """
+                        <style>
+                        .st-xyz .stContainer {
+                            border: 1px solid #000000;
+                            padding: 10px;
+                            margin: 10px;
+                            }
+                        </style>
+                        """
     st.markdown(container_st_style, unsafe_allow_html=True)
 
     df_rank_fa = df_rank_fa.sort_values(by='신청누계', ascending=False)
