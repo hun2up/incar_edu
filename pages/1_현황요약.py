@@ -141,7 +141,7 @@ if authentication_status:
             }
             """,
     ):
-        st.markdown(f"**{df_rank_fa.iat[0,1] + ' ' + df_rank_fa.iat[0,2]}**: {df_rank_fa.iat[0,3]}")
+        st.markdown(st.metric(df_rank_fa.iat[0,1] + ' ' + df_rank_fa.iat[0,2], df_rank_fa.iat[0,3]), unsafe_allow_html=True)
 
     ########################################################################################################################
     ###########################################     stremalit 워터마크 숨기기     ##############################################
