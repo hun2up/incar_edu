@@ -129,6 +129,7 @@ if authentication_status:
     st.dataframe(df_rank_fa)
     r3_c1, r3_c2 = st.columns(2)
     rankfa_apply1, rankfa_apply2, rankfa_apply3, rankfa_apply4, rankfa_apply5 = r3_c1.columns(5)
+    rankfa_apply1 = st.metric(df_rank_fa.iat[0,1] + ' ' + df_rank_fa.iat[0,2], df_rank_fa.iat[0,3])
 
     with stylable_container(
         key="container_with_border",
@@ -140,14 +141,8 @@ if authentication_status:
             }
             """,
     ):
-        st.markdown("container test")
+        st.markdown(rankfa_apply1)
 
-
-
-
-
-    with rankfa_apply1.container():
-        st.metric(df_rank_fa.iat[0,1] + ' ' + df_rank_fa.iat[0,2], df_rank_fa.iat[0,3])
     ########################################################################################################################
     ###########################################     stremalit 워터마크 숨기기     ##############################################
     ########################################################################################################################
