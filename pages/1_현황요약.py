@@ -129,7 +129,7 @@ if authentication_status:
     st.markdown(
     """
     <style>
-    body .stContainer {
+    .st-xyz .stContainer {
         border: 2px solid #ffffff;
         padding: 20px;
     }
