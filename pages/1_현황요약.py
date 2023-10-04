@@ -13,7 +13,6 @@ with open('config.yaml') as file:
 from utils import fn_sidebar, fn_status, fn_trends, fig_piechart, generate_colors, generate_outsides, fig_hbarchart, fig_vbarchart, fn_rank_fa, fn_rank_partner, fn_rank_channel
 from utils import df_atd as df_all
 
-@extra
 def style_metric_cards(
     background_color: str = "blue",
     border_size_px: int = 1,
