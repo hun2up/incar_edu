@@ -131,16 +131,16 @@ if authentication_status:
     rankfa_apply1, rankfa_apply2, rankfa_apply3, rankfa_apply4, rankfa_apply5 = r3_c1.columns(5)
 
     with stylable_container(
-        key="green_button",
+        key="container_with_border",
         css_styles="""
-            button {
-                background-color: green;
-                color: white;
-                border-radius: 20px;
+            {
+                border: 1px solid red;
+                border-radius: 0.5rem;
+                padding: calc(1em - 1px)
             }
             """,
     ):
-        st.button("Green Button")
+        st.markdown("container test")
 
 
 
