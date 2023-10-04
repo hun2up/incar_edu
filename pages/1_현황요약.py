@@ -131,12 +131,12 @@ if authentication_status:
     rankfa_apply1, rankfa_apply2, rankfa_apply3, rankfa_apply4, rankfa_apply5 = r3_c1.columns(5)
 
     with stylable_container(
-        key="test",
+        key="green_button",
         css_styles="""
-            {
-                border: 1px solid rgba(49, 51, 63, 0.2);
-                border-radius: 0.5rem;
-                padding: calc(1em - 1px)
+            button {
+                background-color: green;
+                color: white;
+                border-radius: 20px;
             }
             """,
     ):
