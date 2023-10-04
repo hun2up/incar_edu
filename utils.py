@@ -370,37 +370,8 @@ def fig_piechart(label, value):
     fig_pchart.update_traces(hoverinfo='label+percent', textinfo='label+value', textfont_size=20)
     return fig_pchart
 
-# Add a Streamlit component to hold the JavaScript code
-dark_mode_script = """
-const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
-if (darkModeMediaQuery.matches) {
-    // User has dark mode preference
-    window.localStorage.setItem('dark_mode', 'true');
-} else {
-    // User has light mode preference
-    window.localStorage.setItem('dark_mode', 'false');
-}
-"""
-
-# Run the JavaScript code when the Streamlit app is rendered
-st.script(dark_mode_script)
-
-# Retrieve dark mode preference from local storage
-dark_mode_preference = st.script_request_queue.get()
-
-# Initialize st.session_state.dark_mode if it doesn't exist
-if 'dark_mode' not in st.session_state:
-    st.session_state.dark_mode = False
-
-# Check if the user has dark mode preference based on local storage
-if dark_mode_preference == "true":
-    st.session_state.dark_mode = True
-else:
-    st.session_state.dark_mode = False
-
 def style_metric_cards(
-    background_color: str = "rgb(55,126,184)" if st.session_state.dark_mode else "rgb(179,205,227)",
+    background_color: str = "#001F3F",
     border_size_px: int = 1,
     border_color: str = "#CCC",
     border_radius_px: int = 5,
