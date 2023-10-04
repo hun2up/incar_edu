@@ -5,26 +5,12 @@ import pandas as pd
 import streamlit as st
 import streamlit_authenticator as stauth
 hashed_passwords = stauth.Hasher(['XXX']).generate()
-from streamlit_extras.metric_cards import style_metric_cards
 import yaml
 from yaml.loader import SafeLoader
 with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
 from utils import fn_sidebar, fn_status, fn_trends, fig_piechart, generate_colors, generate_outsides, fig_hbarchart, fig_vbarchart, fn_rank_fa, fn_rank_partner, fn_rank_channel
 from utils import df_atd as df_all
-
-st.markdown(
-    """
-    <style>
-    .stColumn {
-        border: 1px solid #000000;
-        padding: 10px;
-        margin: 10px;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
 
 ########################################################################################################################
 ################################################     인증페이지 설정     ###################################################
@@ -90,7 +76,7 @@ if authentication_status:
     df_fee = df_all.groupby(['유무료','과정코드']).size().reset_index(name='홧수')
     df_fee = df_fee.groupby(['유무료'])['과정코드'].count().reset_index(name='횟수')
     # 수료율
-    comrate = {'구분':['수료','미수료'],'수료율':[df_sums.iloc[0,1]/df_sums.iloc[1,1]*100, 100-df_sums.iloc[0,1]/df_sums.iloc[1,1]*100]}
+    comrate = {'구분':['수료','미수료'],'수료율':[(df_sums.iloc[0,1]/df_sums.iloc[1,1]*100).round(1), (100-df_sums.iloc[0,1]/df_sums.iloc[1,1]*100).round(1)]}
     df_comrate = pd.DataFrame(comrate)
     # IMO신청률
     imo = {'구분':['IMO','IIMS'],'신청률':[(df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1), (100-df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1)]}
@@ -137,6 +123,16 @@ if authentication_status:
     r2_c1.plotly_chart(fig_sums, use_container_width=True)
 
     # ----------------------------------------------------  랭킹  -----------------------------------------------------------
+    container_st_style = """
+    <style>
+    .stColumn {
+        border: 1px solid #000000;
+        padding: 10px;
+        margin: 10px;
+        }
+        </style>
+        """
+    st.markdown(container_st_style, unsafe_allow_html=True)
 
     df_rank_fa = df_rank_fa.sort_values(by='신청누계', ascending=False)
     st.dataframe(df_rank_fa)
