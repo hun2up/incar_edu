@@ -371,11 +371,11 @@ def fig_piechart(label, value):
     return fig_pchart
 
 def style_metric_cards(
-    background_color: str = "rgb(55,126,184)",
+    background_color: str = "rgb(179,205,227)",
     border_size_px: int = 1,
     border_color: str = "#CCC",
     border_radius_px: int = 5,
-    border_left_color: str = "rgb(179,205,227)",
+    border_left_color: str = "rgb(55,126,184)",
     box_shadow: bool = True,
 ):
 
