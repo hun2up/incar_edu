@@ -377,7 +377,6 @@ def style_metric_cards(
     border_radius_px: int = 5,
     border_left_color: str = "rgb(55,126,184)",
     box_shadow: bool = True,
-    label: str = "red",
 ):
 
     box_shadow_str = (
@@ -395,7 +394,6 @@ def style_metric_cards(
                 border-radius: {border_radius_px}px;
                 border-left: 0.5rem solid {border_left_color} !important;
                 {box_shadow_str}
-                label: {label};
             }}
         </style>
         """,
