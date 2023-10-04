@@ -123,12 +123,6 @@ if authentication_status:
     r2_c1.plotly_chart(fig_sums, use_container_width=True)
 
     # ----------------------------------------------------  랭킹  -----------------------------------------------------------
-    container_st_style = """
-                        <style>
-                        st-xyz .stContainer {border: 5px solid #ffffff; padding: 10px; margin: 10px;}
-                        </style>
-                        """
-    st.markdown(container_st_style, unsafe_allow_html=True)
 
     df_rank_fa = df_rank_fa.sort_values(by='신청누계', ascending=False)
     st.dataframe(df_rank_fa)
@@ -137,6 +131,13 @@ if authentication_status:
     with rankfa_apply1:
         st.write("컨테이너 테스트")
         # st.metric(df_rank_fa.iat[0,1] + ' ' + df_rank_fa.iat[0,2], df_rank_fa.iat[0,3])
+    
+    container_st_style = """
+                        <style>
+                        st-xyz .stContainer {border: 5px solid #ffffff; padding: 10px; margin: 10px;}
+                        </style>
+                        """
+    st.markdown(container_st_style, unsafe_allow_html=True)
     ########################################################################################################################
     ###########################################     stremalit 워터마크 숨기기     ##############################################
     ########################################################################################################################
