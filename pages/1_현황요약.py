@@ -13,6 +13,18 @@ with open('config.yaml') as file:
 from utils import fn_sidebar, fn_status, fn_trends, fig_piechart, generate_colors, generate_outsides, fig_hbarchart, fig_vbarchart, fn_rank_fa, fn_rank_partner, fn_rank_channel
 from utils import df_atd as df_all
 
+st.markdown(
+    """
+    <style>
+    .stColumn {
+        border: 1px solid #000000;
+        padding: 10px;
+        margin: 10px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 ########################################################################################################################
 ################################################     인증페이지 설정     ###################################################
@@ -125,18 +137,6 @@ if authentication_status:
     r2_c1.plotly_chart(fig_sums, use_container_width=True)
 
     # ----------------------------------------------------  랭킹  -----------------------------------------------------------
-    # 컨테이너 CSS
-    st.markdown(
-    """
-    <style>
-    .st-xyz .stContainer {
-        border: 2px solid #ffffff;
-        padding: 20px;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-    )
 
     df_rank_fa = df_rank_fa.sort_values(by='신청누계', ascending=False)
     st.dataframe(df_rank_fa)
