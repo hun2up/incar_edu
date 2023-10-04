@@ -125,9 +125,9 @@ if authentication_status:
 
     df_rank_fa = df_rank_fa.sort_values(by='신청누계', ascending=False)
     st.dataframe(df_rank_fa)
-    cols_rank = st.columns([1,1,1,1,1])
-    cols_rank[0].metric(df_rank_fa.iat[0,1] + ' ' + df_rank_fa.iat[0,2], df_rank_fa.iat[0,3])
-    style_metric_cards()
+    r3_c1, r3_c2 = st.columns(2)
+    rankfa_apply1, rankfa_apply2, rankfa_apply3, rankfa_apply4, rankfa_apply5 = r3_c1.columns(5)
+    rankfa_apply1.metric(df_rank_fa.iat[0,1] + ' ' + df_rank_fa.iat[0,2], df_rank_fa.iat[0,3])
     ########################################################################################################################
     ###########################################     stremalit 워터마크 숨기기     ##############################################
     ########################################################################################################################
