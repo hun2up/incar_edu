@@ -138,25 +138,21 @@ if authentication_status:
     # ----------------------------------------------------  랭킹  -----------------------------------------------------------
     st.write("교육신청 TOP5 (FA)")
     df_rank_fa = df_rank_fa.sort_values(by='신청누계', ascending=False)
-
-    '''
-    r3_c1, r3_c2, r3_c3, r3_c4, r3_c5 = st.columns(5)
-    r3_c1.metric(df_rank_fa.iat[0,1] + ' ' + df_rank_fa.iat[0,2], df_rank_fa.iat[0,3])
-    r3_c2.metric(df_rank_fa.iat[1,1] + ' ' + df_rank_fa.iat[1,2], df_rank_fa.iat[1,3])
-    r3_c3.metric(df_rank_fa.iat[2,1] + ' ' + df_rank_fa.iat[2,2], df_rank_fa.iat[2,3])
-    r3_c4.metric(df_rank_fa.iat[3,1] + ' ' + df_rank_fa.iat[3,2], df_rank_fa.iat[3,3])
-    r3_c5.metric(df_rank_fa.iat[4,1] + ' ' + df_rank_fa.iat[4,2], df_rank_fa.iat[4,3])
-    '''
-
-    apply = st.columns(5)
+    apply_fa = st.columns(5)
     for i in range(5):
-        apply[i].metric(df_rank_fa.iat[i,1] + ' ' + df_rank_fa.iat[i,2], df_rank_fa.iat[i,3])
-        
-    
+        apply_fa[i].metric(df_rank_fa.iat[i,1] + ' ' + df_rank_fa.iat[i,2], df_rank_fa.iat[i,3])
 
     st.write("교육수료 TOP5 (FA)")
     df_rank_fa = df_rank_fa.sort_values(by='수료누계', ascending=False)
+    attend_fa = st.columns(5)
+    for i in range(5):
+        attend_fa[i].metric(df_rank_fa.iat[i,1] + ' ' + df_rank_fa.iat[i,2], df_rank_fa.iat[i,4])
+
+    st.write("수료율 TOP5 (FA)")
+    df_rank_fa = df_rank_fa.sort_values(by=['수료율', '수료누계'], ascending=[False, False])
+    rate_fa = st.columns(5)
+    for i in range(5):
+        rate_fa[i].metric(df_rank_fa.iat[i,1] + ' ' + df_rank_fa.iat[i,2], df_rank_fa.iat[i,5])
     st.dataframe(df_rank_fa)
-    
 
     style_metric_cards()
