@@ -149,11 +149,15 @@ if authentication_status:
         columns = st.columns(5)
         for i in range(5):
             columns[i].metric(df.iat[i, 0], df.iat[i, column_name3])
-        
+    
+    st.markdown('---')
+    st.write("주요랭킹 (FA)")
     metrics_fa(st, "교육신청 TOP5 (FA)", df_rank_fa, '신청누계', '수료율', 3)
     metrics_fa(st, "교육수료 TOP5 (FA)", df_rank_fa, '수료누계', '수료율', 4)
     metrics_fa(st, "수료율 TOP5 (FA) (수료율 동률일 경우 수료누계 기준 순위정렬)", df_rank_fa, '수료율', '수료누계', 5)
 
+    st.markdown('---')
+    st.write("주요랭킹 (소속부문)")
     metrics_chn(st, "교육신청 TOP5 (소속부문)", df_stats, '신청누계', '수료율', 2)
     metrics_chn(st, "교육수료 TOP5 (소속부문)", df_stats, '수료누계', '수료율', 4)
     metrics_chn(st, "수료율 TOP5 (소속부문) (수료율 동률일 경우 수료누계 기준 순위정렬)", df_stats, '수료율', '수료누계', 5)
