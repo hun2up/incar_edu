@@ -136,6 +136,18 @@ if authentication_status:
     r2_c1.plotly_chart(fig_sums, use_container_width=True)
 
     # ----------------------------------------------------  랭킹  -----------------------------------------------------------
+    def create_metrics(st, title, df, column_name1, column_name2, column_name3):
+        st.write(title)
+        df = df.sort_values(by=[column_name1, column_name2], ascending=[False, False])
+        columns = st.columns(5)
+        for i in range(5):
+            columns[i].metric(df.iat[i, 1] + ' ' + df.iat[i, 2], df.iat[i, column_name3])
+
+    create_metrics(st, "교육신청 TOP5 (FA)", df_rank_fa, '신청누계', '수료율', 3)
+    create_metrics(st, "교육수료 TOP5 (FA)", df_rank_fa, '수료누계', '수료율', 4)
+    create_metrics(st, "수료율 TOP5 (FA) (수료율 동률일 경우 수료누계 기준 순위정렬)", df_rank_fa, '수료율', '수료누계', 5)
+
+    '''
     st.write("교육신청 TOP5 (FA)")
     df_rank_fa = df_rank_fa.sort_values(by='신청누계', ascending=False)
     apply_fa = st.columns(5)
@@ -153,6 +165,8 @@ if authentication_status:
     rate_fa = st.columns(5)
     for i in range(5):
         rate_fa[i].metric(df_rank_fa.iat[i,1] + ' ' + df_rank_fa.iat[i,2], df_rank_fa.iat[i,5])
+
+    '''
     st.dataframe(df_rank_fa)
     st.dataframe(df_stats)
 
