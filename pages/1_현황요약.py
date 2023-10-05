@@ -148,7 +148,7 @@ if authentication_status:
     for i in range(5):
         attend_fa[i].metric(df_rank_fa.iat[i,1] + ' ' + df_rank_fa.iat[i,2], df_rank_fa.iat[i,4])
 
-    st.write("수료율 TOP5 (FA)")
+    st.write("수료율 TOP5 (FA) (수료율 동률일 경우 수료누계 기준 순위정렬)")
     df_rank_fa = df_rank_fa.sort_values(by=['수료율', '수료누계'], ascending=[False, False])
     rate_fa = st.columns(5)
     for i in range(5):
