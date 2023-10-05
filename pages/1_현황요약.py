@@ -68,9 +68,10 @@ if authentication_status:
     ##################################################     자료 제작     #####################################################
     ########################################################################################################################
     # ------------------------------------------------  dataframe 제작  -----------------------------------------------------
+    df_chn = fn_status(df_all, '소속부문')
+    df_crr = fn_status(df_all, '입사연차')
     # 신청수료인원
-    df_stats = fn_status(df_all, '소속부문')
-    df_sums = df_stats.sum(axis=0)
+    df_sums = df_chn.sum(axis=0)
     df_sums = pd.DataFrame({'합계':df_sums}).transpose().drop(columns='소속부문')
     df_sums_apl = df_sums.drop(columns=['수료인원','수료누계','수료율','IMO신청인원','IMO신청누계','IMO신청률']).rename(columns={'신청인원':'고유인원','신청누계':'누계인원'})
     df_sums_apl.index = ['신청']
@@ -143,7 +144,7 @@ if authentication_status:
         for i in range(5):
             columns[i].metric(df.iat[i, 1] + ' ' + df.iat[i, 2], df.iat[i, column_name3])
 
-    def metrics_chn(st, title, df, column_name1, column_name2, column_name3):
+    def metrics_category(st, title, df, column_name1, column_name2, column_name3):
         st.write(title)
         df = df.sort_values(by=[column_name1, column_name2], ascending=[False, False])
         columns = st.columns(5)
@@ -158,11 +159,15 @@ if authentication_status:
 
     st.markdown('---')
     st.write("주요랭킹 (소속부문)")
-    metrics_chn(st, "교육신청 TOP5 (소속부문)", df_stats, '신청누계', '수료율', 2)
-    metrics_chn(st, "교육수료 TOP5 (소속부문)", df_stats, '수료누계', '수료율', 4)
-    metrics_chn(st, "수료율 TOP5 (소속부문) (수료율 동률일 경우 수료누계 기준 순위정렬)", df_stats, '수료율', '수료누계', 5)
+    metrics_category(st, "교육신청 TOP5 (소속부문)", df_chn, '신청누계', '수료율', 2)
+    metrics_category(st, "교육수료 TOP5 (소속부문)", df_chn, '수료누계', '수료율', 4)
+    metrics_category(st, "수료율 TOP5 (소속부문) (수료율 동률일 경우 수료누계 기준 순위정렬)", df_chn, '수료율', '수료누계', 5)
+
+    st.markdown('---')
+    st.write("주요랭킹 (입사연차)")
+    metrics_category(st, "교육신청 TOP5 (입사연차)", df_crr, '신청누계', '수료율', 2)
+    metrics_category(st, "교육수료 TOP5 (입사연차)", df_crr, '수료누계', '수료율', 4)
+    metrics_category(st, "수료율 TOP5 (입사연차) (수료율 동률일 경우 수료누계 기준 순위정렬)", df_crr, '수료율', '수료누계', 5)
 
     st.dataframe(df_rank_fa)
-    st.dataframe(df_stats)
-
     style_metric_cards()
