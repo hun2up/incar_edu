@@ -10,7 +10,7 @@ import yaml
 from yaml.loader import SafeLoader
 with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
-from utils import fn_sidebar, fn_status, fn_trends, fig_piechart, generate_colors, generate_outsides, fig_hbarchart, fig_vbarchart, fn_rank_fa, fn_rank_partner, fn_rank_channel, style_metric_cards
+from utils import fn_sidebar, fn_status, fig_piechart, generate_colors, generate_outsides, fig_hbarchart, fn_rank_fa, fn_rank_partner, fn_rank_channel, style_metric_cards
 from utils import df_atd as df_all
 
 ########################################################################################################################
@@ -141,4 +141,8 @@ if authentication_status:
     st.dataframe(df_rank_fa)
     r3_c1, r3_c2, r3_c3, r3_c4, r3_c5 = st.columns(5)
     r3_c1.metric(df_rank_fa.iat[0,1] + ' ' + df_rank_fa.iat[0,2], df_rank_fa.iat[0,3])
+    r3_c2.metric(df_rank_fa.iat[1,1] + ' ' + df_rank_fa.iat[1,2], df_rank_fa.iat[1,3])
+    r3_c3.metric(df_rank_fa.iat[2,1] + ' ' + df_rank_fa.iat[2,2], df_rank_fa.iat[2,3])
+    r3_c4.metric(df_rank_fa.iat[3,1] + ' ' + df_rank_fa.iat[3,2], df_rank_fa.iat[3,3])
+    r3_c5.metric(df_rank_fa.iat[4,1] + ' ' + df_rank_fa.iat[4,2], df_rank_fa.iat[4,3])
     style_metric_cards()
