@@ -137,9 +137,9 @@ if authentication_status:
     r2_c1.plotly_chart(fig_sums, use_container_width=True)
 
     # ----------------------------------------------------  랭킹  -----------------------------------------------------------
-    def metrics_fa(st, title, df, column_name1, column_name2, column_name3):
+    def metrics_fa(st, title, df, column_name1, column_name2, column_name3, ascend):
         st.write(title)
-        df = df.sort_values(by=[column_name1, column_name2], ascending=[False, False])
+        df = df.sort_values(by=[column_name1, column_name2], ascending=[ascend, False])
         columns = st.columns(5)
         for i in range(5):
             columns[i].metric(df.iat[i, 1] + ' ' + df.iat[i, 2], df.iat[i, column_name3])
@@ -153,9 +153,10 @@ if authentication_status:
     
     st.markdown('---')
     st.write("주요랭킹 (FA)")
-    metrics_fa(st, "교육신청 TOP5 (FA)", df_rank_fa, '신청누계', '수료율', 3)
-    metrics_fa(st, "교육수료 TOP5 (FA)", df_rank_fa, '수료누계', '수료율', 4)
-    metrics_fa(st, "수료율 TOP5 (FA) (수료율 동률일 경우 수료누계 기준 순위정렬)", df_rank_fa, '수료율', '수료누계', 5)
+    metrics_fa(st, "교육신청 TOP5 (FA)", df_rank_fa, '신청누계', '수료율', 3, False)
+    metrics_fa(st, "교육수료 TOP5 (FA)", df_rank_fa, '수료누계', '수료율', 4, False)
+    metrics_fa(st, "수료율 TOP5 (FA) (수료율 동률일 경우 수료누계 기준 순위정렬)", df_rank_fa, '수료율', '수료누계', 5, False)
+    metrics_fa(st, "수료율 하위 TOP5 (FA) (수료율 동률일 경우 신청누계 기준 순위정렬)", df_rank_fa, '수료율', '신청누계', 5, True)
 
     st.markdown('---')
     st.write("주요랭킹 (소속부문)")
