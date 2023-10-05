@@ -154,5 +154,6 @@ if authentication_status:
     for i in range(5):
         rate_fa[i].metric(df_rank_fa.iat[i,1] + ' ' + df_rank_fa.iat[i,2], df_rank_fa.iat[i,5])
     st.dataframe(df_rank_fa)
+    st.dataframe(df_stats)
 
     style_metric_cards()
