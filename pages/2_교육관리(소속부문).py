@@ -100,7 +100,7 @@ if authentication_status:
     lc_chn_atdrate = fig_linechart(linelist_chn[2])
     # 꺾은선그래피 (부문별 IMO신청률)
     lc_chn_imorate = fig_linechart(linelist_chn[3])
-    end_data = time.time
+    end_data = time.time()
 
     ########################################################################################################################
     ################################################     메인페이지 설정     ###################################################
