@@ -561,7 +561,6 @@ class MakeSet(CallData):
         for i in range(len(self.index)-1):
             # 수료현황, IMO신청여부 1로 묶기
             df_attend = df.groupby(self.index[i][0]).get_group(1)
-            st.dataframe(df_attend)
             # 수료현황 전체 더하기 (수료누계)
             df_attend_total = df.groupby([columns])[self.index[i][0]].sum().reset_index(name=self.index[i][2])
             # 수료현황(1,0)별 사원번호 개수 (수료인원)
