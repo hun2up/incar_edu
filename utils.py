@@ -433,7 +433,7 @@ class Data:
         df_select = pd.read_csv(st.secrets[f"{select}_url"].replace("/edit#gid=", "/export?format=csv&gid=")).drop(columns=['번호'])
         df_select.rename(columns={'성함':'성명'}, inplace=True)
         # 과정현황 데이터베이스 호출 (과정현황) & 컬럼 삭제 (번호)
-        df_course = load_data(st.secrets["course_url"]).drop(columns=['번호'])
+        df_course = pd.read_csv(st.secrets["course_url"].replace("/edit#gid=", "/export?format=csv&gid=")).drop(columns=['번호'])
         return df_select, df_course
 
     # -------------------------------   수료현황 테이블 정리 및 테이블 병합 (신청현황 & 과정현황)   ------------------------------------ 
