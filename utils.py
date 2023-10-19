@@ -557,7 +557,7 @@ class MakeSet(CallData):
         # 위에서 중복값을 제거한 데이터프레임과 모두 더한 데이터프레임 병합
         df_apply = pd.merge(df_apply_unique, df_apply_total)
         # 소속부문별 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률
-        for i in range(len(self.index)):
+        for i in range(len(self.index)-1):
             # 수료현황, IMO신청여부 1로 묶기
             df_for_rate = df.groupby(self.index[i][0]).get_group(1)
             st.dataframe(df_for_rate)
