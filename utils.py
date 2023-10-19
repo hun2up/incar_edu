@@ -705,3 +705,9 @@ class Chart(MakeSet):
             template='plotly_white'  # You can choose different templates if you prefer
         )
         return fig_chart
+
+    # -----------------------------------------------  Pie Chart 제작 함수 정의  ---------------------------------------------------
+    def make_piechart(self, label, value):
+        fig_pchart = pl.graph_objs.Figure(data=[pl.graph_objs.Pie(labels=label, values=value, hole=.3)])
+        fig_pchart.update_traces(hoverinfo='label+percent', textinfo='label+value', textfont_size=20)
+        return fig_pchart
