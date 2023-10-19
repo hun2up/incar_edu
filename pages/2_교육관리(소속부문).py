@@ -9,28 +9,27 @@ from yaml.loader import SafeLoader
 with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
 from utils import make_sidebar, hide_st_style
-from utils import df_atd as df_chn
 from utils import Chart
 
 ########################################################################################################################
 ################################################     인증페이지 설정     ###################################################
 ########################################################################################################################
 instance_channel = Chart()
-
+df_channel = instance_channel.call_data_attend('소속부문')
 # -----------------------------------------------------  사이드바  ---------------------------------------------------------
 # 사이드바 헤더
 st.sidebar.header("원하는 옵션을 선택하세요")
 #사이드바 제작
-month = make_sidebar(instance_channel.call_data_attend('소속부문'),'월') # 월도 선택 사이드바
-region = make_sidebar(instance_channel.call_data_attend('소속부문'),'지역') # 지역 선택 사이드바
-partner = make_sidebar(instance_channel.call_data_attend('소속부문'),'보험사') # 보험사 선택 사이드바
-line = make_sidebar(instance_channel.call_data_attend('소속부문'),'과정형태') # 과정 온오프라인 선택 사이드바
-theme = make_sidebar(instance_channel.call_data_attend('소속부문'),'과정분류') # 과정 테마 선택 사이드바
-name = make_sidebar(instance_channel.call_data_attend('소속부문'),'과정명') # 세부과정 선택 사이드바
-channel = make_sidebar(instance_channel.call_data_attend('소속부문'),'소속부문') # 소속부문 선택 사이드바
-career = make_sidebar(instance_channel.call_data_attend('소속부문'),'입사연차') # 입사연차 선택 사이드바
+month = make_sidebar(df_channel,'월') # 월도 선택 사이드바
+region = make_sidebar(df_channel,'지역') # 지역 선택 사이드바
+partner = make_sidebar(df_channel,'보험사') # 보험사 선택 사이드바
+line = make_sidebar(df_channel,'과정형태') # 과정 온오프라인 선택 사이드바
+theme = make_sidebar(df_channel,'과정분류') # 과정 테마 선택 사이드바
+name = make_sidebar(df_channel,'과정명') # 세부과정 선택 사이드바
+channel = make_sidebar(df_channel,'소속부문') # 소속부문 선택 사이드바
+career = make_sidebar(df_channel,'입사연차') # 입사연차 선택 사이드바
 # 데이터와 사이드바 연결
-df_channel = instance_channel.call_data_attend('소속부문').query(
+df_channel = df_channel.query(
     "월 == @month & 지역 == @region & 보험사 == @partner & 과정형태 == @line & 과정분류 == @theme & 과정명 == @name & 소속부문 == @channel & 입사연차 == @career"
 )
 
