@@ -11,7 +11,7 @@ with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
 from utils import fn_sidebar, fn_status, fn_trends, generate_colors, generate_outsides, fig_hbarchart, fig_linechart
 from utils import df_atd as df_chn
-from utils import MakeSet
+from utils import Chart
 
 ########################################################################################################################
 ################################################     인증페이지 설정     ###################################################
@@ -51,13 +51,20 @@ if authentication_status:
     ##################################################     자료 제작     #####################################################
     ########################################################################################################################
     start_all_after = time.time()
-    
-    instance_channel = MakeSet()
-    st.dataframe(instance_channel.make_set_status(df=instance_channel.call_data_attend("attend"), columns='소속부문'))
-    st.dataframe(instance_channel.make_set_trend(df=instance_channel.call_data_attend("attend"), columns='소속부문'))
+
+    instance_channel = Chart()
+    hbar_apply, hbar_apply_people = st.columns(2)
+    hbar_apply.plotly_chart(instance_channel.make_hbarchart_group(
+        df=instance_channel.make_set_status(df=instance_channel.call_data_attend("attend"), columns='소속부문'),
+        category='소속부문',
+        axis_a='신청인원',
+        axis_b='신청누계',
+        title='부문별 교육신청 현황',
+        caption='색상 차트는 누적인원(중복포함), 회색 차트는 고유인원(중복제거)'), use_container_width=True)
 
     end_all_after = time.time()
     st.write(f"시간측정(전체-수정후) : {end_all_after - start_all_after}")
+
 
 
     start_all_before = time.time()
