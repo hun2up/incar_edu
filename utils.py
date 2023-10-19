@@ -486,7 +486,7 @@ df_apl = fn_apply(df_apply, df_course)
 
 class CallData:
     def __init__(self):
-        self.index = [['수료현황', '수료인원', '수료누계', '수료율'], ['IMO신청여부', 'IMO신청인원', 'IMO신청누계', 'IMO신청률']]
+        pass
 
     # -------------------------------   수료현황 테이블 정리 및 테이블 병합 (신청현황 & 과정현황)   ------------------------------------ 
     def call_data_attend(self, select):
@@ -543,6 +543,7 @@ class CallData:
 class MakeSet(CallData):
     def __init__(self):
         super().__init__()
+        self.index = [['수료현황', '수료인원', '수료누계', '수료율'], ['IMO신청여부', 'IMO신청인원', 'IMO신청누계', 'IMO신청률']]
 
     # -------------------------------------------  소속부문별 고유값 및 누계값  --------------------------------------------------
     # 소속부문별 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률
@@ -559,6 +560,7 @@ class MakeSet(CallData):
         for i in range(len(self.index)):
             # 수료현황, IMO신청여부 1로 묶기
             df_attend = df.groupby(self.index[i][0]).get_group(1)
+            st.dataframe(df_attend)
             # 수료현황 전체 더하기 (수료누계)
             df_attend_total = df.groupby([columns])[self.index[i][0]].sum().reset_index(name=self.index[i][2])
             # 수료현황(1,0)별 사원번호 개수 (수료인원)
@@ -574,6 +576,7 @@ class MakeSet(CallData):
             df_attend_total = df_attend_total.drop(columns=[self.index[i][2]])
             # 수료율/IMO신청률 합치기
             df_attend = pd.merge(df_attend, df_attend_total, on=[columns])
+            st.dataframe(df_attend)
             df_result = pd.merge(df_apply, df_attend, on=[columns])
         # 다 합쳐서 반환
         return df_result
