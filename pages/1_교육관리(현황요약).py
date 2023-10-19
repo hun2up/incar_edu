@@ -63,8 +63,15 @@ if authentication_status:
     st.markdown("<hr>", unsafe_allow_html=True)
 
     pie_line, pie_fee, pie_attend_rate, pie_imo_rate = st.columns(4)
+    # 집합/온라인 과정현황
     df_line = df_all.groupby(['과정형태'])['과정코드'].count().reset_index(name='횟수')
     pie_line.plotly_chart(isinstance.make_piechart(label=df_line['과정형태'], value=df_line['횟수']), use_container_width=True)
+    # 유료/무료 과정현황
+    df_all['유무료'] = df_all['수강료'].apply(lambda x: '무료' if x == 0 else '유료')
+    df_fee = df_all.groupby(['유무료'])['과정코드'].count().reset_index(name='횟수')
+    pie_fee.plotly_chart(isinstance.make_piechart(label=df_fee['유무료'], value=['횟수']), use_container_width=True)
+       
+
 
     ########################################################################################################################
     ##################################################     자료 제작     #####################################################
@@ -86,12 +93,12 @@ if authentication_status:
     df_sums = pd.concat([df_sums_atd, df_sums_apl], axis=0)
     # 온오프라인
     # df_line = df_all.groupby(['과정형태','과정코드']).size().reset_index(name='횟수')
-    df_line = df_all.groupby(['과정형태'])['과정코드'].count().reset_index(name='횟수')
+    # df_line = df_all.groupby(['과정형태'])['과정코드'].count().reset_index(name='횟수')
     # df_line = df_line.groupby(['과정형태'])['과정코드'].count().reset_index(name='횟수')
     # 유무료
-    df_all['유무료'] = df_all['수강료'].apply(lambda x: '무료' if x == 0 else '유료')
-    df_fee = df_all.groupby(['유무료','과정코드']).size().reset_index(name='횟수')
-    df_fee = df_fee.groupby(['유무료'])['과정코드'].count().reset_index(name='횟수')
+    # df_all['유무료'] = df_all['수강료'].apply(lambda x: '무료' if x == 0 else '유료')
+    # df_fee = df_all.groupby(['유무료','과정코드']).size().reset_index(name='횟수')
+    # df_fee = df_fee.groupby(['유무료'])['과정코드'].count().reset_index(name='횟수')
     # 수료율
     comrate = {'구분':['수료','미수료'],'수료율':[(df_sums.iloc[0,1]/df_sums.iloc[1,1]*100).round(1), (100-df_sums.iloc[0,1]/df_sums.iloc[1,1]*100).round(1)]}
     df_comrate = pd.DataFrame(comrate)
@@ -104,9 +111,9 @@ if authentication_status:
     df_rank_channel = fn_rank_channel(df_all)
     # ---------------------------------------------------  chart 제작  ------------------------------------------------------
     # 온오프라인
-    fig_line = fig_piechart(df_line['과정형태'], df_line['횟수'])
+    # fig_line = fig_piechart(df_line['과정형태'], df_line['횟수'])
     # 유무료
-    fig_fee = fig_piechart(df_fee['유무료'], df_fee['횟수'])
+    # fig_fee = fig_piechart(df_fee['유무료'], df_fee['횟수'])
     # 수료율
     fig_comrate = fig_piechart(df_comrate['구분'], df_comrate['수료율'])
     # IMO 신청률
