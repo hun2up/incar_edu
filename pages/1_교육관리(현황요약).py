@@ -17,8 +17,8 @@ from utils import Chart
 ########################################################################################################################
 ################################################     인증페이지 설정     ###################################################
 ########################################################################################################################
-isinstance = Chart()
-df_all = isinstance.call_data_attend("attend")
+instance = Chart()
+df_all = instance.call_data_attend("attend")
 # -----------------------------------------------------  사이드바  ---------------------------------------------------------
 # 사이드바 헤더
 st.sidebar.header("원하는 옵션을 선택하세요")
@@ -61,24 +61,30 @@ if authentication_status:
     # ----------------------------------------------  메이페이지 타이틀  -----------------------------------------------------
     st.header("교육운영 현황요약")
     st.markdown("<hr>", unsafe_allow_html=True)
-    df_sums = isinstance.make_set_sums(isinstance.make_set_status(df=df_all,columns='소속부문'))
+    df_sums = instance.make_set_sums(instance.make_set_status(df=df_all,columns='소속부문'))
 
     pie_line, pie_fee, pie_attend_rate, pie_imo_rate = st.columns(4)
     # 집합/온라인 과정현황
     df_line = df_all.groupby(['과정형태'])['과정코드'].count().reset_index(name='횟수')
-    pie_line.plotly_chart(isinstance.make_piechart(label=df_line['과정형태'], value=df_line['횟수']), use_container_width=True)
+    pie_line.plotly_chart(instance.make_piechart(label=df_line['과정형태'], value=df_line['횟수']), use_container_width=True)
     # 유료/무료 과정현황
     df_all['유무료'] = df_all['수강료'].apply(lambda x: '무료' if x == 0 else '유료')
     df_fee = df_all.groupby(['유무료'])['과정코드'].count().reset_index(name='횟수')
-    pie_fee.plotly_chart(isinstance.make_piechart(label=df_fee['유무료'], value=df_fee['횟수']), use_container_width=True)
+    pie_fee.plotly_chart(instance.make_piechart(label=df_fee['유무료'], value=df_fee['횟수']), use_container_width=True)
     # 수료율
     df_attend_rate = pd.DataFrame({'구분':['수료','미수료'],'수료율':[(df_sums.iloc[0,1]/df_sums.iloc[1,1]*100).round(1), (100-df_sums.iloc[0,1]/df_sums.iloc[1,1]*100).round(1)]})
-    pie_attend_rate.plotly_chart(isinstance.make_piechart(label=df_attend_rate['구분'],value=df_attend_rate['수료율']), use_container_width=True)
+    pie_attend_rate.plotly_chart(instance.make_piechart(label=df_attend_rate['구분'],value=df_attend_rate['수료율']), use_container_width=True)
     # IMO신청률
     df_imo_rate = pd.DataFrame({'구분':['IMO','IIMS'],'신청률':[(df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1), (100-df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1)]})
-    pie_imo_rate.plotly_chart(isinstance.make_piechart(label=df_imo_rate['구분'],value=df_imo_rate['신청률']), use_container_width=True)
+    pie_imo_rate.plotly_chart(instance.make_piechart(label=df_imo_rate['구분'],value=df_imo_rate['신청률']), use_container_width=True)
 
-       
+    hbar_sums, hbar_sums_people = st.columns(2)
+    hbar_sums.plotly_chart(instance.make_hbarchart_group(
+        df=df_sums,
+        category='비고',
+        axis_a='고유인원',
+        axis_b='누계인원',
+        title='신청/수료 현황'), use_container_width=True)
 
 
     ########################################################################################################################
