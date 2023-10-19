@@ -69,8 +69,6 @@ def make_sidebar(dfv_sidebar, colv_sidebar):
     )
 
 
-
-
 # ---------------------------------------    Google Sheet 데이터베이스 호출    ----------------------------------------------
 @st.cache_data(ttl=600)
 def load_data(sheets_url):
@@ -707,15 +705,3 @@ class Chart(MakeSet):
             template='plotly_white'  # You can choose different templates if you prefer
         )
         return fig_chart
-
-########################################################################################################################
-###########################################     stremalit 워터마크 숨기기     ##############################################
-########################################################################################################################
-hide_st_style = """
-                <style>
-                #MainMenu {visibility: hidden;}
-                footer {visibility: hidden;}
-                header {visibility: hidden;}
-                </style>
-                """
-st.markdown(hide_st_style, unsafe_allow_html=True)
