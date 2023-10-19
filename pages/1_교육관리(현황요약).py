@@ -64,9 +64,7 @@ if authentication_status:
 
     pie_line, pie_fee, pie_attend_rate, pie_imo_rate = st.columns(4)
     df_line = df_all.groupby(['과정형태'])['과정코드'].count().reset_index(name='횟수')
-    st.dataframe(df_all)
-    st.dataframe(df_line)
-    pie_line.plotly_chart(isinstance.make_piechart(label=df_line['과정형태'], value=['횟수']), use_container_width=True)
+    pie_line.plotly_chart(isinstance.make_piechart(label=df_line['과정형태'], value=df_line['횟수']), use_container_width=True)
 
     ########################################################################################################################
     ##################################################     자료 제작     #####################################################
