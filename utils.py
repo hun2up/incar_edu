@@ -556,7 +556,8 @@ class MakeSet(CallData):
         df_apply_total = df_apply.groupby([columns])['신청누계'].sum().reset_index(name='신청누계')
         # 위에서 중복값을 제거한 데이터프레임과 모두 더한 데이터프레임 병합
         df_apply = pd.merge(df_apply_unique, df_apply_total)
-        
+        df_merge = pd.DataFrame(columns=[columns])
+        st.dataframe(df_merge)
         # 소속부문별 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률
         for i in range(len(self.index)-1):
             # 수료현황, IMO신청여부 1로 묶기
@@ -575,11 +576,10 @@ class MakeSet(CallData):
             df_attend_total[self.index[i][3]] = (df_attend_total[self.index[i][2]]/df_apply['신청누계']*100).round(1)
             df_attend_total = df_attend_total.drop(columns=[self.index[i][2]])
             # 수료율/IMO신청률 합치기
-            st.dataframe(df_attend)
             df_attend = pd.merge(df_attend, df_attend_total, on=[columns])
-            st.dataframe(df_attend)
-            df_result = pd.merge(df_apply, df_attend, on=[columns])
-            st.dataframe(df_result)
+            df_merge = pd.merge(df_merge, df_attend, on=[columns])
+            st.dataframe(df_merge)
+        df_result = pd.merge(df_apply, df_attend, on=[columns])
             
         # 다 합쳐서 반환
         return df_result
