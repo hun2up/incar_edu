@@ -115,7 +115,7 @@ if authentication_status:
     ### 클래스 ###
     instance = Data()
     st.dataframe(instance.make_data_attend("attend"))
-    st.dataframe(instance.make_data_apply("apply"))
+    st.dataframe(instance.make_data_apply("month"))
 
     # -----------------------------------------------------  차트 노출  ---------------------------------------------------------
     start_chart = time.time()
