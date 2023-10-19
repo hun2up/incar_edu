@@ -11,7 +11,7 @@ with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
 from utils import fn_sidebar, fn_status, fn_trends, generate_colors, generate_outsides, fig_hbarchart, fig_linechart
 from utils import df_atd as df_chn
-from utils import Data
+from utils import MakeSet
 
 ########################################################################################################################
 ################################################     인증페이지 설정     ###################################################
@@ -50,7 +50,16 @@ if authentication_status:
     ########################################################################################################################
     ##################################################     자료 제작     #####################################################
     ########################################################################################################################
-    start_all = time.time()
+    start_all_after = time.time()
+    end_all_after = time.time()
+    st.write(f"시간측정(전체-수정후) : {end_all_after - start_all_after}")
+
+    instance_channel = MakeSet()
+    st.dataframe(instance_channel.make_set_status(df=instance_channel.call_data_attend("attend"), columns='소속부문'))
+    st.dataframe(instance_channel.make_set_trend(df=instance_channel.call_data_attend("attend"), columns='소속부문'))
+
+
+    start_all_before = time.time()
 
     # ------------------------------------------------  dataframe 제작  -----------------------------------------------------
     start_data = time.time()
@@ -112,11 +121,6 @@ if authentication_status:
     st.header("소속부문별 교육지표")
     st.write(f"시간측정(데이터제작) : {end_data - start_data}")
 
-    ### 클래스 ###
-    instance = Data()
-    st.dataframe(instance.make_data_attend("attend"))
-    st.dataframe(instance.make_data_apply("month"))
-
     # -----------------------------------------------------  차트 노출  ---------------------------------------------------------
     start_chart = time.time()
     # 첫번째 행 (신청인원)
@@ -141,8 +145,8 @@ if authentication_status:
     end_chart = time.time()
     st.write(f"시간측정(차트) : {end_chart - start_chart}")
 
-    end_all = time.time()
-    st.write(f"시간측정(전체) : {end_all - start_all}")
+    end_all_before = time.time()
+    st.write(f"시간측정(전체-수정전) : {end_all_before - start_all_before}")
 
     ########################################################################################################################
     ###########################################     stremalit 워터마크 숨기기     ##############################################

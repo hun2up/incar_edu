@@ -9,6 +9,57 @@ from datetime import datetime
 ########################################################################################################################
 ##############################################     function 정의     ####################################################
 ########################################################################################################################
+# -------------------------------------------    스트림릿 워터마크 제거    ---------------------------------------------------
+def hide_st_style():
+    hide_st_style = """
+                    <style>
+                    #MainMenu {visibility: hidden;}
+                    footer {visibility: hidden;}
+                    header {visibility: hidden;}
+                    </style>
+                    """
+    st.markdown(hide_st_style, unsafe_allow_html=True)
+
+# ------------------------------------    랭킹 디스플레이를 위한 스타일 카드 정의    --------------------------------------------
+def style_metric_cards(
+    border_size_px: int = 1,
+    border_color: str = "#CCC",
+    border_radius_px: int = 5,
+    border_left_color: str = "rgb(55,126,184)",
+    box_shadow: bool = True,
+):
+
+    box_shadow_str = (
+        "box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;"
+        if box_shadow
+        else "box-shadow: none !important;"
+    )
+    st.markdown(
+        f"""
+        <style>
+            div[data-testid="metric-container"] {{
+                border: {border_size_px}px solid {border_color};
+                padding: 5% 5% 5% 10%;
+                border-radius: {border_radius_px}px;
+                border-left: 0.5rem solid {border_left_color} !important;
+                {box_shadow_str}
+            }}
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+# ---------------------------------------    Google Sheet 데이터베이스 호출    ----------------------------------------------
+# select : {수료현황 : attend}, {신청현황 : month}
+@st.cache_data(ttl=600)
+def call_data(select):
+    # 데이터베이스 호출 & 컬럼 삭제 (번호)
+    df_select = pd.read_csv(st.secrets[f"{select}_url"].replace("/edit#gid=", "/export?format=csv&gid=")).drop(columns=['번호'])
+    df_select.rename(columns={'성함':'성명'}, inplace=True)
+    # 과정현황 데이터베이스 호출 (과정현황) & 컬럼 삭제 (번호)
+    df_course = pd.read_csv(st.secrets["course_url"].replace("/edit#gid=", "/export?format=csv&gid=")).drop(columns=['번호'])
+    return df_select, df_course
+
 # ---------------------------------------    Google Sheet 데이터베이스 호출    ----------------------------------------------
 @st.cache_data(ttl=600)
 def load_data(sheets_url):
@@ -403,6 +454,7 @@ def style_metric_cards(
 ########################################################################################################################
 ################################################     자료 전처리     ######################################################
 ########################################################################################################################
+
 # ---------------------------------------    Google Sheet 데이터베이스 호출    ----------------------------------------------
 # 출석부 데이터베이스 호출 (교육과정수료현황) & 컬럼 삭제 (번호)
 df_attend = load_data(st.secrets["attend_url"]).drop(columns=['번호'])
@@ -416,28 +468,17 @@ df_apply = load_data(st.secrets["month_url"]).drop(columns=['번호'])
 df_apply.rename(columns={'성함':'성명'}, inplace=True)
 ##### df_attend = ['과정명','소속부문','소속총괄','소속부서','파트너','사원번호','성명','IMO신청여부','수료현황','비고', '날짜']
 
-# ---------------------------------------    Google Sheet 데이터베이스 호출    ----------------------------------------------
-# select : {수료현황 : attend}, {신청현황 : month}
-@st.cache_data(ttl=600)
-def call_data(select):
-    # 데이터베이스 호출 & 컬럼 삭제 (번호)
-    df_select = pd.read_csv(st.secrets[f"{select}_url"].replace("/edit#gid=", "/export?format=csv&gid=")).drop(columns=['번호'])
-    df_select.rename(columns={'성함':'성명'}, inplace=True)
-    # 과정현황 데이터베이스 호출 (과정현황) & 컬럼 삭제 (번호)
-    df_course = pd.read_csv(st.secrets["course_url"].replace("/edit#gid=", "/export?format=csv&gid=")).drop(columns=['번호'])
-    return df_select, df_course
-
 # -----------------------------------------------    기본 자료 수정    ----------------------------------------------------
 ###### df_atd = [과정코드, 과정분류, 과정명, 보험사, 월, 과정형태, 수강료, 지역, 교육장소, 정원, 목표인원, 소속부문, 소속총괄, 소속부서, 파트너, 사원번호, 성함, IMO신청여부, 수료현황, 입사연차]
 df_atd = fn_attend(df_attend, df_course)
 df_apl = fn_apply(df_apply, df_course)
 
 class Data:
-    def __init__(self) -> None:
+    def __init__(self):
         pass
 
     # -------------------------------   수료현황 테이블 정리 및 테이블 병합 (신청현황 & 과정현황)   ------------------------------------ 
-    def make_data_attend(self, select):
+    def call_data_attend(self, select):
         df_attend, df_course = call_data(select)
         # df_attend: 컬럼 생성 (과정코드)
         df_attend.insert(loc=1, column='과정코드', value=None)
@@ -470,7 +511,7 @@ class Data:
         return df_result
 
     # ------------------------------   신청현황 테이블 정리 및 테이블 병합 (신청현황 & 과정현황)   -------------------------------------
-    def make_data_apply(self, select):
+    def call_data_apply(self, select):
         df_apply, df_course = call_data(select)
         # df_apply: 컬럼 생성 (과정코드)
         df_apply.insert(loc=1, column='과정코드', value=None)
@@ -488,6 +529,46 @@ class Data:
         ##### df_apl = ['날짜','과정코드','소속부문','신청인원','목표인원','과정명']
         return df_result
     
+class Chart(Data):
+    def __init__(self):
+        super().__init__()
+        basic_index = [['수료현황', '수료인원', '수료누계', '수료율'], ['IMO신청여부', 'IMO신청인원', 'IMO신청누계', 'IMO신청률']]
+
+    # -------------------------------------------  소속부문별 고유값 및 누계값  --------------------------------------------------
+    # 소속부문별 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률
+    def make_data_status(df_input, column_select):
+        # dfv_atd를 '소속부문', '사원번호' 칼럼으로 묶고, 누적개수 구하기
+        dfv_status_apply = df_input.groupby([column_select,'사원번호']).size().reset_index(name='신청누계')
+        # df_func_number에서 묶여있는 '사원번호' 카운트 (중복값 제거한 인원)
+        dfv_status_apply_unique = dfv_status_apply.groupby([column_select])['사원번호'].count().reset_index(name='신청인원')
+        # df_func_number에서 '누적개수' 카운트 (중복값 더한 인원)
+        dfv_status_apply_total = dfv_status_apply.groupby([column_select])['신청누계'].sum().reset_index(name='신청누계')
+        # 위에서 중복값을 제거한 데이터프레임과 모두 더한 데이터프레임 병합
+        dfv_status_apply = pd.merge(dfv_status_apply_unique, dfv_status_apply_total)
+        # 소속부문별 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률
+        for groups in range(len(basic_index)):
+            # 수료현황, IMO신청여부 1로 묶기
+            dfv_status_attend = df_input.groupby(basic_index[groups][0]).get_group(1)
+            # 수료현황 전체 더하기 (수료누계)
+            dfv_status_attend_total = df_input.groupby([column_select])[basic_index[groups][0]].sum().reset_index(name=basic_index[groups][2])
+            # 수료현황(1,0)별 사원번호 개수 (수료인원)
+            dfv_status_attend_unique = df_input.groupby([column_select,basic_index[groups][0]])['사원번호'].nunique().reset_index(name=basic_index[groups][1])
+            # 수료현항 0인 row 날리기
+            dfv_status_attend_unique = dfv_status_attend_unique[dfv_status_attend_unique[basic_index[groups][0]] != 0]
+            # 수료현황 column 날리기
+            dfv_status_attend_unique = dfv_status_attend_unique.drop(columns=[basic_index[groups][0]])
+            # 수료인원이랑 수료누계 합치기
+            dfv_status_attend = pd.merge(dfv_status_attend_unique, dfv_status_attend_total, on=[column_select])
+            # 수료율
+            dfv_status_attend_total[basic_index[groups][3]] = (dfv_status_attend_total[basic_index[groups][2]]/dfv_status_apply['신청누계']*100).round(1)
+            dfv_status_attend_total = dfv_status_attend_total.drop(columns=[basic_index[groups][2]])
+            # 수료율/IMO신청률 합치기
+            dfv_status_attend = pd.merge(dfv_status_attend, dfv_status_attend_total, on=[column_select])
+            dfv_status_apply = pd.merge(dfv_status_apply, dfv_status_attend, on=[column_select])
+        # 다 합쳐서 반환
+        return dfv_status_apply
+
+
 ########################################################################################################################
 ###########################################     stremalit 워터마크 숨기기     ##############################################
 ########################################################################################################################
