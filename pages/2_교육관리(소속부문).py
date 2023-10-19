@@ -52,7 +52,12 @@ if authentication_status:
     ########################################################################################################################
     start_all_after = time.time()
 
+    
+
     instance_channel = Chart()
+
+    st.dataframe(instance_channel.make_set_status(df=instance_channel.call_data_attend("attend"), columns='소속부문'))
+    
     hbar_apply, hbar_apply_people = st.columns(2)
     hbar_apply.plotly_chart(instance_channel.make_hbarchart_group(
         df=instance_channel.make_set_status(df=instance_channel.call_data_attend("attend"), columns='소속부문'),
