@@ -60,6 +60,17 @@ def call_data(select):
     df_course = pd.read_csv(st.secrets["course_url"].replace("/edit#gid=", "/export?format=csv&gid=")).drop(columns=['번호'])
     return df_select, df_course
 
+# ----------------------------------------------    sidebar 제작    -----------------------------------------------------
+def make_sidebar(dfv_sidebar, colv_sidebar):
+    return st.sidebar.multiselect(
+        colv_sidebar,
+        options=dfv_sidebar[colv_sidebar].unique(),
+        default=dfv_sidebar[colv_sidebar].unique()
+    )
+
+
+
+
 # ---------------------------------------    Google Sheet 데이터베이스 호출    ----------------------------------------------
 @st.cache_data(ttl=600)
 def load_data(sheets_url):
@@ -599,6 +610,79 @@ class MakeSet(CallData):
         # 다 합쳐서 반환
         return df_result
 
+class Chart(MakeSet):
+    def __init__(self):
+        super().__init__()
+
+    def generate_chart_colors(self, df):
+        presets = ['#636efa', '#ef553b', '#00cc96', '#ab63fa', '#ffa15a', '#19d3f3', '#ff6692', '#b6e880', '#ff97ff', '#fecb52']
+        colors = [presets[i % len(presets)] for i in range(df.shape[0])]
+        return colors
+    
+    def generate_chart_outsides(delf, df):
+        outsides = ['outside' for i in range(df.shape[0])]
+        return outsides
+    
+    def generate_barchart_orders(self, df, form):
+        if form == '소속부문':
+            orders = ['개인부문', '전략부문', 'CA부문', 'MA부문', 'PA부문', '다이렉트부문'][::-1]
+        elif form == '입사연차':
+            orders = [f'{i}년차' for i in df.index]
+        return orders
+    
+    def generate_linechart_orders(self, df, form):
+        if form == '소속부문':
+            orders = ['개인부문', '전략부문', 'CA부문', 'MA부문', 'PA부문', '다이렉트부문']
+        elif form == '입사연차':
+            orders = [f'{i}년차' for i in df.index]
+        return orders
+    
+    # -----------------------------------------  Horizontal Bar Chart 제작 함수 정의  -----------------------------------------------
+    # axis_a : 신청인원, 수료인원, 수료율, IMO신청률
+    # Single Bar Chart 만들기
+    def make_hbarchart_single(self, df, category, axis_a, title):
+        fig_chart = pl.graph_objs.Bar(
+            x=df[axis_a],
+            y=df[category],
+            width=0.3,
+            name=axis_a,
+            text=df[axis_a],
+            marker={'color':self.generate_chart_colors(df)},
+            orientation='h'
+        )
+        data_chart = [fig_chart]
+        layout_chart = pl.graph_objs.Layout(title=title,yaxis={'categoryorder':'array', 'categoryarray':self.generate_barchart_orders(df,category)}) # 여기수정
+        return_chart = pl.graph_objs.Figure(data=data_chart,layout=layout_chart)
+        return_chart.update_traces(textposition=self.generate_chart_outsides(df))
+        return_chart.update_layout(showlegend=False) 
+        return return_chart
+
+    # ---------------------------------------------  Bar Chart 제작 함수 정의  --------------------------------------------------
+    # axis_a: 고유값 (신청인원, 수료인원) / axis_b: 누계값 (신청누계, 수료누계)
+    # Grouped Bar Chart 만들기
+    def make_hbarchart_group(self, df, category, axis_a, axis_b, title, caption):
+        fig_chart_a = pl.graph_objs.Bar(
+            x=df[axis_a],
+            y=df[category],
+            name=axis_a,
+            text=df[axis_a],
+            marker={'color':'grey'},
+            orientation='h'
+        )
+        fig_chart_b = pl.graph_objs.Bar(
+            x=df[axis_b],
+            y=df[category],
+            name=axis_b,
+            text=df[axis_b],
+            marker={'color':self.generate_chart_colors(df)},
+            orientation='h'
+        )
+        data_chart = [fig_chart_a, fig_chart_b]
+        layout_chart = pl.graph_objs.Layout(title=title,yaxis={'categoryorder':'array', 'categoryarray':self.generate_barchart_orders(df,category)}, annotations=[dict(text=caption,showarrow=False,xref='paper',yref='paper',x=0,y=1.1)])
+        return_chart = pl.graph_objs.Figure(data=data_chart,layout=layout_chart)
+        return_chart.update_traces(textposition=self.generate_chart_outsides(df))
+        return_chart.update_layout(showlegend=False)
+        return return_chart
 
 ########################################################################################################################
 ###########################################     stremalit 워터마크 숨기기     ##############################################
