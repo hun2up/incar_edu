@@ -483,6 +483,36 @@ class MakeSet(CallData):
         df_sums = pd.concat([df_sums_atd, df_sums_apl], axis=0)
         return df_sums
 
+    def make_rank(self, df):
+    # -------------------------------------------  소속부문별 고유값 및 누계값  --------------------------------------------------
+    # 소속부문, 파트너, FA 별 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률
+        # dfv_atd를 '소속부문', '사원번호' 칼럼으로 묶고, 누적개수 구하기
+        df_rank = df.groupby(['소속부문','파트너','성명'])['사원번호'].size().reset_index(name='신청누계')
+        st.dataframe(df_rank)
+        # 소속부문별 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률
+        for groups in range(len(self.index)):
+            # 수료현황, IMO신청여부 1로 묶기
+            df_rank_attend = df.groupby(self.index[groups][0]).get_group(1)
+            # 수료현황 전체 더하기 (수료누계)
+            df_rank_total = df.groupby(['소속부문','파트너','성명'])[self.index[groups][0]].sum().reset_index(name=self.index[groups][2])
+            # 수료현황(1,0)별 사원번호 개수 (수료인원)
+            df_rank_unique = df.groupby(['소속부문','파트너','성명',self.index[groups][0]])['사원번호'].nunique().reset_index(name=self.index[groups][1])
+            # 수료현항 0인 row 날리기
+            df_rank_unique = df_rank_unique[df_rank_unique[self.index[groups][0]] != 0]
+            # 수료현황 column 날리기
+            df_rank_unique = df_rank_unique.drop(columns=[self.index[groups][0]])
+            # 수료인원이랑 수료누계 합치기
+            df_rank_attend = pd.merge(df_rank_unique, df_rank_total, on=['소속부문','파트너','성명'])
+            # 수료율
+            df_rank_total[self.index[groups][3]] = (df_rank_total[self.index[groups][2]]/df_rank['신청누계']*100).round(1)
+            df_rank_total = df_rank_total.drop(columns=[self.index[groups][2]])
+            # 수료율/IMO신청률 합치기
+            df_rank_attend = pd.merge(df_rank_attend, df_rank_total, on=['소속부문','파트너','성명'])
+            df_rank = pd.merge(df_rank, df_rank_attend, on=['소속부문','파트너','성명'])
+        df_rank = df_rank.drop(columns=['수료인원','IMO신청인원'])
+        # 다 합쳐서 반환
+        return df_rank    
+
 class Chart(MakeSet):
     def __init__(self):
         super().__init__()
