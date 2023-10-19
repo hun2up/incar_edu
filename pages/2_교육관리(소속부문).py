@@ -11,6 +11,7 @@ with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
 from utils import fn_sidebar, fn_status, fn_trends, generate_colors, generate_outsides, fig_hbarchart, fig_linechart
 from utils import df_atd as df_chn
+from utils import Data
 
 ########################################################################################################################
 ################################################     인증페이지 설정     ###################################################
@@ -110,6 +111,11 @@ if authentication_status:
     # 메인페이지 타이틀
     st.header("소속부문별 교육지표")
     st.write(f"시간측정(데이터제작) : {end_data - start_data}")
+
+    ### 클래스 ###
+    instance = Data()
+    st.dataframe(instance.make_data_attend("attend"))
+    st.dataframe(instance.make_data_apply("apply"))
 
     # -----------------------------------------------------  차트 노출  ---------------------------------------------------------
     start_chart = time.time()

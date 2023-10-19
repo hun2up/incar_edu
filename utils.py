@@ -421,6 +421,73 @@ df_apply.rename(columns={'성함':'성명'}, inplace=True)
 df_atd = fn_attend(df_attend, df_course)
 df_apl = fn_apply(df_apply, df_course)
 
+class Data:
+    def __init__(self) -> None:
+        pass
+    
+    # ---------------------------------------    Google Sheet 데이터베이스 호출    ----------------------------------------------
+    # select : {수료현황 : attend}, {신청현황 : month}
+    @st.cache_data(ttl=600)
+    def call_data(self, select):
+        # 데이터베이스 호출 & 컬럼 삭제 (번호)
+        df_select = pd.read_csv(st.secrets[f"{select}_url"].replace("/edit#gid=", "/export?format=csv&gid=")).drop(columns=['번호'])
+        df_select.rename(columns={'성함':'성명'}, inplace=True)
+        # 과정현황 데이터베이스 호출 (과정현황) & 컬럼 삭제 (번호)
+        df_course = load_data(st.secrets["course_url"]).drop(columns=['번호'])
+        return df_select, df_course
+
+    # -------------------------------   수료현황 테이블 정리 및 테이블 병합 (신청현황 & 과정현황)   ------------------------------------ 
+    def make_data_attend(self, select):
+        df_attend, df_course = self.call_data(select)
+        # df_attend: 컬럼 생성 (과정코드)
+        df_attend.insert(loc=1, column='과정코드', value=None)
+        # 데이터 정리 (과정코드)
+        for modify_attend in range(df_attend.shape[0]):
+            df_attend.iloc[modify_attend,1] = df_attend.iloc[modify_attend,0].split(")")[0].replace('(','')
+        # df_attend: 컬럼 삭제 (과정명, 비고)
+        df_attend = df_attend.drop(columns=['과정명','비고'])
+        # df_attend: 데이터 정리 (IMO신청여부: Y -> 1)
+        df_attend['IMO신청여부'] = df_attend['IMO신청여부'].replace({'Y':1, 'N':0})
+        # df_attend: 데이터 정리 (수료현황: 텍스트 -> 숫자)
+        df_attend['수료현황'] = pd.to_numeric(df_attend['수료현황'], errors='coerce')
+        # df_attend: 컬럼 추가 및 데이터 삽입 (입사연차)
+        df_attend['입사연차'] = (datetime.now().year%100 + 1 - df_attend['사원번호'].astype(str).str[:2].astype(int, errors='ignore')).apply(lambda x: f'{x}년차')
+        # df_attend: 데이터 삭제 (파트너: 인카본사)
+        df_attend = df_attend.drop(df_attend[df_attend.iloc[:,4] == '인카본사'].index)
+        df_attend['과정코드'] = df_attend['과정코드'].astype(str)
+        # df_course1: 컬럼명 & 데이터 변경 (course1_date -> 월)
+        for date in range(df_course.shape[0]):
+            value_date = pd.to_datetime(df_course.at[date, '교육일자'], format="%Y. %m. %d")
+            month = value_date.month
+            df_course.at[date, '교육일자'] = f'{month}월'
+        df_course['과정코드'] = df_course['과정코드'].astype(str)
+        ###### df_course1 = [과정코드, 과정분류, 과정명, 보험사, 교육일자, 과정형태, 수강료, 지역, 교육장소, 정원, 목표인원]
+        # 테이블 병합 (과정현황 + 수료현황)
+        df_result = pd.merge(df_course, df_attend, on=['과정코드'])
+        # df_atd: 컬럼명 변경 (교육일자 -> 월)
+        df_result.rename(columns={'교육일자':'월'}, inplace=True)
+        ###### df_atd = [과정코드, 과정분류, 과정명, 보험사, 월, 과정형태, 수강료, 지역, 교육장소, 정원, 목표인원, 소속부문, 소속총괄, 소속부서, 파트너, 사원번호, 성함, IMO신청여부, 수료현황, 입사연차]
+        return df_result
+
+    # ------------------------------   신청현황 테이블 정리 및 테이블 병합 (신청현황 & 과정현황)   -------------------------------------
+    def make_data_apply(self, select):
+        df_apply, df_course = self.call_data(select)
+        # df_apply: 컬럼 생성 (과정코드)
+        df_apply.insert(loc=1, column='과정코드', value=None)
+        # df_apply: 데이터 정리 (과정코드)
+        for modify_apply in range(df_apply.shape[0]):
+            df_apply.iloc[modify_apply,1] = df_apply.iloc[modify_apply,0].split(")")[0].replace('(','')
+        # df_apply: 컬럼 추가 (신청인원)
+        df_apply = df_apply.groupby(['날짜','과정코드','소속부문'])['사원번호'].count().reset_index(name='신청인원')
+        # df_course2: 데이터 변경 ([지역]+과정명)
+        df_course['과정명'] = '['+df_course['지역']+'] '+df_course['과정명']
+        # 테이블 병합 (신청현황 + 과정현황)
+        df_result = pd.merge(df_apply, df_course[['과정코드','과정명','교육일자','목표인원']], on=['과정코드'])
+        # df_apl: 날짜 오름차순으로 정렬
+        df_result = df_result.sort_values(by='날짜', ascending=True)
+        ##### df_apl = ['날짜','과정코드','소속부문','신청인원','목표인원','과정명']
+        return df_result
+    
 ########################################################################################################################
 ###########################################     stremalit 워터마크 숨기기     ##############################################
 ########################################################################################################################
