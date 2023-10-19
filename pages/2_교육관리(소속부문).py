@@ -51,12 +51,13 @@ if authentication_status:
     ##################################################     자료 제작     #####################################################
     ########################################################################################################################
     start_all_after = time.time()
-    end_all_after = time.time()
-    st.write(f"시간측정(전체-수정후) : {end_all_after - start_all_after}")
-
+    
     instance_channel = MakeSet()
     st.dataframe(instance_channel.make_set_status(df=instance_channel.call_data_attend("attend"), columns='소속부문'))
     st.dataframe(instance_channel.make_set_trend(df=instance_channel.call_data_attend("attend"), columns='소속부문'))
+
+    end_all_after = time.time()
+    st.write(f"시간측정(전체-수정후) : {end_all_after - start_all_after}")
 
 
     start_all_before = time.time()
