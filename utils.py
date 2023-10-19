@@ -416,6 +416,17 @@ df_apply = load_data(st.secrets["month_url"]).drop(columns=['번호'])
 df_apply.rename(columns={'성함':'성명'}, inplace=True)
 ##### df_attend = ['과정명','소속부문','소속총괄','소속부서','파트너','사원번호','성명','IMO신청여부','수료현황','비고', '날짜']
 
+# ---------------------------------------    Google Sheet 데이터베이스 호출    ----------------------------------------------
+# select : {수료현황 : attend}, {신청현황 : month}
+@st.cache_data(ttl=600)
+def call_data(select):
+    # 데이터베이스 호출 & 컬럼 삭제 (번호)
+    df_select = pd.read_csv(st.secrets[f"{select}_url"].replace("/edit#gid=", "/export?format=csv&gid=")).drop(columns=['번호'])
+    df_select.rename(columns={'성함':'성명'}, inplace=True)
+    # 과정현황 데이터베이스 호출 (과정현황) & 컬럼 삭제 (번호)
+    df_course = pd.read_csv(st.secrets["course_url"].replace("/edit#gid=", "/export?format=csv&gid=")).drop(columns=['번호'])
+    return df_select, df_course
+
 # -----------------------------------------------    기본 자료 수정    ----------------------------------------------------
 ###### df_atd = [과정코드, 과정분류, 과정명, 보험사, 월, 과정형태, 수강료, 지역, 교육장소, 정원, 목표인원, 소속부문, 소속총괄, 소속부서, 파트너, 사원번호, 성함, IMO신청여부, 수료현황, 입사연차]
 df_atd = fn_attend(df_attend, df_course)
@@ -424,21 +435,10 @@ df_apl = fn_apply(df_apply, df_course)
 class Data:
     def __init__(self) -> None:
         pass
-    
-    # ---------------------------------------    Google Sheet 데이터베이스 호출    ----------------------------------------------
-    # select : {수료현황 : attend}, {신청현황 : month}
-    @st.cache_data(ttl=600)
-    def call_data(self, select):
-        # 데이터베이스 호출 & 컬럼 삭제 (번호)
-        df_select = pd.read_csv(st.secrets[f"{select}_url"].replace("/edit#gid=", "/export?format=csv&gid=")).drop(columns=['번호'])
-        df_select.rename(columns={'성함':'성명'}, inplace=True)
-        # 과정현황 데이터베이스 호출 (과정현황) & 컬럼 삭제 (번호)
-        df_course = pd.read_csv(st.secrets["course_url"].replace("/edit#gid=", "/export?format=csv&gid=")).drop(columns=['번호'])
-        return df_select, df_course
 
     # -------------------------------   수료현황 테이블 정리 및 테이블 병합 (신청현황 & 과정현황)   ------------------------------------ 
     def make_data_attend(self, select):
-        df_attend, df_course = self.call_data(select)
+        df_attend, df_course = call_data(select)
         # df_attend: 컬럼 생성 (과정코드)
         df_attend.insert(loc=1, column='과정코드', value=None)
         # 데이터 정리 (과정코드)
@@ -471,7 +471,7 @@ class Data:
 
     # ------------------------------   신청현황 테이블 정리 및 테이블 병합 (신청현황 & 과정현황)   -------------------------------------
     def make_data_apply(self, select):
-        df_apply, df_course = self.call_data(select)
+        df_apply, df_course = call_data(select)
         # df_apply: 컬럼 생성 (과정코드)
         df_apply.insert(loc=1, column='과정코드', value=None)
         # df_apply: 데이터 정리 (과정코드)
