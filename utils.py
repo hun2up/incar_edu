@@ -660,7 +660,7 @@ class Chart(MakeSet):
     # ---------------------------------------------  Bar Chart 제작 함수 정의  --------------------------------------------------
     # axis_a: 고유값 (신청인원, 수료인원) / axis_b: 누계값 (신청누계, 수료누계)
     # Grouped Bar Chart 만들기
-    def make_hbarchart_group(self, df, category, axis_a, axis_b, title, caption):
+    def make_hbarchart_group(self, df, category, axis_a, axis_b, title):
         fig_chart_a = pl.graph_objs.Bar(
             x=df[axis_a],
             y=df[category],
@@ -678,7 +678,7 @@ class Chart(MakeSet):
             orientation='h'
         )
         data_chart = [fig_chart_a, fig_chart_b]
-        layout_chart = pl.graph_objs.Layout(title=title,yaxis={'categoryorder':'array', 'categoryarray':self.generate_barchart_orders(df,category)}, annotations=[dict(text=caption,showarrow=False,xref='paper',yref='paper',x=0,y=1.1)])
+        layout_chart = pl.graph_objs.Layout(title=title,yaxis={'categoryorder':'array', 'categoryarray':self.generate_barchart_orders(df,category)}, annotations=[dict(text='색상 차트는 누적인원(중복포함), 회색 차트는 고유인원(중복제거)',showarrow=False,xref='paper',yref='paper',x=0,y=1.1)])
         return_chart = pl.graph_objs.Figure(data=data_chart,layout=layout_chart)
         return_chart.update_traces(textposition=self.generate_chart_outsides(df))
         return_chart.update_layout(showlegend=False)
