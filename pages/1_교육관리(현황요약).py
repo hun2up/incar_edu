@@ -10,7 +10,7 @@ import yaml
 from yaml.loader import SafeLoader
 with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
-from utils import make_sidebar, fn_status, fig_piechart, generate_colors, generate_outsides, fig_hbarchart, fn_rank_fa, fn_rank_partner, fn_rank_channel, style_metric_cards
+from utils import make_sidebar, fn_status, fn_rank_fa, fn_rank_partner, fn_rank_channel, style_metric_cards
 from utils import df_atd as df_all
 from utils import Chart
 
