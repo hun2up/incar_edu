@@ -83,11 +83,12 @@ if authentication_status:
     df_sums_atd = df_sums_atd.rename(columns={'index':'비고'})
     df_sums = pd.concat([df_sums_atd, df_sums_apl], axis=0)
     # 온오프라인
-    df_line = df_all.groupby(['과정형태','과정코드']).size().reset_index(name='홧수')
-    df_line = df_line.groupby(['과정형태'])['과정코드'].count().reset_index(name='횟수')
+    # df_line = df_all.groupby(['과정형태','과정코드']).size().reset_index(name='횟수')
+    df_line = df_all.groupby(['과정형태'])['과정코드'].count().reset_index(name='횟수')
+    # df_line = df_line.groupby(['과정형태'])['과정코드'].count().reset_index(name='횟수')
     # 유무료
     df_all['유무료'] = df_all['수강료'].apply(lambda x: '무료' if x == 0 else '유료')
-    df_fee = df_all.groupby(['유무료','과정코드']).size().reset_index(name='홧수')
+    df_fee = df_all.groupby(['유무료','과정코드']).size().reset_index(name='횟수')
     df_fee = df_fee.groupby(['유무료'])['과정코드'].count().reset_index(name='횟수')
     # 수료율
     comrate = {'구분':['수료','미수료'],'수료율':[(df_sums.iloc[0,1]/df_sums.iloc[1,1]*100).round(1), (100-df_sums.iloc[0,1]/df_sums.iloc[1,1]*100).round(1)]}
