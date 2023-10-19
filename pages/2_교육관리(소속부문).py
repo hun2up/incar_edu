@@ -8,13 +8,12 @@ import yaml
 from yaml.loader import SafeLoader
 with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
-from utils import make_sidebar, hide_st_style
+from utils import make_sidebar
 from utils import Chart
 
 ########################################################################################################################
 ################################################     인증페이지 설정     ###################################################
 ########################################################################################################################
-hide_st_style()
 instance = Chart()
 df_channel = instance.call_data_attend("attend")
 # -----------------------------------------------------  사이드바  ---------------------------------------------------------
@@ -56,7 +55,6 @@ if authentication_status:
     ########################################################################################################################
     ##################################################     자료 제작     #####################################################
     ########################################################################################################################
-    # hide_st_style()
     # --------------------------------------------------  페이지 타이틀  -------------------------------------------------------
     # 메인페이지 타이틀
     st.header("소속부문별 교육지표")
@@ -68,7 +66,7 @@ if authentication_status:
         category='소속부문',
         axis_a='신청인원',
         axis_b='신청누계',
-        title='부문별 교육신청 현황'), use_container_width=True)
+        title='소속부문별 교육신청 현황'), use_container_width=True)
     
     # 두번째 행 (수료인원)
     hbar_attend, hbar_attend_people = st.columns(2)
@@ -77,7 +75,7 @@ if authentication_status:
         category='소속부문',
         axis_a='수료인원',
         axis_b='수료누계',
-        title='부문별 교육수료 현황'), use_container_width=True)
+        title='소속부문별 교육수료 현황'), use_container_width=True)
     
     # 세번째 행 (수료율 & IMO신청률)
     hbar_attend_rate, hbar_imo_rate = st.columns(2)
@@ -85,12 +83,12 @@ if authentication_status:
         df=instance.make_set_status(df=df_channel, columns='소속부문'),
         category='소속부문',
         axis_a='수료율',
-        title='부문별 수료율'), use_container_width=True)
+        title='소속부문별 수료율'), use_container_width=True)
     hbar_imo_rate.plotly_chart(instance.make_hbarchart_single(
         df=instance.make_set_status(df=df_channel, columns='소속부문'),
         category='소속부문',
         axis_a='IMO신청률',
-        title='부문별 IMO신청률'), use_container_width=True)
+        title='소속부문별 IMO신청률'), use_container_width=True)
     
     # 네번째 행 (신청누계 & 수료누계 추이그래프) 수료율, IMO신청률)
     line_apply, line_attend = st.columns(2)
