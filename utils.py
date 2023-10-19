@@ -559,25 +559,25 @@ class MakeSet(CallData):
         # 소속부문별 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률
         for i in range(len(self.index)-1):
             # 수료현황, IMO신청여부 1로 묶기
-            df_for_rate = df.groupby(self.index[i][0]).get_group(1)
-            st.dataframe(df_for_rate)
+            df_attend = df.groupby(self.index[i][0]).get_group(1)
+            st.dataframe(df_attend)
             # 수료현황 전체 더하기 (수료누계)
-            df_for_rate_total = df.groupby([columns])[self.index[i][0]].sum().reset_index(name=self.index[i][2])
+            df_attend_total = df.groupby([columns])[self.index[i][0]].sum().reset_index(name=self.index[i][2])
             # 수료현황(1,0)별 사원번호 개수 (수료인원)
-            df_for_rate_unique = df.groupby([columns,self.index[i][0]])['사원번호'].nunique().reset_index(name=self.index[i][1])
+            df_attend_unique = df.groupby([columns,self.index[i][0]])['사원번호'].nunique().reset_index(name=self.index[i][1])
             # 수료현항 0인 row 날리기
-            df_for_rate_unique = df_for_rate_unique[df_for_rate_unique[self.index[i][0]] != 0]
+            df_attend_unique = df_attend_unique[df_attend_unique[self.index[i][0]] != 0]
             # 수료현황 column 날리기
-            df_for_rate_unique = df_for_rate_unique.drop(columns=[self.index[i][0]])
+            df_attend_unique = df_attend_unique.drop(columns=[self.index[i][0]])
             # 수료인원이랑 수료누계 합치기
-            df_for_rate = pd.merge(df_for_rate_unique, df_for_rate_total, on=[columns])
+            df_attend = pd.merge(df_attend_unique, df_attend_total, on=[columns])
             # 수료율
-            df_for_rate_total[self.index[i][3]] = (df_for_rate_total[self.index[i][2]]/df_apply['신청누계']*100).round(1)
-            df_for_rate_total = df_for_rate_total.drop(columns=[self.index[i][2]])
+            df_attend_total[self.index[i][3]] = (df_attend_total[self.index[i][2]]/df_apply['신청누계']*100).round(1)
+            df_attend_total = df_attend_total.drop(columns=[self.index[i][2]])
             # 수료율/IMO신청률 합치기
-            df_for_rate_result = pd.merge(df_for_rate, df_for_rate_total, on=[columns])
-            df_result = pd.merge(df_apply, df_for_rate_result, on=[columns])
-            st.dataframe(df_result)
+            df_attend = pd.merge(df_attend, df_attend_total, on=[columns])
+            df_merge = pd.merge(df_apply, df_attend, on=[columns])
+            df_result = pd.merge(df_result, df_merge, on=[columns])
         # 다 합쳐서 반환
         return df_result
     
