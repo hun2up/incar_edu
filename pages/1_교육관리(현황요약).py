@@ -61,7 +61,7 @@ if authentication_status:
     # ----------------------------------------------  메이페이지 타이틀  -----------------------------------------------------
     st.header("교육운영 현황요약")
     st.markdown("<hr>", unsafe_allow_html=True)
-    df_sums = isinstance.make_set_sums(df_all)
+    df_sums = isinstance.make_set_sums(isinstance.make_set_status(df=df_all,columns='소속부문'))
 
     pie_line, pie_fee, pie_attend_rate, pie_imo_rate = st.columns(4)
     # 집합/온라인 과정현황
