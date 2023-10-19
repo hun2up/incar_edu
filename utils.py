@@ -608,6 +608,21 @@ class MakeSet(CallData):
         # 다 합쳐서 반환
         return df_apply
 
+    # 코드리뷰필요
+    def make_set_sums(self, df):
+        df_sums = df.sum(axis=0)
+        df_sums = pd.DataFrame({'합계':df_sums}).transpose().drop(columns='소속부문')
+        df_sums_apl = df_sums.drop(columns=['수료인원','수료누계','수료율','IMO신청인원','IMO신청누계','IMO신청률']).rename(columns={'신청인원':'고유인원','신청누계':'누계인원'})
+        df_sums_apl.index = ['신청']
+        df_sums_apl = df_sums_apl.reset_index()
+        df_sums_apl = df_sums_apl.rename(columns={'index':'비고'})
+        df_sums_atd = df_sums.drop(columns=['신청인원','신청누계','수료율','IMO신청인원','IMO신청누계','IMO신청률']).rename(columns={'수료인원':'고유인원','수료누계':'누계인원'})
+        df_sums_atd.index = ['수료']
+        df_sums_atd = df_sums_atd.reset_index()
+        df_sums_atd = df_sums_atd.rename(columns={'index':'비고'})
+        df_sums = pd.concat([df_sums_atd, df_sums_apl], axis=0)
+        return df_sums
+
 class Chart(MakeSet):
     def __init__(self):
         super().__init__()
