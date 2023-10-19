@@ -57,7 +57,7 @@ if authentication_status:
     instance_channel = Chart()
 
     st.dataframe(instance_channel.make_set_status(df=instance_channel.call_data_attend("attend"), columns='소속부문'))
-    
+
     hbar_apply, hbar_apply_people = st.columns(2)
     hbar_apply.plotly_chart(instance_channel.make_hbarchart_group(
         df=instance_channel.make_set_status(df=instance_channel.call_data_attend("attend"), columns='소속부문'),
@@ -85,6 +85,7 @@ if authentication_status:
     start_data = time.time()
     # barchart 제작을 위한 현황 dataframe (소속부문별)
     df_chn_stat = fn_status(df_chn, '소속부문')
+    st.dataframe(df_chn_stat)
     # linechart 제작을 위한 추세 dataframe (월별 & 소속부문별)
     df_chn_trnd = fn_trends(df_chn, '소속부문')
 
