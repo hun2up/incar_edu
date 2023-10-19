@@ -136,8 +136,8 @@ if authentication_status:
 
     # --------------------------------------------------  주요지표  ---------------------------------------------------------
     r1_c1, r1_c2, r1_c3, r1_c4 = st.columns(4)
-    r1_c1.plotly_chart(fig_line, use_container_width=True)
-    r1_c2.plotly_chart(fig_fee, use_container_width=True)
+    # r1_c1.plotly_chart(fig_line, use_container_width=True)
+    # r1_c2.plotly_chart(fig_fee, use_container_width=True)
     r1_c3.plotly_chart(fig_comrate, use_container_width=True)
     r1_c4.plotly_chart(fig_imo, use_container_width=True)
 
