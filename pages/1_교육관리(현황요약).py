@@ -69,7 +69,7 @@ if authentication_status:
     # 유료/무료 과정현황
     df_all['유무료'] = df_all['수강료'].apply(lambda x: '무료' if x == 0 else '유료')
     df_fee = df_all.groupby(['유무료'])['과정코드'].count().reset_index(name='횟수')
-    pie_fee.plotly_chart(isinstance.make_piechart(label=df_fee['유무료'], value=['횟수']), use_container_width=True)
+    pie_fee.plotly_chart(isinstance.make_piechart(label=df_fee['유무료'], value=df_fee['횟수']), use_container_width=True)
        
 
 
