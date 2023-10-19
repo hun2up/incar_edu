@@ -52,12 +52,9 @@ if authentication_status:
     ########################################################################################################################
     start_all_after = time.time()
 
-    
-
     instance_channel = Chart()
 
-    # st.dataframe(instance_channel.make_set_status(df=instance_channel.call_data_attend("attend"), columns='소속부문'))
-
+    # 첫번째 행 (신청인원)
     hbar_apply, hbar_apply_people = st.columns(2)
     hbar_apply.plotly_chart(instance_channel.make_hbarchart_group(
         df=instance_channel.make_set_status(df=instance_channel.call_data_attend("attend"), columns='소속부문'),
@@ -66,6 +63,7 @@ if authentication_status:
         axis_b='신청누계',
         title='부문별 교육신청 현황'), use_container_width=True)
     
+    # 두번째 행 (수료인원)
     hbar_attend, hbar_attend_people = st.columns(2)
     hbar_attend.plotly_chart(instance_channel.make_hbarchart_group(
         df=instance_channel.make_set_status(df=instance_channel.call_data_attend("attend"), columns='소속부문'),
@@ -74,7 +72,19 @@ if authentication_status:
         axis_b='수료누계',
         title='부문별 교육수료 현황'), use_container_width=True)
     
-
+    # 세번째 행 (수료율 & IMO신청률)
+    hbar_attend_rate, hbar_imo_rate = st.columns(2)
+    hbar_attend_rate.plotly_chart(instance_channel.make_hbarchart_single(
+        df=instance_channel.make_set_status(df=instance_channel.call_data_attend("attend"), columns='소속부문'),
+        category='소속부문',
+        axis_a='수료율',
+        title='부문별 수료율'), use_container_width=True)
+    hbar_imo_rate.plotly_chart(instance_channel.make_hbarchart_single(
+        df=instance_channel.make_set_status(df=instance_channel.call_data_attend("attend"), columns='소속부문'),
+        category='소속부문',
+        axis_a='IMO신청률',
+        title='부문별 IMO신청률'), use_container_width=True)
+    
     end_all_after = time.time()
     st.write(f"시간측정(전체-수정후) : {end_all_after - start_all_after}")
 
