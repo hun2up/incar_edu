@@ -637,7 +637,7 @@ class Chart(MakeSet):
             orders = [f'{i}년차' for i in df.index]
         return orders
     
-    # -----------------------------------------  Horizontal Bar Chart 제작 함수 정의  -----------------------------------------------
+    # -------------------------------------  Horizontal Bar Chart (Single) 제작 함수 정의  -----------------------------------------
     # axis_a : 신청인원, 수료인원, 수료율, IMO신청률
     # Single Bar Chart 만들기
     def make_hbarchart_single(self, df, category, axis_a, title):
@@ -657,7 +657,7 @@ class Chart(MakeSet):
         return_chart.update_layout(showlegend=False) 
         return return_chart
 
-    # ---------------------------------------------  Bar Chart 제작 함수 정의  --------------------------------------------------
+    # --------------------------------------  Horizontal Bar Chart (Group) 제작 함수 정의  -----------------------------------------
     # axis_a: 고유값 (신청인원, 수료인원) / axis_b: 누계값 (신청누계, 수료누계)
     # Grouped Bar Chart 만들기
     def make_hbarchart_group(self, df, category, axis_a, axis_b, title):
@@ -683,6 +683,30 @@ class Chart(MakeSet):
         return_chart.update_traces(textposition=self.generate_chart_outsides(df))
         return_chart.update_layout(showlegend=False)
         return return_chart
+    
+    # ----------------------------------------------  Line Chart 제작 함수 정의  ---------------------------------------------------
+    # xaxis : '월'(df_apply), '날짜'(df_attend) / yaxis : 데이터 (신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청률 등)
+    def make_linechart(self, df, category, xaxis, yaxis, title):
+        fig_chart = pl.graph_objs.Figure()
+        # Iterate over unique channels and add a trace for each
+        for reference in df[category].unique():
+            line_data = df[df[category] == reference]
+            fig_chart.add_trace(pl.graph_objs.Scatter(
+                x=line_data[xaxis],
+                y=line_data[yaxis],
+                mode='lines+markers',
+                name=reference,
+            ))
+        # Update the layout
+        fig_chart.update_layout(
+            title=title,
+            xaxis_title=xaxis,
+            yaxis_title=yaxis,
+            legend_title=category,
+            hovermode='x',
+            template='plotly_white'  # You can choose different templates if you prefer
+        )
+        return fig_chart
 
 ########################################################################################################################
 ###########################################     stremalit 워터마크 숨기기     ##############################################
