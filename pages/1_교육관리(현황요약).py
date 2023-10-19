@@ -72,8 +72,8 @@ if authentication_status:
     df_fee = df_all.groupby(['유무료'])['과정코드'].count().reset_index(name='횟수')
     pie_fee.plotly_chart(isinstance.make_piechart(label=df_fee['유무료'], value=df_fee['횟수']), use_container_width=True)
     # 수료율
-    attend_rate = {'구분':['수료','미수료'],'수료율':[(df_sums.iloc[0,1]/df_sums.iloc[1,1]*100).round(1), (100-df_sums.iloc[0,1]/df_sums.iloc[1,1]*100).round(1)]}
-    df_attend_rate = pd.DataFrame(attend_rate)
+    df_attend_rate = pd.DataFrame({'구분':['수료','미수료'],'수료율':[(df_sums.iloc[0,1]/df_sums.iloc[1,1]*100).round(1), (100-df_sums.iloc[0,1]/df_sums.iloc[1,1]*100).round(1)]})
+    # df_attend_rate = pd.DataFrame(attend_rate)
     pie_attend_rate.plotly_chart(isinstance.make_piechart(label=df_attend_rate['구분'],value=df_attend_rate['수료율']), use_container_width=True)
 
        
@@ -144,7 +144,7 @@ if authentication_status:
     r1_c1, r1_c2, r1_c3, r1_c4 = st.columns(4)
     # r1_c1.plotly_chart(fig_line, use_container_width=True)
     # r1_c2.plotly_chart(fig_fee, use_container_width=True)
-    r1_c3.plotly_chart(fig_comrate, use_container_width=True)
+    # r1_c3.plotly_chart(fig_comrate, use_container_width=True)
     r1_c4.plotly_chart(fig_imo, use_container_width=True)
 
     r2_c1, r2_c2, r2_c3, r2_c4 = st.columns(4)
