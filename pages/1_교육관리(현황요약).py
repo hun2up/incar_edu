@@ -85,6 +85,12 @@ if authentication_status:
         axis_a='고유인원',
         axis_b='누계인원',
         title='신청/수료 현황'), use_container_width=True)
+    
+    ##########################################################################################################################
+    ##############################################     스타일 카드 (랭킹)     #################################################
+    ##########################################################################################################################  
+
+    
 
 
     ########################################################################################################################
@@ -105,58 +111,11 @@ if authentication_status:
     df_sums_atd = df_sums_atd.reset_index()
     df_sums_atd = df_sums_atd.rename(columns={'index':'비고'})
     df_sums = pd.concat([df_sums_atd, df_sums_apl], axis=0)
-    # 온오프라인
-    # df_line = df_all.groupby(['과정형태','과정코드']).size().reset_index(name='횟수')
-    # df_line = df_all.groupby(['과정형태'])['과정코드'].count().reset_index(name='횟수')
-    # df_line = df_line.groupby(['과정형태'])['과정코드'].count().reset_index(name='횟수')
-    # 유무료
-    # df_all['유무료'] = df_all['수강료'].apply(lambda x: '무료' if x == 0 else '유료')
-    # df_fee = df_all.groupby(['유무료','과정코드']).size().reset_index(name='횟수')
-    # df_fee = df_fee.groupby(['유무료'])['과정코드'].count().reset_index(name='횟수')
-    # 수료율
-    # comrate = {'구분':['수료','미수료'],'수료율':[(df_sums.iloc[0,1]/df_sums.iloc[1,1]*100).round(1), (100-df_sums.iloc[0,1]/df_sums.iloc[1,1]*100).round(1)]}
-    # df_comrate = pd.DataFrame(comrate)
-    # IMO신청률
-    # imo = {'구분':['IMO','IIMS'],'신청률':[(df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1), (100-df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1)]}
-    # df_imo = pd.DataFrame(imo)
+
 
     df_rank_fa = fn_rank_fa(df_all)
     df_rank_partner = fn_rank_partner(df_all)
     df_rank_channel = fn_rank_channel(df_all)
-    # ---------------------------------------------------  chart 제작  ------------------------------------------------------
-    # 온오프라인
-    # fig_line = fig_piechart(df_line['과정형태'], df_line['횟수'])
-    # 유무료
-    # fig_fee = fig_piechart(df_fee['유무료'], df_fee['횟수'])
-    # 수료율
-    # fig_comrate = fig_piechart(df_comrate['구분'], df_comrate['수료율'])
-    # IMO 신청률
-    # fig_imo = fig_piechart(df_imo['구분'], df_imo['신청률'])
-
-    # 신청인원 및 수료인원
-    # 색상(hexcode) 제작
-    sums_colors = generate_colors(df_sums.shape[0])
-    # 텍스트위치(outsides) 제작
-    sums_outsides = generate_outsides(df_sums.shape[0])
-    # barchart 항목 순서 지정
-    orders_sums = ['신청', '수료'][::-1]
-    sums_list = [df_sums, '비고', '고유인원', '누계인원', 'group', 'h', sums_colors, sums_outsides, orders_sums, '', '']
-    fig_sums = fig_hbarchart(sums_list)
-
-    ########################################################################################################################
-    ################################################     페이지 노출     ####################################################
-    ########################################################################################################################
-
-
-    # --------------------------------------------------  주요지표  ---------------------------------------------------------
-    r1_c1, r1_c2, r1_c3, r1_c4 = st.columns(4)
-    # r1_c1.plotly_chart(fig_line, use_container_width=True)
-    # r1_c2.plotly_chart(fig_fee, use_container_width=True)
-    # r1_c3.plotly_chart(fig_comrate, use_container_width=True)
-    # r1_c4.plotly_chart(fig_imo, use_container_width=True)
-
-    r2_c1, r2_c2, r2_c3, r2_c4 = st.columns(4)
-    r2_c1.plotly_chart(fig_sums, use_container_width=True)
 
     # ----------------------------------------------------  랭킹  -----------------------------------------------------------
     def metrics_fa(st, title, df, column_name1, column_name2, column_name3, ascend):

@@ -68,7 +68,6 @@ def make_sidebar(dfv_sidebar, colv_sidebar):
         default=dfv_sidebar[colv_sidebar].unique()
     )
 
-
 # ---------------------------------------    Google Sheet 데이터베이스 호출    ----------------------------------------------
 @st.cache_data(ttl=600)
 def load_data(sheets_url):
@@ -288,82 +287,6 @@ def fn_rank_channel(dfv_atd):
     # 다 합쳐서 반환
     return dfv_rank
 
-# ------------------------------------  차트 제작에 필요한 색상과 outside 생성 함수  ------------------------------------------
-def generate_colors(shape):
-    color_preset = ['#636efa', '#ef553b', '#00cc96', '#ab63fa', '#ffa15a', '#19d3f3', '#ff6692', '#b6e880', '#ff97ff', '#fecb52']
-    color_hexcodes = []
-    for i in range(shape):
-        color_hexcodes.append(color_preset[i % len(color_preset)])
-    return color_hexcodes
-def generate_outsides(shape):
-    text_outsides = []
-    for i in range(shape):
-        text_outsides.append('outside')
-        i += 1
-    return text_outsides
-def generate_orders(shape):
-    text_orders = []
-    for i in range(shape.shape[0]):
-        text_orders.append(shape.index[0])
-        i += 1
-    return text_orders
-
-# ---------------------------------------------  Bar Chart 제작 함수 정의  --------------------------------------------------
-'''
-list_hbarchart[0]: dataframe (df_stat, df_trnd)
-list_hbarchart[1]: 참조 컬럼 (소속부문, 입사연차)
-list_hbarchart[2]: 고유값 (신청인원, 수료인원)
-list_hbarchart[3]: 누계값 (신청누계, 수료누계)
-list_hbarchart[4]: 차트 형태 (single, group)
-list_hbarchart[5]: 차트 방향 (horizontal, vertical)
-list_hbarchart[6]: 색상 리스트 ()
-list_hbarchart[7]: outside 리스트 ()
-list_hbarchart[8]: 항목 순서
-list_hbarchart[9]: 차트 제목
-list_hbarchart[10]: 캡션
-'''
-def fig_hbarchart(list_hbarchart):
-    # Single Bar Chart 만들기
-    if list_hbarchart[4] == 'single' :
-        fig_singlebar = pl.graph_objs.Bar(
-            x=list_hbarchart[0][list_hbarchart[2]],
-            y=list_hbarchart[0][list_hbarchart[1]],
-            width=0.3,
-            name=list_hbarchart[2],
-            text=list_hbarchart[0][list_hbarchart[2]],
-            marker={'color':list_hbarchart[6]},
-            orientation=list_hbarchart[5]
-        )
-        data_singlebar = [fig_singlebar]
-        layout_singlebar = pl.graph_objs.Layout(title=list_hbarchart[9],yaxis={'categoryorder':'array', 'categoryarray':list_hbarchart[8]}) # 여기수정
-        return_singlebar = pl.graph_objs.Figure(data=data_singlebar,layout=layout_singlebar)
-        return_singlebar.update_traces(textposition=list_hbarchart[7])
-        return_singlebar.update_layout(showlegend=False) 
-        return return_singlebar
-    # Grouped Bar Chart 만들기
-    if list_hbarchart[4] == 'group' :
-        fig_groupbar1 = pl.graph_objs.Bar(
-            x=list_hbarchart[0][list_hbarchart[2]],
-            y=list_hbarchart[0][list_hbarchart[1]],
-            name=list_hbarchart[2],
-            text=list_hbarchart[0][list_hbarchart[2]],
-            marker={'color':'grey'},
-            orientation=list_hbarchart[5]
-        )
-        fig_groupbar2 = pl.graph_objs.Bar(
-            x=list_hbarchart[0][list_hbarchart[3]],
-            y=list_hbarchart[0][list_hbarchart[1]],
-            name=list_hbarchart[3],
-            text=list_hbarchart[0][list_hbarchart[3]],
-            marker={'color':list_hbarchart[6]},
-            orientation=list_hbarchart[5]
-        )
-        data_groupbar = [fig_groupbar1, fig_groupbar2]
-        layout_groupbar = pl.graph_objs.Layout(title=list_hbarchart[9],yaxis={'categoryorder':'array', 'categoryarray':list_hbarchart[8]}, annotations=[dict(text=list_hbarchart[10],showarrow=False,xref='paper',yref='paper',x=0,y=1.1)])
-        return_groupbar = pl.graph_objs.Figure(data=data_groupbar,layout=layout_groupbar)
-        return_groupbar.update_traces(textposition=list_hbarchart[7])
-        return_groupbar.update_layout(showlegend=False)
-        return return_groupbar
 
 '''
 list_vbarchart[0]: dataframe (df_stat, df_trnd)
@@ -396,69 +319,6 @@ def fig_vbarchart(list_vbarchart):
     return_fig_vbar.update_layout(showlegend=True)
     return return_fig_vbar
 
-'''
-list_linechart[0]: dataframe (df_stat, df_trnd)
-list_linechart[1]: 참조 컬럼 (소속부문, 입사연차, 과정명)
-list_linechart[2]: 데이터 (신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청률 등)
-list_linechart[3]: 차트 제목
-list_linechart[4]: df_apply: '월' / df_attend: '날짜'
-'''
-def fig_linechart(list_linechart):
-    fig_line = pl.graph_objs.Figure()
-    # Iterate over unique channels and add a trace for each
-    for reference in list_linechart[0][list_linechart[1]].unique():
-        line_data = list_linechart[0][list_linechart[0][list_linechart[1]] == reference]
-        fig_line.add_trace(pl.graph_objs.Scatter(
-            x=line_data[list_linechart[4]],
-            y=line_data[list_linechart[2]],
-            mode='lines+markers',
-            name=reference,
-        ))
-    # Update the layout
-    fig_line.update_layout(
-        title=list_linechart[3],
-        xaxis_title=list_linechart[4],
-        yaxis_title=list_linechart[2],
-        legend_title=list_linechart[1],
-        hovermode='x',
-        template='plotly_white'  # You can choose different templates if you prefer
-    )
-    return fig_line
-
-def fig_piechart(label, value):
-    fig_pchart = pl.graph_objs.Figure(data=[pl.graph_objs.Pie(labels=label, values=value, hole=.3)])
-    fig_pchart.update_traces(hoverinfo='label+percent', textinfo='label+value', textfont_size=20)
-    return fig_pchart
-
-def style_metric_cards(
-    background_color: str = "#ADD8E6",
-    border_size_px: int = 1,
-    border_color: str = "#CCC",
-    border_radius_px: int = 5,
-    border_left_color: str = "rgb(55,126,184)",
-    box_shadow: bool = True,
-):
-
-    box_shadow_str = (
-        "box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;"
-        if box_shadow
-        else "box-shadow: none !important;"
-    )
-    st.markdown(
-        f"""
-        <style>
-            div[data-testid="metric-container"] {{
-                background-color: {background_color};
-                border: {border_size_px}px solid {border_color};
-                padding: 5% 5% 5% 10%;
-                border-radius: {border_radius_px}px;
-                border-left: 0.5rem solid {border_left_color} !important;
-                {box_shadow_str}
-            }}
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
 
 ########################################################################################################################
 ################################################     자료 전처리     ######################################################
