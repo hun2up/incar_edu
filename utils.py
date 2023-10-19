@@ -576,8 +576,8 @@ class MakeSet(CallData):
             df_for_rate_total = df_for_rate_total.drop(columns=[self.index[i][2]])
             # 수료율/IMO신청률 합치기
             df_for_rate_result = pd.merge(df_for_rate, df_for_rate_total, on=[columns])
-            st.dataframe(df_for_rate)
             df_result = pd.merge(df_apply, df_for_rate_result, on=[columns])
+            st.dataframe(df_result)
         # 다 합쳐서 반환
         return df_result
     
