@@ -648,6 +648,8 @@ class Chart(MakeSet):
             orders = ['개인부문', '전략부문', 'CA부문', 'MA부문', 'PA부문', '다이렉트부문']
         elif form == '입사연차':
             orders = [f'{i}년차' for i in df.index]
+        elif form == '비고':
+            orders = ['신청', '수료'][::-1]
         return orders
     
     # -------------------------------------  Horizontal Bar Chart (Single) 제작 함수 정의  -----------------------------------------
