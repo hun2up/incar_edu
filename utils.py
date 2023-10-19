@@ -574,13 +574,11 @@ class MakeSet(CallData):
             df_attend_total[self.index[i][3]] = (df_attend_total[self.index[i][2]]/df_apply['신청누계']*100).round(1)
             df_attend_total = df_attend_total.drop(columns=[self.index[i][2]])
             # 수료율/IMO신청률 합치기
-            st.dataframe(df_attend)
-            df_attend = pd.concat([df_attend, df_attend_total], axis=0)
-            st.dataframe(df_attend)
-        df_result = pd.merge(df_apply, df_attend, on=[columns])
-            
+            df_attend = pd.merge(df_attend, df_attend_total, on=[columns])
+            df_apply = pd.merge(df_apply, df_attend, on=[columns])
+            st.dataframe(df_apply)
         # 다 합쳐서 반환
-        return df_result
+        return df_apply
     
     # ----------------------------------------  월별 & 소속부문별 고유값 및 누계값  -----------------------------------------------
     # 월별, 소속부문별 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률
