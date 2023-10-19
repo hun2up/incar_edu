@@ -73,8 +73,10 @@ if authentication_status:
     pie_fee.plotly_chart(isinstance.make_piechart(label=df_fee['유무료'], value=df_fee['횟수']), use_container_width=True)
     # 수료율
     df_attend_rate = pd.DataFrame({'구분':['수료','미수료'],'수료율':[(df_sums.iloc[0,1]/df_sums.iloc[1,1]*100).round(1), (100-df_sums.iloc[0,1]/df_sums.iloc[1,1]*100).round(1)]})
-    # df_attend_rate = pd.DataFrame(attend_rate)
     pie_attend_rate.plotly_chart(isinstance.make_piechart(label=df_attend_rate['구분'],value=df_attend_rate['수료율']), use_container_width=True)
+    # IMO신청률
+    df_imo_rate = pd.DataFrame({'구분':['IMO','IIMS'],'신청률':[(df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1), (100-df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1)]})
+    pie_imo_rate.plotly_chart(isinstance.make_piechart(label=df_imo_rate['구분'],value=df_imo_rate['신청률']), use_container_width=True)
 
        
 
@@ -109,8 +111,8 @@ if authentication_status:
     # comrate = {'구분':['수료','미수료'],'수료율':[(df_sums.iloc[0,1]/df_sums.iloc[1,1]*100).round(1), (100-df_sums.iloc[0,1]/df_sums.iloc[1,1]*100).round(1)]}
     # df_comrate = pd.DataFrame(comrate)
     # IMO신청률
-    imo = {'구분':['IMO','IIMS'],'신청률':[(df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1), (100-df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1)]}
-    df_imo = pd.DataFrame(imo)
+    # imo = {'구분':['IMO','IIMS'],'신청률':[(df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1), (100-df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1)]}
+    # df_imo = pd.DataFrame(imo)
 
     df_rank_fa = fn_rank_fa(df_all)
     df_rank_partner = fn_rank_partner(df_all)
@@ -123,7 +125,7 @@ if authentication_status:
     # 수료율
     # fig_comrate = fig_piechart(df_comrate['구분'], df_comrate['수료율'])
     # IMO 신청률
-    fig_imo = fig_piechart(df_imo['구분'], df_imo['신청률'])
+    # fig_imo = fig_piechart(df_imo['구분'], df_imo['신청률'])
 
     # 신청인원 및 수료인원
     # 색상(hexcode) 제작
@@ -145,7 +147,7 @@ if authentication_status:
     # r1_c1.plotly_chart(fig_line, use_container_width=True)
     # r1_c2.plotly_chart(fig_fee, use_container_width=True)
     # r1_c3.plotly_chart(fig_comrate, use_container_width=True)
-    r1_c4.plotly_chart(fig_imo, use_container_width=True)
+    # r1_c4.plotly_chart(fig_imo, use_container_width=True)
 
     r2_c1, r2_c2, r2_c3, r2_c4 = st.columns(4)
     r2_c1.plotly_chart(fig_sums, use_container_width=True)
