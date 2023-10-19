@@ -606,9 +606,9 @@ class MakeSet(CallData):
             df_attend_total[self.index[groups][3]] = (df_attend_total[self.index[groups][2]]/df_apply['신청누계']*100).round(1)
             # 수료인원이랑 수료누계 합치기
             df_attend = pd.merge(df_attend_unique, df_attend_total, on=['월',columns])
-            df_result = pd.merge(df_apply, df_attend, on=['월',columns])
+            df_apply = pd.merge(df_apply, df_attend, on=['월',columns])
         # 다 합쳐서 반환
-        return df_result
+        return df_apply
 
 class Chart(MakeSet):
     def __init__(self):

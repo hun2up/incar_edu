@@ -85,13 +85,26 @@ if authentication_status:
         axis_a='IMO신청률',
         title='부문별 IMO신청률'), use_container_width=True)
     
+    # 네번째 행 (신청누계 & 수료누계 추이그래프) 수료율, IMO신청률)
+    # 다섯번째 행 (수료율 & IMO신청률 추이그래프)
+    line_apply, line_attend = st.columns(2)
+    line_apply.plotly_chart(instance_channel.make_linechart(
+        df=instance_channel.make_set_trend(df=instance_channel.call_data_attend("attend"), columns='소속부문'),
+        category='소속부문',
+        xaxis='월',
+        yaxis='신청누계',
+        title='소속부문별 신청인원 추이 (신청누계 기준)'), use_container_width=True)
+    line_attend.plotly_chart(instance_channel.make_linechart(
+        df=instance_channel.make_set_trend(df=instance_channel.call_data_attend("attend"), columns='소속부문'),
+        category='소속부문',
+        xaxis='월',
+        yaxis='수료누계',
+        title='소속부문별 수료인원 추이 (수료누계 기준)'), use_container_width=True)
+
     end_all_after = time.time()
     st.write(f"시간측정(전체-수정후) : {end_all_after - start_all_after}")
 
-
-
     start_all_before = time.time()
-
     # ------------------------------------------------  dataframe 제작  -----------------------------------------------------
     start_data = time.time()
     # barchart 제작을 위한 현황 dataframe (소속부문별)
