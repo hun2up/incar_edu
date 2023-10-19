@@ -65,7 +65,7 @@ if authentication_status:
         axis_a='신청인원',
         axis_b='신청누계',
         title='부문별 교육신청 현황'), use_container_width=True)
-    
+    '''
     hbar_attend, hbar_attend_people = st.columns(2)
     hbar_attend.plotly_chart(instance_channel.make_hbarchart_group(
         df=instance_channel.make_set_status(df=instance_channel.call_data_attend("attend"), columns='소속부문'),
@@ -73,6 +73,7 @@ if authentication_status:
         axis_a='수료인원',
         axis_b='수료누계',
         title='부문별 교육수료 현황'), use_container_width=True)
+    '''
 
     end_all_after = time.time()
     st.write(f"시간측정(전체-수정후) : {end_all_after - start_all_after}")
