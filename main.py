@@ -55,13 +55,13 @@ if authentication_status:
 
     bar_today, line_today = st.columns(2)
     bar_today.plotly_chart(instance.make_vbarchart_group(
-        df=instance.make_set_status(df_apply_bar, *['과정명']),
+        df=df_apply_bar,
         category='과정명',
         axis_a='목표인원',
         axis_b='신청인원',
         title='과정별 신청현황'), use_container_width=True)
     line_today.plotly_chart(instance.make_linechart(
-        df=instance.make_set_trend(df_apply_line, *['과정명']),
+        df=df_apply_line,
         category='과정명',
         xaxis='날짜',
         yaxis='신청인원',
