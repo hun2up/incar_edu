@@ -405,7 +405,7 @@ class MakeSet(CallData):
 
     # -------------------------------------------  소속부문별 고유값 및 누계값  --------------------------------------------------
     # 소속부문별 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률
-    def make_set_status(self, df, columns):
+    def test(self, df, columns):
         # dfv_atd를 '소속부문', '사원번호' 칼럼으로 묶고, 누적개수 구하기
         df_apply = df.groupby([columns,'사원번호']).size().reset_index(name='신청누계')
         # df_func_number에서 묶여있는 '사원번호' 카운트 (중복값 제거한 인원)
@@ -514,7 +514,7 @@ class MakeSet(CallData):
 
     # -------------------------------------------  소속부문별 고유값 및 누계값  --------------------------------------------------
     # 소속부문별 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률
-    def test(self, df, *columns):
+    def make_set_status(self, df, *columns):
         # dfv_atd를 '소속부문', '사원번호' 칼럼으로 묶고, 누적개수 구하기
         df_apply = df.groupby([*columns,'사원번호']).size().reset_index(name='신청누계')
         # df_func_number에서 묶여있는 '사원번호' 카운트 (중복값 제거한 인원)

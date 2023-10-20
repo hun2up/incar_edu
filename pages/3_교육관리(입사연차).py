@@ -62,7 +62,7 @@ if authentication_status:
     # 첫번째 행 (신청인원)
     hbar_apply, hbar_apply_people = st.columns(2)
     hbar_apply.plotly_chart(instance.make_hbarchart_group(
-        df=instance.make_set_status(df=df_career, columns='입사연차'),
+        df=instance.make_set_status(df_career, *['입사연차']),
         category='입사연차',
         axis_a='신청인원',
         axis_b='신청누계',
@@ -71,7 +71,7 @@ if authentication_status:
     # 두번째 행 (수료인원)
     hbar_attend, hbar_attend_people = st.columns(2)
     hbar_attend.plotly_chart(instance.make_hbarchart_group(
-        df=instance.make_set_status(df=df_career, columns='입사연차'),
+        df=instance.make_set_status(df_career, *['입사연차']),
         category='입사연차',
         axis_a='수료인원',
         axis_b='수료누계',
@@ -80,12 +80,12 @@ if authentication_status:
     # 세번째 행 (수료율 & IMO신청률)
     hbar_attend_rate, hbar_imo_rate = st.columns(2)
     hbar_attend_rate.plotly_chart(instance.make_hbarchart_single(
-        df=instance.make_set_status(df=df_career, columns='입사연차'),
+        df=instance.make_set_status(df_career, *['입사연차']),
         category='입사연차',
         axis_a='수료율',
         title='입사연차별 수료율'), use_container_width=True)
     hbar_imo_rate.plotly_chart(instance.make_hbarchart_single(
-        df=instance.make_set_status(df=df_career, columns='입사연차'),
+        df=instance.make_set_status(df_career, *['입사연차']),
         category='입사연차',
         axis_a='IMO신청률',
         title='입사연차별 IMO신청률'), use_container_width=True)
