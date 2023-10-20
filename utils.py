@@ -505,7 +505,7 @@ class Chart(MakeSet):
         if form == '소속부문': orders = ['개인부문', '전략부문', 'CA부문', 'MA부문', 'PA부문', '다이렉트부문'][::-1]
         elif form == '입사연차': orders = [f'{i}년차' for i in df.index]
         elif form == '비고': orders = ['신청', '수료'][::-1]
-        else: orders = [df.iat[i,1] for i in df.shape[0]]
+        else: orders = [df.iat[i,1] for i in range(df.shape[0])]
         return orders
     
     def generate_linechart_orders(self, df, form):
