@@ -1,7 +1,6 @@
 ########################################################################################################################
 ##############################################     라이브러리 호출하기     ##################################################
 ########################################################################################################################
-from datetime import datetime
 import pandas as pd
 import streamlit as st
 import streamlit_authenticator as stauth
@@ -11,8 +10,6 @@ import yaml
 from yaml.loader import SafeLoader
 with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
-# from utils import fn_status, fn_trends, fig_vbarchart
-# from utils import df_apl
 from utils import Chart
 
 ########################################################################################################################

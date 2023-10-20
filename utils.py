@@ -68,6 +68,7 @@ def make_sidebar(dfv_sidebar, colv_sidebar):
         default=dfv_sidebar[colv_sidebar].unique()
     )
 
+'''
 # ---------------------------------------    Google Sheet 데이터베이스 호출    ----------------------------------------------
 @st.cache_data(ttl=600)
 def load_data(sheets_url):
@@ -334,6 +335,7 @@ df_apply.rename(columns={'성함':'성명'}, inplace=True)
 ###### df_atd = [과정코드, 과정분류, 과정명, 보험사, 월, 과정형태, 수강료, 지역, 교육장소, 정원, 목표인원, 소속부문, 소속총괄, 소속부서, 파트너, 사원번호, 성함, IMO신청여부, 수료현황, 입사연차]
 df_atd = fn_attend(df_attend, df_course)
 df_apl = fn_apply(df_apply, df_course)
+'''
 
 class CallData:
     def __init__(self):
