@@ -50,7 +50,10 @@ if authentication_status:
     df_apply_bar = df_apply.drop(df_apply[df_apply.iloc[:,0] != df_apply.iloc[-1,0]].index)
     month_today = pd.to_datetime(df_apply_bar.iloc[-1]['날짜'], format="%Y. %m. %d").month
     df_apply_bar = df_apply_bar.groupby(['날짜','과정명','목표인원'])['신청인원'].sum().reset_index(name='신청인원')
+    st.dataframe(df_apply_bar)
+    st.dataframe(df_apply_line)
 
+    '''
     bar_today, line_today = st.columns(2)
     line_today.plotly_chart(instance.make_linechart(
         df=instance.make_set_trend(df=df_apply_line, columns='소속부문'),
@@ -58,6 +61,7 @@ if authentication_status:
         xaxis='날짜',
         yaxis='신청인원',
         title=f'{month_today}월 신청인원 추이'), use_container_width=True)
+    '''
 
 
     '''
