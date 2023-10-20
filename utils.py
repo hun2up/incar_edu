@@ -624,7 +624,7 @@ class Chart(MakeSet):
         return fig_pchart
     
     # ------------------------------------------------  랭킹 (스타일 카드 제작)  ----------------------------------------------------
-    def make_cards_a(self, df, *columns, select, ascend, title):
+    def make_cards_a(self, df, select, ascend, title, *columns):
         st.write(title)
         df = df.sort_values(by=[*columns], ascending=[ascend, False])
         sector = st.columns(5)
