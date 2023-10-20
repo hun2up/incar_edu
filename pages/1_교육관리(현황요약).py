@@ -91,11 +91,11 @@ if authentication_status:
     ##########################################################################################################################  
     df_test_fa = instance.make_set_status(df_all,*['소속부문','파트너','성명'])
     st.dataframe(df_test_fa)
-    df_test_partner = instance.make_set_status(df_all,*['소속부문','파트너','성명'])
+    df_test_partner = instance.make_set_status(df_all,*['소속부문','파트너'])
     st.dataframe(df_test_partner)
-    df_test_channel = instance.make_set_status(df_all,*['소속부문','파트너','성명'])
+    df_test_channel = instance.make_set_status(df_all,*['소속부문'])
     st.dataframe(df_test_channel)
-    df_test_career = instance.make_set_status(df_all,*['입사연차','파트너','성명'])
+    df_test_career = instance.make_set_status(df_all,*['입사연차'])
     st.dataframe(df_test_career)
     
     
