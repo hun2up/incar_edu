@@ -4,7 +4,6 @@
 import pandas as pd
 import streamlit as st
 import streamlit_authenticator as stauth
-# from streamlit_extras.metric_cards import style_metric_cards
 hashed_passwords = stauth.Hasher(['XXX']).generate()
 import yaml
 from yaml.loader import SafeLoader
