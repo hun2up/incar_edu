@@ -103,7 +103,7 @@ if authentication_status:
         [3,5,6,6],
         ['교육신청 TOP5 (파트너)','교육수료 TOP5 (파트너)','수료율 TOP5 (파트너) (수료율 동률일 경우 수료누계 기준 순위정렬)','수료율 하위 TOP5 (파트너) (수료율 동률일 경우 신청누계 기준 순위정렬)']
     ]
-    instance.make_cards_a(df=instance.make_set_status(df_all,*['소속부문','파트너']), select=reference_partner, title="##### 주요랭킹 (파트너)")
+    instance.make_cards_a(df=instance.make_set_status(df_all,*['소속부문','파트너']).drop(columns=['성명']), select=reference_partner, title="##### 주요랭킹 (파트너)")
 
     # [소속부문, 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률]
     reference_channel = [
