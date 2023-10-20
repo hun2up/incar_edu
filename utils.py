@@ -565,20 +565,20 @@ class Chart(MakeSet):
     # --------------------------------------  Vertical Bar Chart (Group) 제작 함수 정의  -----------------------------------------
     # axis_a: 고유값 (신청인원, 수료인원) / axis_b: 누계값 (신청누계, 수료누계)
     # Grouped Bar Chart 만들기
-    def make_vbarchart_group(self, df, category, axis_a, axis_b, title):
+    def make_vbarchart(self, df, title):
         fig_chart_a = pl.graph_objs.Bar(
-            x=df[axis_a],
-            y=df[category],
-            name=axis_a,
-            text=df[axis_a],
+            x=df['과정명'],
+            y=df['목표인원'],
+            name='목표인원',
+            text=df['목표인원'],
             marker={'color':'grey'},
             orientation='v'
         )
         fig_chart_b = pl.graph_objs.Bar(
-            x=df[axis_b],
-            y=df[category],
-            name=axis_b,
-            text=df[axis_b],
+            x=df['과정명'],
+            y=df['신청인원'],
+            name='신청인원',
+            text=df['신청인원'],
             marker={'color':self.generate_chart_colors(df)},
             orientation='v'
         )
