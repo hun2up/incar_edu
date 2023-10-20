@@ -396,8 +396,8 @@ class Chart(MakeSet):
 class ServiceData:
     def __init__(self) -> None:
         pass
+
     # 데이터프레임 만들기 (보고서용)
-    
     def make_service_data(self, df):
         # 컬럼 삭제
         df_result = df.drop(columns=['본부','지점'])
@@ -415,10 +415,12 @@ class ServiceData:
         # 소속찾기
         return df_result
 
+    # 각 사원별 접속횟수 : [사원번호, 접속수]
     def make_service_branch(self, df):
         df_result = self.make_service_data(df).groupby(['사원번호'])['사원번호'].count().reset_index(name='접속수')
         return df_result
 
+    # 보고서용 요약자료
     def make_service_summary(self, df):
         columns = [
             '로그인수',
@@ -449,7 +451,22 @@ class ServiceData:
             columns_sums[columns[i]] = [self.make_service_data(df)[columns[i]].sum()]
         df_result = pd.DataFrame(columns_sums)
         return df_result
-    
+
+    # 1~12월 전체자료 불러오기
+    '''
+    month = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec']
+    start_all = time.time()
+    for i in range(9):
+        start = time.time()
+        st.write(month[i])
+        st.dataframe(instance.make_service_data(call_sheets(month[i])))
+        end = time.time()
+        st.write(f"시간측정({month[i]}) : {end-start} 초")
+    end_all = time.time()
+    st.write(f"시간측정(전체) : {end_all-start_all} sec")
+    '''
+
+
 class Register:
     def __init__(self):
         self.dates = {'jan':'20230201','feb':'20230301','mar':'20230401','apr':'20230501','may':'20230601','jun':'20230701','jul':'20230801','aug':'20230901','sep':'20231001','oct':'20231101','nov':'20231201','dec':'20240101'}
@@ -460,14 +477,17 @@ class Register:
         st.dataframe(df_fa)
         # 입사인원관리 시트 호출
         df_enter = call_sheets("enter")[['사원번호','입사일자(사원)']]
-        df_enter['입사일자(사원)'] = df_enter['입사일자(사원)'].str.replace('/','').astype(int)
-        df_enter = df_enter[df_enter['입사일자(사원)'] >= 20230901].drop(columns=['입사일자(사원)'])
+        df_enter['입사일자(사원)'] = df_enter['입사일자(사원)'].str.replace('/','').astype(int) # 입사일자의 형식을 8자리 숫자로 변환
+        df_enter = df_enter[df_enter['입사일자(사원)'] >= 20230901].drop(columns=['입사일자(사원)']) # 특정일자 이후에 입사한 인원을 추출
+        enter = df_enter['사원번호'].tolist()
+        st.dataframe(enter)
+        df_fa = df_fa[df_fa['사원번호'].isin(enter)]
         # 퇴사인원관리 시트 호출
-        df_quit = call_sheets("quit")[['사원번호','퇴사일자(사원)']]
+        df_quit = call_sheets("quit")[['사원번호','영업가족CD','퇴사일자(사원)']]
         df_quit['퇴사일자(사원)'] = df_quit['퇴사일자(사원)'].str.replace('/','').astype(int)
         df_quit = df_quit[df_quit['퇴사일자(사원)'] >= 20230901].drop(columns=['퇴사일자(사원)'])
         # 입사 및 퇴사 시점에 맞게 재적인원 정리
-        df_fa = df_fa.merge(df_enter, on='사원번호', how='left', indicator=True).query('_merge == "left_only"').drop('_merge', axis=1)
+        # df_fa = df_fa.merge(df_enter, on='사원번호', how='left', indicator=True).query('_merge == "left_only"').drop('_merge', axis=1)
         st.dataframe(df_fa)
         st.dataframe(df_enter)
         st.dataframe(df_quit)
