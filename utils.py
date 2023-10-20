@@ -399,8 +399,7 @@ class ServiceData:
     
     # 데이터프레임 만들기 (보고서용)
     
-    def make_data_service(self):
-
+    def make_service_data(self):
         # 컬럼 삭제
         df_result = self.df.drop(columns=['본부','지점'])
         # 컬럼 정리 (보고서 순으로)
@@ -409,4 +408,8 @@ class ServiceData:
         df_result = df_result.rename(columns={'컨설턴트ID':'사원번호','컨설텅트성명':'성명'})
         # 사번정리
         # 소속찾기
+        return df_result
+    
+    def make_service_summary(self):
+        df_result = self.make_service_data().groupby['로그인수','보장분석접속건수','보장분석고객등록수','보장분석컨설팅고객수','보장분석출력건수','간편보장_접속건수','간편보장_출력건수','APP 보험다보여전송건수','APP 주요보장합계조회건수','APP 명함_접속건수','APP 의료비/보험금조회건수','보험료비교접속건수','보험료비교출력건수','한장보험료비교_접속건수','상품비교설명확인서_접속건수','영업자료접속건수','영업자료출력건수','(NEW)영업자료접속건수','(NEW)영업자료출력건수','라이프사이클접속건수','라이프사이클출력건수'].sum()
         return df_result
