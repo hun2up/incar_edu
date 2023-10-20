@@ -444,5 +444,5 @@ class ServiceData:
         return df_result
     
     def make_service_branch(self):
-        df_result = self.make_service_data().groupby(['성명','사원번호'])['사원번호'].count()
+        df_result = self.make_service_data().groupby(['사원번호'])['사원번호'].count().reset_index(name='접속수')
         return df_result
