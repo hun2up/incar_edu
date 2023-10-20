@@ -8,7 +8,7 @@ import yaml
 from yaml.loader import SafeLoader
 with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
-from utils import call_data
+from utils import call_sheets
 from utils import month_dict
 from utils import ServiceData
 
@@ -22,7 +22,7 @@ st.set_page_config(page_title="실적관리 대시보드", layout='wide')
 # 9월 실적현황 SHEET 호출
 month = "sep"
 this_month = month_dict[month]
-df_month = call_data(month)
+df_month = call_sheets(month)
 
 # -------------------------------------------------  인증페이지 삽입  -------------------------------------------------------
 # 인증모듈 기본설정
@@ -48,3 +48,5 @@ if authentication_status:
     ########################################################################################################################
     instance = ServiceData(df_month)
     st.dataframe(instance.make_data_service())
+
+    # 요약보고서 제작
