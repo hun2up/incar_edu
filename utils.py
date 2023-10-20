@@ -480,6 +480,7 @@ class Register:
         df_enter['입사일자(사원)'] = df_enter['입사일자(사원)'].str.replace('/','').astype(int) # 입사일자의 형식을 8자리 숫자로 변환
         df_enter = df_enter[df_enter['입사일자(사원)'] >= 20230901].drop(columns=['입사일자(사원)']) # 특정일자 이후에 입사한 인원을 추출
         df_fa = df_fa[~df_fa['사원번호'].isin(df_enter['사원번호'])] # 현재 재적인원에서 특정일자 이후에 입사한 인원 삭제
+        st.write(df_enter.shape[0])
         st.write(df_fa.shape[0])
         # enter = df_enter['사원번호'].tolist()
         # df_fa = df_fa[df_fa['사원번호'].isin(enter)] 
@@ -490,6 +491,7 @@ class Register:
         df_fa = pd.concat([df_fa, df_quit], axis=0)
         # 입사 및 퇴사 시점에 맞게 재적인원 정리
         # df_fa = df_fa.merge(df_enter, on='사원번호', how='left', indicator=True).query('_merge == "left_only"').drop('_merge', axis=1)
+        st.write(df_quit.shape[0])
         st.write(df_fa.shape[0])
 
 
