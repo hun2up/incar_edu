@@ -287,13 +287,6 @@ def fn_rank_channel(dfv_atd):
     # 다 합쳐서 반환
     return dfv_rank
 
-
-'''
-list_vbarchart[0]: dataframe (df_stat, df_trnd)
-list_vbarchart[1]: 색상 리스트 ()
-list_vbarchart[2]: outside 리스트 ()
-list_vbarchart[3]: 차트 제목
-'''
 def fig_vbarchart(list_vbarchart):
     # 오늘의 신청현황 막대그래프
     fig_vbar1 = pl.graph_objs.Bar(
@@ -583,7 +576,7 @@ class Chart(MakeSet):
             orientation='v'
         )
         data_chart = [fig_chart_a, fig_chart_b]
-        layout_chart = pl.graph_objs.Layout(title=title,yaxis={'categoryorder':'array', 'categoryarray':self.generate_barchart_orders(None, None)})
+        layout_chart = pl.graph_objs.Layout(title=title,yaxis={'categoryorder':'array', 'categoryarray':self.generate_barchart_orders(df, None)})
         return_chart = pl.graph_objs.Figure(data=data_chart,layout=layout_chart)
         return_chart.update_traces(textposition=self.generate_chart_outsides(df))
         return_chart.update_layout(showlegend=False)
