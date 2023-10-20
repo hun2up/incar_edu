@@ -64,7 +64,7 @@ if authentication_status:
         
     st.dataframe(instance.make_set_status(df=df_all, columns='소속부문'))
     col = ['소속부문']
-    st.dataframe(instance.test(df=df_all, *col))
+    st.dataframe(instance.test(df_all, *col))
 
     df_sums = instance.make_set_sums(instance.make_set_status(df=df_all,columns='소속부문'))
 
