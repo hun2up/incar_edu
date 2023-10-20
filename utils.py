@@ -583,7 +583,7 @@ class Chart(MakeSet):
             orientation='v'
         )
         data_chart = [fig_chart_a, fig_chart_b]
-        layout_chart = pl.graph_objs.Layout(title=title,yaxis={'categoryorder':'array', 'categoryarray':self.generate_barchart_orders()})
+        layout_chart = pl.graph_objs.Layout(title=title,yaxis={'categoryorder':'array', 'categoryarray':self.generate_barchart_orders(None, None)})
         return_chart = pl.graph_objs.Figure(data=data_chart,layout=layout_chart)
         return_chart.update_traces(textposition=self.generate_chart_outsides(df))
         return_chart.update_layout(showlegend=False)
