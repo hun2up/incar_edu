@@ -626,9 +626,11 @@ class Chart(MakeSet):
 
     # ------------------------------------------------  랭킹 (스타일 카드 제작)  ----------------------------------------------------
     # 스타일카드 : FA, 파트너
-    def make_cards_a(self, df, select):
+    def make_cards_a(self, df, select, title):
         index_card = [['신청누계','수료율'], ['수료누계','수료율'], ['수료율','수료누계'], ['수료율','수료누계']]
         index_ascending = [False, False, False, True]
+        st.markdown('---')
+        st.markdown(title)
         # 랭킹 항목 4개씩 만들기
         for loop in range(4):
             st.write(select[1][loop])
@@ -640,9 +642,11 @@ class Chart(MakeSet):
 
     # ------------------------------------------------  랭킹 (스타일 카드 제작)  ----------------------------------------------------
     # 스타일카드 : 소속부문, 입사연차
-    def make_cards_b(self, df, select):
+    def make_cards_b(self, df, select, title):
         index_card = [['신청누계','수료율'], ['수료누계','수료율'], ['수료율','수료누계'], ['수료율','수료누계']]
         index_ascending = [False, False, False, True]
+        st.markdown('---')
+        st.markdown(title)
         # 랭킹 항목 4개씩 만들기
         for loop in range(4):
             st.write(select[1][loop])
