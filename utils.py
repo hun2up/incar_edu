@@ -458,9 +458,11 @@ class Register:
 
     def find_register(self):
         df_fa = call_sheets("fa")[['사원번호','영업가족CD']].astype(str)
-        df_enter = call_data("enter")[['사원번호','입사일자(사원)']].astype(str)
+        df_enter = call_data("enter")[['사원번호','입사일자(사원)']]
+        df_enter['입사일자(사원)'] = df_enter['입사일자(사원)'].str.replace('/','').astype(int)
         df_enter = df_enter[df_enter['입사일자(사원)'] < 20231001]
         df_quit = call_data("quit")[['사원번호','퇴사일자(사원)']].astype(str)
+        df_quit['퇴사일자(사원)'] = df_quit['퇴사일자(사원)'].str.replace('/','').astype(int)
         df_quit = df_quit[df_quit['퇴사일자(사원)'] < 20231001]
         st.dataframe(df_fa)
         st.dataframe(df_enter)
