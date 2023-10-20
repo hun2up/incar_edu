@@ -487,7 +487,7 @@ class Register:
         df_quit = call_sheets("quit")[['사원번호','영업가족CD','퇴사일자(사원)']]
         df_quit['퇴사일자(사원)'] = df_quit['퇴사일자(사원)'].str.replace('/','').astype(int)
         df_quit = df_quit[df_quit['퇴사일자(사원)'] >= 20230901].drop(columns=['퇴사일자(사원)'])
-        df_fa = pd.merge(df_fa, df_quit, on=['사원번호','영업가족CD'])
+        df_fa = pd.concat([df_fa, df_quit], axis=0)
         # 입사 및 퇴사 시점에 맞게 재적인원 정리
         # df_fa = df_fa.merge(df_enter, on='사원번호', how='left', indicator=True).query('_merge == "left_only"').drop('_merge', axis=1)
         st.write(df_fa.shape[0])
