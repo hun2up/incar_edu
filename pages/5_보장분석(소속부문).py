@@ -1,6 +1,7 @@
 ########################################################################################################################
 ##############################################     라이브러리 호출하기     ##################################################
 ########################################################################################################################
+import time
 import streamlit as st
 import streamlit_authenticator as stauth
 hashed_passwords = stauth.Hasher(['XXX']).generate()
@@ -17,13 +18,6 @@ from utils import ServiceData, Register
 ###########################################################################################################################
 # ---------------------------------------------    페이지 레이아웃 설정    --------------------------------------------------
 st.set_page_config(page_title="보장분석 대시보드", layout='wide')
-
-# ----------------------------------------    Google Sheet 데이터베이스 호출    ---------------------------------------------
-# 9월 실적현황 SHEET 호출
-month = "sep"
-this_month = month_dict[month]
-df_month = call_sheets(month)
-
 
 # -------------------------------------------------  인증페이지 삽입  -------------------------------------------------------
 # 인증모듈 기본설정
@@ -47,11 +41,22 @@ if authentication_status:
     ########################################################################################################################
     ##################################################     자료 제작     #####################################################
     ########################################################################################################################
-    instance = ServiceData(df_month)
-    instance_register = Register()
-    st.dataframe(instance.make_service_summary())
-    st.dataframe(instance.make_service_branch())
+    # ----------------------------------------    Google Sheet 데이터베이스 호출    ---------------------------------------------
+    # 9월 실적현황 SHEET 호출
+    instance = ServiceData()
+    month = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec']
+    for i in range(len(month)):
+        start = time.time()
+        st.write('jan')
+        st.dataframe(instance.make_service_data(call_sheets(month[i])))
+        end = time.time()
+        st.write(f"시간측정({month[i]}) : {end-start} 초")
+    
+    
+    # instance_register = Register()
+    # st.dataframe(instance.make_service_summary())
+    # st.dataframe(instance.make_service_branch())
 
-    instance_register.find_register()
+    # instance_register.find_register()
 
     # 요약보고서 제작

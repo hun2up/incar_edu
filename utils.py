@@ -394,14 +394,13 @@ class Chart(MakeSet):
 ##############################################     Class 정의 (보장분석)     ############################################
 ########################################################################################################################
 class ServiceData:
-    def __init__(self, df) -> None:
-        self.df = df
+    def __init__(self) -> None:
     
     # 데이터프레임 만들기 (보고서용)
     
-    def make_service_data(self):
+    def make_service_data(self, df):
         # 컬럼 삭제
-        df_result = self.df.drop(columns=['본부','지점'])
+        df_result = df.drop(columns=['본부','지점'])
         # 컬럼 정리 (보고서 순으로)
         # df_result = df_result[['기준일자','컨설턴트ID','컨설턴트성명','로그인수','보장분석접속건수','보장분석고객등록수','보장분석컨설팅고객수','보장분석출력건수','간편보장_접속건수','간편보장_출력건수','APP 보험다보여전송건수','APP 주요보장합계조회건수','APP 명함_접속건수','APP 의료비/보험금조회건수','보험료비교접속건수','보험료비교출력건수','한장보험료비교_접속건수','상품비교설명확인서_접속건수','영업자료접속건수','영업자료출력건수','(NEW)영업자료접속건수','(NEW)영업자료출력건수','라이프사이클접속건수','라이프사이클출력건수']]
         # 컬럼명 변경
@@ -416,11 +415,11 @@ class ServiceData:
         # 소속찾기
         return df_result
 
-    def make_service_branch(self):
-        df_result = self.make_service_data().groupby(['사원번호'])['사원번호'].count().reset_index(name='접속수')
+    def make_service_branch(self, df):
+        df_result = self.make_service_data(df).groupby(['사원번호'])['사원번호'].count().reset_index(name='접속수')
         return df_result
 
-    def make_service_summary(self):
+    def make_service_summary(self, df):
         columns = [
             '로그인수',
             '보장분석접속건수',
@@ -447,9 +446,8 @@ class ServiceData:
         ]
         columns_sums = {}
         for i in range(len(columns)):
-            columns_sums[columns[i]] = [self.make_service_data()[columns[i]].sum()]
+            columns_sums[columns[i]] = [self.make_service_data(df)[columns[i]].sum()]
         df_result = pd.DataFrame(columns_sums)
-
         return df_result
     
 class Register:
