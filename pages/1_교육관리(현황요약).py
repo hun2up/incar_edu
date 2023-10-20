@@ -91,19 +91,14 @@ if authentication_status:
     ##############################################     스타일 카드 (랭킹)     #################################################
     ##########################################################################################################################  
     style_metric_cards()
-    # st.markdown('---')
-    # st.markdown("##### 주요랭킹 (FA)")
-    # df_test_fa = instance.make_set_status(df_all,*['소속부문','파트너','성명'])
+
+    # [소속부문, 파트너, 성명, 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률]
     reference_fa = [
         [4,6,7,7], # df_test_fa 데이터프레임에서 랭킹 제작할 컬럼 선택 
         ['교육신청 TOP5 (FA)','교육수료 TOP5 (FA)','수료율 TOP5 (FA) (수료율 동률일 경우 수료누계 기준 순위정렬)','수료율 하위 TOP5 (FA) (수료율 동률일 경우 신청누계 기준 순위정렬)'] # 각 항목별 제목
     ]
     instance.make_cards_a(df=instance.make_set_status(df_all,*['소속부문','파트너','성명']), select=reference_fa, title="##### 주요랭킹 (FA)")
 
-    # st.markdown('---')
-    # st.markdown("##### 주요랭킹 (파트너)")
-    # df_test_partner = instance.make_set_status(df_all,*['소속부문','파트너'])
-    # st.dataframe(df_test_partner)
     # [소속부문, 파트너, 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률]
     reference_partner = [
         [3,5,6,6],
@@ -111,87 +106,16 @@ if authentication_status:
     ]
     instance.make_cards_a(df=instance.make_set_status(df_all,*['소속부문','파트너']), select=reference_partner, title="##### 주요랭킹 (파트너)")
 
-    # st.markdown('---')
-    # st.markdown("##### 주요랭킹 (소속부문)")
-    df_test_channel = instance.make_set_status(df_all,*['소속부문'])
-    st.dataframe(df_test_channel)
+    # [소속부문, 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률]
     reference_channel = [
         [2,4,5,5],
         ['교육신청 순위 (소속부문)','교육수료 순위 (소속부문)','수료율 순위 (소속부문) (수료율 동률일 경우 수료누계 기준 순위정렬)','수료율 하위 (소속부문) (수료율 동률일 경우 신청누계 기준 순위정렬)']
     ]
     instance.make_cards_b(df=instance.make_set_status(df_all,*['소속부문']), select=reference_channel, title="##### 주요랭킹 (소속부문)")
 
-    # st.markdown('---')
-    # st.markdown("##### 주요랭킹 (입사연차)")
-    df_test_career = instance.make_set_status(df_all,*['입사연차'])
-    st.dataframe(df_test_career)
+    # [입사연차, 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률]
     reference_career = [
         [2,4,5,5],
         ['교육신청 순위 (입사연차)','교육수료 순위 (입사연차)','수료율 순위 (입사연차) (수료율 동률일 경우 수료누계 기준 순위정렬)','수료율 순위 (입사연차) (수료율 동률일 경우 신청누계 기준 순위정렬)']
     ]
     instance.make_cards_b(df=instance.make_set_status(df_all,*['입사연차']), select=reference_career, title="##### 주요랭킹 (입사연차)")
-
-    
-
-    '''
-    ########################################################################################################################
-    ##################################################     자료 제작     #####################################################
-    ########################################################################################################################
-    # ------------------------------------------------  dataframe 제작  -----------------------------------------------------
-    df_chn = fn_status(df_all, '소속부문')
-    df_crr = fn_status(df_all, '입사연차')
-    # 신청수료인원
-    df_sums = df_chn.sum(axis=0)
-    df_sums = pd.DataFrame({'합계':df_sums}).transpose().drop(columns='소속부문')
-    df_sums_apl = df_sums.drop(columns=['수료인원','수료누계','수료율','IMO신청인원','IMO신청누계','IMO신청률']).rename(columns={'신청인원':'고유인원','신청누계':'누계인원'})
-    df_sums_apl.index = ['신청']
-    df_sums_apl = df_sums_apl.reset_index()
-    df_sums_apl = df_sums_apl.rename(columns={'index':'비고'})
-    df_sums_atd = df_sums.drop(columns=['신청인원','신청누계','수료율','IMO신청인원','IMO신청누계','IMO신청률']).rename(columns={'수료인원':'고유인원','수료누계':'누계인원'})
-    df_sums_atd.index = ['수료']
-    df_sums_atd = df_sums_atd.reset_index()
-    df_sums_atd = df_sums_atd.rename(columns={'index':'비고'})
-    df_sums = pd.concat([df_sums_atd, df_sums_apl], axis=0)
-
-
-    df_rank_fa = fn_rank_fa(df_all)
-    df_rank_partner = fn_rank_partner(df_all)
-    df_rank_channel = fn_rank_channel(df_all)
-
-    # ----------------------------------------------------  랭킹  -----------------------------------------------------------
-    def metrics_fa(st, title, df, column_name1, column_name2, column_name3, ascend):
-        st.write(title)
-        df = df.sort_values(by=[column_name1, column_name2], ascending=[ascend, False])
-        columns = st.columns(5)
-        for i in range(5):
-            columns[i].metric(df.iat[i, 1] + ' ' + df.iat[i, 2], df.iat[i, column_name3])
-
-    def metrics_category(st, title, df, column_name1, column_name2, column_name3):
-        st.write(title)
-        df = df.sort_values(by=[column_name1, column_name2], ascending=[False, False])
-        columns = st.columns(5)
-        for i in range(5):
-            columns[i].metric(df.iat[i, 0], df.iat[i, column_name3])
-    
-    st.markdown('---')
-    st.write("주요랭킹 (FA)")
-    metrics_fa(st, "교육신청 TOP5 (FA)", df_rank_fa, '신청누계', '수료율', 3, False)
-    metrics_fa(st, "교육수료 TOP5 (FA)", df_rank_fa, '수료누계', '수료율', 4, False)
-    metrics_fa(st, "수료율 TOP5 (FA) (수료율 동률일 경우 수료누계 기준 순위정렬)", df_rank_fa, '수료율', '수료누계', 5, False)
-    metrics_fa(st, "수료율 하위 TOP5 (FA) (수료율 동률일 경우 신청누계 기준 순위정렬)", df_rank_fa, '수료율', '신청누계', 5, True)
-
-    st.markdown('---')
-    st.write("주요랭킹 (소속부문)")
-    metrics_category(st, "교육신청 TOP5 (소속부문)", df_chn, '신청누계', '수료율', 2)
-    metrics_category(st, "교육수료 TOP5 (소속부문)", df_chn, '수료누계', '수료율', 4)
-    metrics_category(st, "수료율 TOP5 (소속부문) (수료율 동률일 경우 수료누계 기준 순위정렬)", df_chn, '수료율', '수료누계', 5)
-
-    st.markdown('---')
-    st.write("주요랭킹 (입사연차)")
-    metrics_category(st, "교육신청 TOP5 (입사연차)", df_crr, '신청누계', '수료율', 2)
-    metrics_category(st, "교육수료 TOP5 (입사연차)", df_crr, '수료누계', '수료율', 4)
-    metrics_category(st, "수료율 TOP5 (입사연차) (수료율 동률일 경우 수료누계 기준 순위정렬)", df_crr, '수료율', '수료누계', 5)
-
-    st.dataframe(df_rank_fa)
-    '''
-    
