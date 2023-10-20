@@ -580,7 +580,7 @@ class Chart(MakeSet):
             name=axis_b,
             text=df[axis_b],
             marker={'color':self.generate_chart_colors(df)},
-            orientation='h'
+            orientation='v'
         )
         data_chart = [fig_chart_a, fig_chart_b]
         layout_chart = pl.graph_objs.Layout(title=title,yaxis={'categoryorder':'array', 'categoryarray':self.generate_barchart_orders(df,category)}, annotations=[dict(text='색상 차트는 누적인원(중복포함), 회색 차트는 고유인원(중복제거)',showarrow=False,xref='paper',yref='paper',x=0,y=1.1)])
