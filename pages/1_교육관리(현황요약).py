@@ -61,12 +61,7 @@ if authentication_status:
     # ----------------------------------------------  메이페이지 타이틀  -----------------------------------------------------
     st.header("교육운영 현황요약")
     st.markdown("<hr>", unsafe_allow_html=True)
-        
-    st.dataframe(fn_rank_fa(df_all))
-    # col = ['소속부문','파트너','성명']
-    st.dataframe(instance.test(df_all, *['소속부문','파트너','성명']))
-
-    df_sums = instance.make_set_sums(instance.make_set_status(df=df_all,columns='소속부문'))
+    df_sums = instance.make_set_sums(instance.make_set_status(df_all,*['소속부문']))
 
     pie_line, pie_fee, pie_attend_rate, pie_imo_rate = st.columns(4)
     # 집합/온라인 과정현황
@@ -94,7 +89,15 @@ if authentication_status:
     ##########################################################################################################################
     ##############################################     스타일 카드 (랭킹)     #################################################
     ##########################################################################################################################  
-
+    df_test_fa = instance.make_set_status(df_all,*['소속부문','파트너','성명'])
+    st.dataframe(df_test_fa)
+    df_test_partner = instance.make_set_status(df_all,*['소속부문','파트너','성명'])
+    st.dataframe(df_test_partner)
+    df_test_channel = instance.make_set_status(df_all,*['소속부문','파트너','성명'])
+    st.dataframe(df_test_channel)
+    df_test_career = instance.make_set_status(df_all,*['입사연차','파트너','성명'])
+    st.dataframe(df_test_career)
+    
     
 
 
