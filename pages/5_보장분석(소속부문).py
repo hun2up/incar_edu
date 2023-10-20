@@ -48,7 +48,7 @@ if authentication_status:
     start_all = time.time()
     for i in range(len(month)):
         start = time.time()
-        st.write('jan')
+        st.write(month[i])
         st.dataframe(instance.make_service_data(call_sheets(month[i])))
         end = time.time()
         st.write(f"시간측정({month[i]}) : {end-start} 초")
