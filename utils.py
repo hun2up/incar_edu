@@ -463,13 +463,13 @@ class Register:
         # 입사인원관리 시트 호출
         df_enter = call_sheets("enter")[['사원번호','입사일자(사원)']]
         df_enter['입사일자(사원)'] = df_enter['입사일자(사원)'].str.replace('/','').astype(int)
-        df_enter = df_enter[df_enter['입사일자(사원)'] < 20230901].drop(columns=['입사일자(사원)'])
+        df_enter = df_enter[df_enter['입사일자(사원)'] >= 20231001].drop(columns=['입사일자(사원)'])
         # 퇴사인원관리 시트 호출
         df_quit = call_sheets("quit")[['사원번호','퇴사일자(사원)']]
         df_quit['퇴사일자(사원)'] = df_quit['퇴사일자(사원)'].str.replace('/','').astype(int)
-        df_quit = df_quit[df_quit['퇴사일자(사원)'] < 20230901].drop(columns=['퇴사일자(사원)'])
+        df_quit = df_quit[df_quit['퇴사일자(사원)'] >= 20231001].drop(columns=['퇴사일자(사원)'])
         # 입사 및 퇴사 시점에 맞게 재적인원 정리
-        df_fa = df_fa.merge(df_quit, on='사원번호', how='left', indicator=True).query('_merge == "left_only"').drop('_merge', axis=1)
+        df_fa = df_fa.merge(df_enter, on='사원번호', how='left', indicator=True).query('_merge == "left_only"').drop('_merge', axis=1)
         st.dataframe(df_fa)
         st.dataframe(df_enter)
         st.dataframe(df_quit)
