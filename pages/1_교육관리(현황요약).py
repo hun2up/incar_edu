@@ -93,6 +93,7 @@ if authentication_status:
 
     st.markdown('---')
     st.markdown("##### 주요랭킹 (FA)")
+    # how can I put the list as an *argument
     instance.make_cards_a(
         df=df_test_fa,
         select=4,
