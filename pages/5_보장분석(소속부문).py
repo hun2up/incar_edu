@@ -44,16 +44,8 @@ if authentication_status:
     # ----------------------------------------    Google Sheet 데이터베이스 호출    ---------------------------------------------
     # 9월 실적현황 SHEET 호출
     instance = ServiceData()
-    month = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec']
-    start_all = time.time()
-    for i in range(9):
-        start = time.time()
-        st.write(month[i])
-        st.dataframe(instance.make_service_data(call_sheets(month[i])))
-        end = time.time()
-        st.write(f"시간측정({month[i]}) : {end-start} 초")
-    end_all = time.time()
-    st.write(f"시간측정(전체) : {end_all-start_all} sec")
+    st.dataframe(instance.make_service_branch(call_sheets("sep")))
+    st.dataframe(instance.make_service_summary(call_sheets("sep")))
     
     
     # instance_register = Register()
