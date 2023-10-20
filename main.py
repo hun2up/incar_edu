@@ -54,7 +54,7 @@ if authentication_status:
     st.dataframe(df_apply_line)
 
     bar_today, line_today = st.columns(2)
-    bar_today.plotly_chart(instance.make_vbarchart_group(
+    bar_today.plotly_chart(instance.make_vbarchart(
         df=df_apply_bar,
         title='과정별 신청현황'), use_container_width=True)
     line_today.plotly_chart(instance.make_linechart(
