@@ -625,16 +625,32 @@ class Chart(MakeSet):
         return fig_pchart
 
     # ------------------------------------------------  랭킹 (스타일 카드 제작)  ----------------------------------------------------
+    # 스타일카드 : FA, 파트너
     def make_cards_a(self, df, select):
         index_card = [['신청누계','수료율'], ['수료누계','수료율'], ['수료율','수료누계'], ['수료율','수료누계']]
         index_ascending = [False, False, False, True]
+        # 랭킹 항목 4개씩 만들기
         for loop in range(4):
             st.write(select[1][loop])
             df = df.sort_values(by=[*index_card[loop]], ascending=[index_ascending[loop], False])
+            # 카드 5개 씩 만들기
             sector = st.columns(5)
             for i in range(5):
                 sector[i].metric(f"{df.iat[i,2]} ({df.iat[i, 1]})", df.iat[i, select[0][loop]])
 
+    # ------------------------------------------------  랭킹 (스타일 카드 제작)  ----------------------------------------------------
+    # 스타일카드 : 소속부문, 입사연차
+    def make_cards_b(self, df, select):
+        index_card = [['신청누계','수료율'], ['수료누계','수료율'], ['수료율','수료누계'], ['수료율','수료누계']]
+        index_ascending = [False, False, False, True]
+        # 랭킹 항목 4개씩 만들기
+        for loop in range(4):
+            st.write(select[1][loop])
+            df = df.sort_values(by=[*index_card[loop]], ascending=[index_ascending[loop], False])
+            # 카드 5개 씩 만들기
+            sector = st.columns(6)
+            for i in range(6):
+                sector[i].metric(df.iat[i, 0], df.iat[i, select[0][loop]])
 
     # ----------------------------------------------------  랭킹  -----------------------------------------------------------
     def metrics_fa(st, title, df, column_name1, column_name2, column_name3, ascend):
