@@ -512,15 +512,15 @@ class MakeSet(CallData):
         # 다 합쳐서 반환
         return df_rank    
 
-        # -------------------------------------------  소속부문별 고유값 및 누계값  --------------------------------------------------
+    # -------------------------------------------  소속부문별 고유값 및 누계값  --------------------------------------------------
     # 소속부문별 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률
-    def test(self, df, columns):
-        # dfv_atd를 '소속부문'  칼럼으로 묶고, 누적개수 구하기
-        df_apply = df.groupby(columns).size().reset_index(name='신청누계')
+    def test(self, df, *columns):
+        # dfv_atd를 '소속부문', '사원번호' 칼럼으로 묶고, 누적개수 구하기
+        df_apply = df.groupby([*columns,'사원번호']).size().reset_index(name='신청누계')
         # df_func_number에서 묶여있는 '사원번호' 카운트 (중복값 제거한 인원)
-        df_apply_unique = df_apply.groupby(columns)['사원번호'].count().reset_index(name='신청인원')
+        df_apply_unique = df_apply.groupby([*columns])['사원번호'].count().reset_index(name='신청인원')
         # df_func_number에서 '누적개수' 카운트 (중복값 더한 인원)
-        df_apply_total = df_apply.groupby(columns)['신청누계'].sum().reset_index(name='신청누계')
+        df_apply_total = df_apply.groupby([*columns])['신청누계'].sum().reset_index(name='신청누계')
         # 위에서 중복값을 제거한 데이터프레임과 모두 더한 데이터프레임 병합
         df_apply = pd.merge(df_apply_unique, df_apply_total)
         # 소속부문별 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률
@@ -528,21 +528,21 @@ class MakeSet(CallData):
             # 수료현황, IMO신청여부 1로 묶기
             df_attend = df.groupby(self.index[i][0]).get_group(1)
             # 수료현황 전체 더하기 (수료누계)
-            df_attend_total = df.groupby(columns)[self.index[i][0]].sum().reset_index(name=self.index[i][2])
+            df_attend_total = df.groupby([*columns])[self.index[i][0]].sum().reset_index(name=self.index[i][2])
             # 수료현황(1,0)별 사원번호 개수 (수료인원)
-            df_attend_unique = df.groupby([columns,self.index[i][0]])['사원번호'].nunique().reset_index(name=self.index[i][1])
+            df_attend_unique = df.groupby([*columns,self.index[i][0]])['사원번호'].nunique().reset_index(name=self.index[i][1])
             # 수료현항 0인 row 날리기
             df_attend_unique = df_attend_unique[df_attend_unique[self.index[i][0]] != 0]
             # 수료현황 column 날리기
             df_attend_unique = df_attend_unique.drop(columns=[self.index[i][0]])
             # 수료인원이랑 수료누계 합치기
-            df_attend = pd.merge(df_attend_unique, df_attend_total, on=columns)
+            df_attend = pd.merge(df_attend_unique, df_attend_total, on=[*columns])
             # 수료율
             df_attend_total[self.index[i][3]] = (df_attend_total[self.index[i][2]]/df_apply['신청누계']*100).round(1)
             df_attend_total = df_attend_total.drop(columns=[self.index[i][2]])
             # 수료율/IMO신청률 합치기
-            df_attend = pd.merge(df_attend, df_attend_total, on=columns)
-            df_apply = pd.merge(df_apply, df_attend, on=columns)
+            df_attend = pd.merge(df_attend, df_attend_total, on=[*columns])
+            df_apply = pd.merge(df_apply, df_attend, on=[*columns])
         # 다 합쳐서 반환
         return df_apply
 
