@@ -10,7 +10,7 @@ with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
 from utils import call_sheets
 from utils import month_dict
-from utils import ServiceData
+from utils import ServiceData, Register
 
 ###########################################################################################################################
 ################################################     인증페이지 설정     ###################################################
@@ -23,6 +23,7 @@ st.set_page_config(page_title="보장분석 대시보드", layout='wide')
 month = "sep"
 this_month = month_dict[month]
 df_month = call_sheets(month)
+
 
 # -------------------------------------------------  인증페이지 삽입  -------------------------------------------------------
 # 인증모듈 기본설정
@@ -47,7 +48,10 @@ if authentication_status:
     ##################################################     자료 제작     #####################################################
     ########################################################################################################################
     instance = ServiceData(df_month)
+    instance_register = Register()
     st.dataframe(instance.make_service_summary())
     st.dataframe(instance.make_service_branch())
+
+    instance_register.find_register()
 
     # 요약보고서 제작
