@@ -93,10 +93,11 @@ if authentication_status:
     st.markdown('---')
     st.markdown("##### 주요랭킹 (FA)")
     df_test_fa = instance.make_set_status(df_all,*['소속부문','파트너','성명'])
-    instance.make_cards_a(df_test_fa, 4, False, '교육신청 TOP5 (FA)')
-    instance.make_cards_a(df_test_fa, 6, False, '교육수료 TOP5 (FA)')
-    instance.make_cards_a(df_test_fa, 7, False, '수료율 TOP5 (FA) (수료율 동률일 경우 수료누계 기준 순위정렬)')
-    instance.make_cards_a(df_test_fa, 7, True, '수료율 하위 TOP5 (FA) (수료율 동률일 경우 신청누계 기준 순위정렬)')
+    reference_fa = [[4,6,7,7], ['교육신청 TOP5 (FA)','교육수료 TOP5 (FA)','수료율 TOP5 (FA) (수료율 동률일 경우 수료누계 기준 순위정렬)','수료율 하위 TOP5 (FA) (수료율 동률일 경우 신청누계 기준 순위정렬)']]
+    instance.make_cards_a(df=df_test_fa, select=reference_fa)
+    # instance.make_cards_a(df_test_fa, 6, False, '교육수료 TOP5 (FA)')
+    # instance.make_cards_a(df_test_fa, 7, False, '수료율 TOP5 (FA) (수료율 동률일 경우 수료누계 기준 순위정렬)')
+    # instance.make_cards_a(df_test_fa, 7, True, '수료율 하위 TOP5 (FA) (수료율 동률일 경우 신청누계 기준 순위정렬)')
     '''
     st.markdown('---')
     st.markdown("##### 주요랭킹 (FA)")
