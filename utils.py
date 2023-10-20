@@ -459,6 +459,7 @@ class Register:
     def find_register(self):
         # 재적인원관리 시트 호출
         df_fa = call_sheets("fa")[['사원번호','영업가족CD']]
+        st.dataframe(df_fa)
         # 입사인원관리 시트 호출
         df_enter = call_sheets("enter")[['사원번호','입사일자(사원)']]
         df_enter['입사일자(사원)'] = df_enter['입사일자(사원)'].str.replace('/','').astype(int)
