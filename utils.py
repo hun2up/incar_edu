@@ -520,7 +520,7 @@ class MakeSet(CallData):
 class Chart(MakeSet):
     def __init__(self):
         super().__init__()
-        self.index_card = [*['신청누계','수료율'], *['수료누계','수료율'], *['수료율','수료누계'], *['수료율','수료누계']]
+        self.index_card = [['신청누계','수료율'], ['수료누계','수료율'], ['수료율','수료누계'], ['수료율','수료누계']]
 
     def generate_chart_colors(self, df):
         presets = ['#636efa', '#ef553b', '#00cc96', '#ab63fa', '#ffa15a', '#19d3f3', '#ff6692', '#b6e880', '#ff97ff', '#fecb52']
@@ -628,7 +628,7 @@ class Chart(MakeSet):
     def make_cards_a(self, df, select, ascend, title):
         for a in range(4):
             st.write(title)
-            df = df.sort_values(by=[self.index_card[a]], ascending=[ascend, False])
+            df = df.sort_values(by=[*self.index_card[a]], ascending=[ascend, False])
             sector = st.columns(5)
             for i in range(5):
                 sector[i].metric(f"{df.iat[i,2]} ({df.iat[i, 1]})", df.iat[i, select])
