@@ -474,16 +474,33 @@ class Register:
     def find_register(self):
         # 재적인원관리 시트 호출
         df_fa = call_sheets("fa")[['사원번호','영업가족CD']]
-        # 입사인원관리 시트 호출
         df_enter = call_sheets("enter")[['사원번호','입사일자(사원)']]
+        df_quit = call_sheets("quit")[['사원번호','영업가족CD','퇴사일자(사원)']]
+        # 입사인원관리 시트
         df_enter['입사일자(사원)'] = df_enter['입사일자(사원)'].str.replace('/','').astype(int) # 입사일자의 형식을 8자리 숫자로 변환
         df_enter = df_enter[df_enter['입사일자(사원)'] >= 20230901].drop(columns=['입사일자(사원)']) # 특정일자 이후에 입사한 인원을 추출
         df_fa = df_fa[~df_fa['사원번호'].isin(df_enter['사원번호'])] # 현재 재적인원에서 특정일자 이후에 입사한 인원 삭제
-        # 퇴사인원관리 시트 호출
-        df_quit = call_sheets("quit")[['사원번호','영업가족CD','퇴사일자(사원)']]
+        # 퇴사인원관리 시트
         df_quit['퇴사일자(사원)'] = df_quit['퇴사일자(사원)'].str.replace('/','').astype(int) # 퇴사일자의 형식을 8자리 숫자로 변환
         df_quit = df_quit[df_quit['퇴사일자(사원)'] >= 20230901].drop(columns=['퇴사일자(사원)']) # 특정일자 이후에 퇴사한 인원 추출
         df_fa = pd.concat([df_fa, df_quit], axis=0) # 현재 재적인원에서 특정일자 이후에 퇴사한 인원 추가
-        st.dataframe(df_fa)
+        
+        df_branch = call_sheets("branch")[['영업가족코드','소속부서']]
+        st.write(df_branch.shape[0])
+        df_open = call_sheets("open")[['영업가족코드','등록전환일자']]
+        df_open['등록전환일자'] = df_open['등록전환일자'].str.replace('/','').astype(int) # 입사일자의 형식을 8자리 숫자로 변환
+        df_open = df_open[df_open['등록전환일자'] >= 20230901].drop(columns=['등록전환일자'])
+        df_branch = df_branch[~df_branch['영업가족코드'].isin(df_open['영업가족코드'])]
+        st.write(df_open.shape[0])
+        st.write(df_branch.shape[0])
+        df_close = call_sheets("close")[['영업가족코드','폐쇄일자']]
+        df_close['폐쇄일자'] = df_close['폐쇄일자'].str.replace('/','').astype(int) # 입사일자의 형식을 8자리 숫자로 변환
+        df_close = df_close[df_close['폐쇄일자'] >= 20230901].drop(columns=['폐쇄일자'])
+        df_branch = pd.concat([df_branch, df_close], axis=0)
+        st.write(df_close.shape[0])
+        st.write(df_branch.shape[0])
+
+        
+        
 
 
