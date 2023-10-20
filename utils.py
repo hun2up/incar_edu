@@ -409,6 +409,9 @@ class ServiceData:
         # 약관조회 컬럼 추가
         df_result['약관조회'] = 0
         # 사번정리
+        for i in range(df_result.shape[0]):
+            if len(df_result.iat[i,1]) < 6: df_result.iat[i,1] = f"16{df_result.iat[i,1]}"
+            else: pass
         # 소속찾기
         return df_result
     
