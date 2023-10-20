@@ -627,11 +627,11 @@ class Chart(MakeSet):
     # ------------------------------------------------  랭킹 (스타일 카드 제작)  ----------------------------------------------------
     # 스타일카드 : FA, 파트너
     def make_cards_a(self, df, select, title):
+        st.markdown('---')
+        st.markdown(title)
         index_card = [['신청누계','수료율'], ['수료누계','수료율'], ['수료율','수료누계'], ['수료율','수료누계']]
         index_ascending = [False, False, False, True]
         index_columns = [3,5,6,6]
-        st.markdown('---')
-        st.markdown(title)
         # 랭킹 항목 4개씩 만들기
         for loop in range(4):
             st.write(select[loop])
@@ -644,11 +644,11 @@ class Chart(MakeSet):
     # ------------------------------------------------  랭킹 (스타일 카드 제작)  ----------------------------------------------------
     # 스타일카드 : 소속부문, 입사연차
     def make_cards_b(self, df, select, title):
+        st.markdown('---')
+        st.markdown(title)
         index_card = [['신청누계','수료율'], ['수료누계','수료율'], ['수료율','수료누계'], ['수료율','수료누계']]
         index_ascending = [False, False, False, True]
         index_column = [2,4,5,5]
-        st.markdown('---')
-        st.markdown(title)
         # 랭킹 항목 4개씩 만들기
         for loop in range(4):
             st.write(select[loop])
@@ -657,18 +657,3 @@ class Chart(MakeSet):
             sector = st.columns(6)
             for i in range(6):
                 sector[i].metric(df.iat[i, 0], df.iat[i, index_column[loop]])
-
-    # ----------------------------------------------------  랭킹  -----------------------------------------------------------
-    def metrics_fa(st, title, df, column_name1, column_name2, column_name3, ascend):
-        st.write(title)
-        df = df.sort_values(by=[column_name1, column_name2], ascending=[ascend, False])
-        columns = st.columns(5)
-        for i in range(5):
-            columns[i].metric(df.iat[i, 1] + ' ' + df.iat[i, 2], df.iat[i, column_name3])
-
-    def metrics_category(st, title, df, column_name1, column_name2, column_name3):
-        st.write(title)
-        df = df.sort_values(by=[column_name1, column_name2], ascending=[False, False])
-        columns = st.columns(5)
-        for i in range(5):
-            columns[i].metric(df.iat[i, 0], df.iat[i, column_name3])
