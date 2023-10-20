@@ -48,10 +48,10 @@ if authentication_status:
     st.dataframe(instance.make_service_summary(call_sheets("sep")))
     
     
-    # instance_register = Register()
+    instance_register = Register()
     # st.dataframe(instance.make_service_summary())
     # st.dataframe(instance.make_service_branch())
 
-    # instance_register.find_register()
+    instance_register.find_register()
 
     # 요약보고서 제작
