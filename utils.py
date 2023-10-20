@@ -457,10 +457,10 @@ class Register:
         self.dates = {'jan':'20230201','feb':'20230301','mar':'20230401','apr':'20230501','may':'20230601','jun':'20230701','jul':'20230801','aug':'20230901','sep':'20231001','oct':'20231101','nov':'20231201','dec':'20240101'}
 
     def find_register(self):
-        df_fa = call_sheets("fa")['사원번호','영업가족CD']
-        df_enter = call_data("enter")['사원번호','입사일자(사원)']
+        df_fa = call_sheets("fa")[['사원번호','영업가족CD']]
+        df_enter = call_data("enter")[['사원번호','입사일자(사원)']]
         df_enter = df_enter[df_enter['입사일자(사원)'] < 20231001]
-        df_quit = call_data("quit")['사원번호','퇴사일자(사원)']
+        df_quit = call_data("quit")[['사원번호','퇴사일자(사원)']]
         df_quit = df_quit[df_quit['퇴사일자(사원)'] < 20231001]
         st.dataframe(df_fa)
         st.dataframe(df_enter)
