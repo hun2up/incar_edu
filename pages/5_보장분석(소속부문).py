@@ -48,6 +48,6 @@ if authentication_status:
     ########################################################################################################################
     instance = ServiceData(df_month)
     st.dataframe(instance.make_service_summary())
-    st.dataframe(instance.make_service_data())
+    st.dataframe(instance.make_service_branch())
 
     # 요약보고서 제작
