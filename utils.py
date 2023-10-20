@@ -409,6 +409,7 @@ class ServiceData:
         # 약관조회 컬럼 추가
         df_result['약관조회'] = 0
         # 사번정리
+        df_result['사원번호'] = df_result['사원번호'].astype(str)
         for i in range(df_result.shape[0]):
             if len(df_result.iat[i,1]) < 6: df_result.iat[i,1] = f"16{df_result.iat[i,1]}"
             else: pass
