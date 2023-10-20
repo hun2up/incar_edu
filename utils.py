@@ -395,7 +395,7 @@ class Chart(MakeSet):
 ########################################################################################################################
 class ServiceData:
     def __init__(self) -> None:
-    
+        pass
     # 데이터프레임 만들기 (보고서용)
     
     def make_service_data(self, df):
