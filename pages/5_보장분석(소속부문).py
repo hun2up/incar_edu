@@ -46,7 +46,7 @@ if authentication_status:
     instance = ServiceData()
     month = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec']
     start_all = time.time()
-    for i in range(len(month)):
+    for i in range(9):
         start = time.time()
         st.write(month[i])
         st.dataframe(instance.make_service_data(call_sheets(month[i])))
