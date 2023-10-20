@@ -47,7 +47,7 @@ if authentication_status:
     # df_apply_line = ['날짜','과정명','신청인원']
     df_apply_line = df_apply.groupby(['날짜','과정명'])['신청인원'].sum().reset_index(name='신청인원')
     # df_apply_bar = ['날짜','과정명','목표인원','신청인원']
-    df_apply_bar = df_apply.drop(df_apply[df_apl.iloc[:,0] != df_apply.iloc[-1,0]].index)
+    df_apply_bar = df_apply.drop(df_apply[df_apply.iloc[:,0] != df_apply.iloc[-1,0]].index)
     month_today = pd.to_datetime(df_apply_bar.iloc[-1]['날짜'], format="%Y. %m. %d").month
     df_apply_bar = df_apply_bar.groupby(['날짜','과정명','목표인원'])['신청인원'].sum().reset_index(name='신청인원')
 
