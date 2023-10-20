@@ -61,6 +61,11 @@ if authentication_status:
     # ----------------------------------------------  메이페이지 타이틀  -----------------------------------------------------
     st.header("교육운영 현황요약")
     st.markdown("<hr>", unsafe_allow_html=True)
+        
+    st.dataframe(instance.make_set_status(df=df_all, columns='소속부문'))
+    col = ['소속부문']
+    st.dataframe(instance.test(df=df_all, *col))
+
     df_sums = instance.make_set_sums(instance.make_set_status(df=df_all,columns='소속부문'))
 
     pie_line, pie_fee, pie_attend_rate, pie_imo_rate = st.columns(4)
@@ -85,9 +90,7 @@ if authentication_status:
         axis_a='고유인원',
         axis_b='누계인원',
         title='신청/수료 현황'), use_container_width=True)
-    
-    st.dataframe(df_all)
-    st.dataframe(instance.test(df=df_all, columns=['소속부문']))
+
     ##########################################################################################################################
     ##############################################     스타일 카드 (랭킹)     #################################################
     ##########################################################################################################################  
