@@ -43,15 +43,14 @@ if authentication_status:
     ########################################################################################################################
     # ----------------------------------------    Google Sheet 데이터베이스 호출    ---------------------------------------------
     # 9월 실적현황 SHEET 호출
+    '''
     instance = ServiceData()
     st.dataframe(instance.make_service_branch(call_sheets("sep")))
     st.dataframe(instance.make_service_summary(call_sheets("sep")))
+    '''
     
     
     instance_register = Register()
-    # st.dataframe(instance.make_service_summary())
-    # st.dataframe(instance.make_service_branch())
-
     instance_register.find_register()
 
     # 요약보고서 제작
