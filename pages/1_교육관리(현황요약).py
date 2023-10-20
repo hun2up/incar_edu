@@ -10,13 +10,14 @@ import yaml
 from yaml.loader import SafeLoader
 with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
-from utils import make_sidebar, fn_status, fn_rank_fa, fn_rank_partner, fn_rank_channel, style_metric_cards
+from utils import make_sidebar, hide_st_style, style_metric_cards
 from utils import df_atd as df_all
 from utils import Chart
 
 ########################################################################################################################
 ################################################     인증페이지 설정     ###################################################
 ########################################################################################################################
+hide_st_style()
 instance = Chart()
 df_all = instance.call_data_attend("attend")
 # -----------------------------------------------------  사이드바  ---------------------------------------------------------
@@ -127,6 +128,9 @@ if authentication_status:
     ]
     instance.make_cards_b(df=df_test_career, select=reference_career)
 
+    style_metric_cards()
+
+    '''
     ########################################################################################################################
     ##################################################     자료 제작     #####################################################
     ########################################################################################################################
@@ -186,4 +190,5 @@ if authentication_status:
     metrics_category(st, "수료율 TOP5 (입사연차) (수료율 동률일 경우 수료누계 기준 순위정렬)", df_crr, '수료율', '수료누계', 5)
 
     st.dataframe(df_rank_fa)
-    style_metric_cards()
+    '''
+    
