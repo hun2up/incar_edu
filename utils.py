@@ -457,13 +457,18 @@ class Register:
         self.dates = {'jan':'20230201','feb':'20230301','mar':'20230401','apr':'20230501','may':'20230601','jun':'20230701','jul':'20230801','aug':'20230901','sep':'20231001','oct':'20231101','nov':'20231201','dec':'20240101'}
 
     def find_register(self):
+        # 재적인원관리 시트 호출
         df_fa = call_sheets("fa")[['사원번호','영업가족CD']]
+        # 입사인원관리 시트 호출
         df_enter = call_sheets("enter")[['사원번호','입사일자(사원)']]
         df_enter['입사일자(사원)'] = df_enter['입사일자(사원)'].str.replace('/','').astype(int)
-        df_enter = df_enter[df_enter['입사일자(사원)'] < 20231001].drop(columns=['입사일자(사원)'])
+        df_enter = df_enter[df_enter['입사일자(사원)'] < 20230901].drop(columns=['입사일자(사원)'])
+        # 퇴사인원관리 시트 호출
         df_quit = call_sheets("quit")[['사원번호','퇴사일자(사원)']]
         df_quit['퇴사일자(사원)'] = df_quit['퇴사일자(사원)'].str.replace('/','').astype(int)
-        df_quit = df_quit[df_quit['퇴사일자(사원)'] < 20231001].drop(columns=['퇴사일자(사원)'])
+        df_quit = df_quit[df_quit['퇴사일자(사원)'] < 20230901].drop(columns=['퇴사일자(사원)'])
+        # 입사 및 퇴사 시점에 맞게 재적인원 정리
+        df_fa = df_fa.merge(df_quit, on='사원번호', how='left', indicator=True).query('_merge == "left_only"').drop('_merge', axis=1)
         st.dataframe(df_fa)
         st.dataframe(df_enter)
         st.dataframe(df_quit)
