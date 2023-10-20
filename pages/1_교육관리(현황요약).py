@@ -99,7 +99,7 @@ if authentication_status:
         loop=5,
         ascend=False,
         title='교육신청 TOP5 (FA)',
-        columns=*['신청누계','수료율'])
+        *columns=*['신청누계','수료율'])
     instance.make_cards_a(df_test_fa,6,5,False,'교육수료 TOP5 (FA)',*['수료누계','수료율'])
     instance.make_cards_a(df_test_fa,7,5,False,'수료율 TOP5 (FA) (수료율 동률일 경우 수료누계 기준 순위정렬)',*['수료율','수료누계'])
     instance.make_cards_a(df_test_fa,7,5,True,'수료율 하위 TOP5 (FA) (수료율 동률일 경우 신청누계 기준 순위정렬)',*['수료율','수료누계'])
