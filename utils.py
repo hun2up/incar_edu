@@ -494,7 +494,7 @@ class Register:
         st.write(df_open.shape[0])
         st.write(df_branch.shape[0])
         df_close = call_sheets("close")[['영업가족코드','소속부서','폐쇄일자']]
-        df_close['폐쇄일자'] = df_close['폐쇄일자'].str.replace('/','').astype(int) # 입사일자의 형식을 8자리 숫자로 변환
+        df_close['폐쇄일자'] = df_close['폐쇄일자'].str.replace('/','') # 입사일자의 형식을 8자리 숫자로 변환
         df_close = df_close[df_close['폐쇄일자'] >= 20230901].drop(columns=['폐쇄일자'])
         df_branch = pd.concat([df_branch, df_close], axis=0)
         st.write(df_close.shape[0])
