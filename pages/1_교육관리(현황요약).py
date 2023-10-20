@@ -90,11 +90,20 @@ if authentication_status:
     ##############################################     스타일 카드 (랭킹)     #################################################
     ##########################################################################################################################  
     df_test_fa = instance.make_set_status(df_all,*['소속부문','파트너','성명'])
+
     st.markdown('---')
-    instance.make_cards_a(df_test_fa,4,False,'교육신청 TOP5 (FA)',*['신청누계','수료율'])
-    instance.make_cards_a(df_test_fa,6,False,'교육수료 TOP5 (FA)',*['수료누계','수료율'])
-    instance.make_cards_a(df_test_fa,7,False,'수료율 TOP5 (FA) (수료율 동률일 경우 수료누계 기준 순위정렬)',*['수료율','수료누계'])
-    instance.make_cards_a(df_test_fa,7,True,'수료율 하위 TOP5 (FA) (수료율 동률일 경우 신청누계 기준 순위정렬)',*['수료율','수료누계'])
+    st.markdown("##### 주요랭킹 (FA)")
+    instance.make_cards_a(
+        df=df_test_fa,
+        select=4,
+        loop=5,
+        ascend=False,
+        title='교육신청 TOP5 (FA)',
+        *['신청누계','수료율'])
+    instance.make_cards_a(df_test_fa,6,5,False,'교육수료 TOP5 (FA)',*['수료누계','수료율'])
+    instance.make_cards_a(df_test_fa,7,5,False,'수료율 TOP5 (FA) (수료율 동률일 경우 수료누계 기준 순위정렬)',*['수료율','수료누계'])
+    instance.make_cards_a(df_test_fa,7,5,True,'수료율 하위 TOP5 (FA) (수료율 동률일 경우 신청누계 기준 순위정렬)',*['수료율','수료누계'])
+
     df_test_partner = instance.make_set_status(df_all,*['소속부문','파트너'])
     st.dataframe(df_test_partner)
     df_test_channel = instance.make_set_status(df_all,*['소속부문'])

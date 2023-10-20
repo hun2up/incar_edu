@@ -624,11 +624,11 @@ class Chart(MakeSet):
         return fig_pchart
     
     # ------------------------------------------------  랭킹 (스타일 카드 제작)  ----------------------------------------------------
-    def make_cards_a(self, df, select, ascend, title, *columns):
+    def make_cards_a(self, df, loop, select, ascend, title, *columns):
         st.write(title)
         df = df.sort_values(by=[*columns], ascending=[ascend, False])
-        sector = st.columns(5)
-        for i in range(5):
+        sector = st.columns(loop)
+        for i in range(loop):
             sector[i].metric(f"{df.iat[i,2]} ({df.iat[i, 1]})", df.iat[i, select])
 
 
