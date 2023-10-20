@@ -53,7 +53,6 @@ if authentication_status:
     st.dataframe(df_apply_bar)
     st.dataframe(df_apply_line)
 
-    '''
     bar_today, line_today = st.columns(2)
     line_today.plotly_chart(instance.make_linechart(
         df=instance.make_set_trend(df=df_apply_line, columns='소속부문'),
@@ -61,7 +60,6 @@ if authentication_status:
         xaxis='날짜',
         yaxis='신청인원',
         title=f'{month_today}월 신청인원 추이'), use_container_width=True)
-    '''
 
 
     '''
