@@ -63,8 +63,8 @@ if authentication_status:
     st.markdown("<hr>", unsafe_allow_html=True)
         
     st.dataframe(fn_rank_fa(df_all))
-    col = ['소속부문','파트너','성명']
-    st.dataframe(instance.test(df_all, *col))
+    # col = ['소속부문','파트너','성명']
+    st.dataframe(instance.test(df_all, *['소속부문','파트너','성명']))
 
     df_sums = instance.make_set_sums(instance.make_set_status(df=df_all,columns='소속부문'))
 
