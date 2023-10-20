@@ -413,5 +413,5 @@ class ServiceData:
     def make_service_summary(self):
         df_result = pd.DataFrame(columns=['기준일자','컨설턴트ID','컨설턴트성명','로그인수','보장분석접속건수','보장분석고객등록수','보장분석컨설팅고객수','보장분석출력건수','간편보장_접속건수','간편보장_출력건수','APP 보험다보여전송건수','APP 주요보장합계조회건수','APP 명함_접속건수','APP 의료비/보험금조회건수','보험료비교접속건수','보험료비교출력건수','한장보험료비교_접속건수','상품비교설명확인서_접속건수','영업자료접속건수','영업자료출력건수','(NEW)영업자료접속건수','(NEW)영업자료출력건수','라이프사이클접속건수','라이프사이클출력건수'])
         for i in range(len(df_result.index)):
-            df_result[i] = [self.make_service_data()[i].sum()]
+            df_result.iat[1,i] = [self.make_service_data()[i].sum()]
         return df_result
