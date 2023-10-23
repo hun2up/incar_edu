@@ -61,6 +61,8 @@ if authentication_status:
     st.header("교육운영 현황요약")
     st.markdown("<hr>", unsafe_allow_html=True)
     df_sums = instance.make_set_sums(instance.make_set_status(df_all,*['소속부문']))
+    df_sums['재적인원 대비 고유인원'] = (df_sums['고유인원']/df_sums['재적인원']*100).round(1)
+    df_sums['재적인원 대비 누계인원'] = (df_sums['누계인원']/df_sums['재적인원']*100).round(1)
 
     pie_line, pie_fee, pie_attend_rate, pie_imo_rate = st.columns(4)
     # 집합/온라인 과정현황
