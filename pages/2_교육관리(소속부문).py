@@ -59,7 +59,6 @@ if authentication_status:
     # 메인페이지 타이틀
     st.header("소속부문별 교육지표")
     
-    st.dataframe(instance.call_regist_channel(), use_container_width=True)
     st.dataframe(df_channel, use_container_width=True)
 
     # 첫번째 행 (신청인원)
