@@ -172,8 +172,10 @@ class MakeSet(CallData):
         df_apply_unique = df_apply.groupby([*columns])['사원번호'].count().reset_index(name='신청인원')
         # df_func_number에서 '누적개수' 카운트 (중복값 더한 인원)
         df_apply_total = df_apply.groupby([*columns])['신청누계'].sum().reset_index(name='신청누계')
+        df_units = df_apply.groupby([*columns])['재적인원'].sum().reset_index(name='재적인원')
         # 위에서 중복값을 제거한 데이터프레임과 모두 더한 데이터프레임 병합
         df_apply = pd.merge(df_apply_unique, df_apply_total)
+        df_apply = pd.merge(df_apply, df_units)
         # 소속부문별 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률
         for i in range(len(self.index)):
             # 수료현황, IMO신청여부 1로 묶기
