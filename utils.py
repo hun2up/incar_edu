@@ -61,7 +61,8 @@ def call_sheets(select):
 @st.cache_data(ttl=600)
 def call_data(select):
     # 데이터베이스 호출 & 컬럼 삭제 (번호)
-    df_select = call_sheets(select).drop(columns=['번호'])
+    df_select = call_sheets(select)
+    #.drop(columns=['번호'])
     df_select.rename(columns={'성함':'성명'}, inplace=True)
     # 과정현황 데이터베이스 호출 (과정현황) & 컬럼 삭제 (번호)
     df_course = pd.read_csv(st.secrets["course_url"].replace("/edit#gid=", "/export?format=csv&gid=")).drop(columns=['번호'])
@@ -86,7 +87,7 @@ class CallData:
     # -------------------------------   수료현황 테이블 정리 및 테이블 병합 (신청현황 & 과정현황)   ------------------------------------ 
     def call_data_attend(self, select):
         df_attend, df_course = call_data(select)
-        df_registred = call_data("regist")
+        # df_registred = call_data("regist")
         # df_attend: 컬럼 생성 (과정코드)
         df_attend.insert(loc=1, column='과정코드', value=None)
         # 데이터 정리 (과정코드)
