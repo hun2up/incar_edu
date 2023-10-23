@@ -86,6 +86,7 @@ class CallData:
     # -------------------------------   수료현황 테이블 정리 및 테이블 병합 (신청현황 & 과정현황)   ------------------------------------ 
     def call_data_attend(self, select):
         df_attend, df_course = call_data(select)
+        df_registred = call_data("regist")
         # df_attend: 컬럼 생성 (과정코드)
         df_attend.insert(loc=1, column='과정코드', value=None)
         # 데이터 정리 (과정코드)
