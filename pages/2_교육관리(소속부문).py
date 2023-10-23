@@ -58,6 +58,8 @@ if authentication_status:
     # --------------------------------------------------  페이지 타이틀  -------------------------------------------------------
     # 메인페이지 타이틀
     st.header("소속부문별 교육지표")
+
+    st.dataframe(instance.make_set_status(df_channel, *['소속부문']), use_container_width=True)
     
     # 첫번째 행 (신청인원)
     hbar_apply, hbar_apply_people = st.columns(2)
