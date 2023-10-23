@@ -117,6 +117,7 @@ if authentication_status:
         yaxis='수료누계',
         title='소속부문별 수료인원 추이 (수료누계 기준)'), use_container_width=True)
     
+    st.dataframe(instance.make_set_trend(df=df_channel, columns='소속부문'))
     # 다섯번째 행 (수료율 & IMO신청률 추이그래프)
     line_attend_rate, line_imo_rate = st.columns(2)
     line_attend_rate.plotly_chart(instance.make_linechart(

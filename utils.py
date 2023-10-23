@@ -231,6 +231,7 @@ class MakeSet(CallData):
             # 수료인원이랑 수료누계 합치기
             df_attend = pd.merge(df_attend_unique, df_attend_total, on=['월',columns])
             df_apply = pd.merge(df_apply, df_attend, on=['월',columns])
+            
         # 다 합쳐서 반환
         return df_apply
 
