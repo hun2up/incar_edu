@@ -59,9 +59,11 @@ if authentication_status:
     st.sidebar.header("원하는 옵션을 선택하세요")
     #사이드바 제작
     course = make_sidebar(df_apply_bar,'과정명') # 월도 선택 사이드바
+    channel = make_sidebar(df_apply_bar,'소속부문') # 부문 선택 사이드바
+    branch = make_sidebar(df_apply_bar,'파트너') # 지점 선택 사이드바
     # 데이터와 사이드바 연결
     df_apply_bar = df_apply_bar.query(
-        "과정명 == @course"
+        "과정명 == @course & 소속부문 == @channel & 파트너 == @branch"
     )
 
     bar_today, line_today = st.columns(2)
