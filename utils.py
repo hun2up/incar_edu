@@ -198,6 +198,8 @@ class MakeSet(CallData):
             df_apply = pd.merge(df_apply, df_attend, on=[*columns])
         df_apply['재적인원 대비 신청인원'] = (df_apply['신청인원'] / df_apply['재적인원'] * 100).round(1)
         df_apply['재적인원 대비 신청누계'] = (df_apply['신청누계'] / df_apply['재적인원'] * 100).round(1)
+        df_apply['재적인원 대비 수료인원'] = (df_apply['수료인원'] / df_apply['재적인원'] * 100).round(1)
+        df_apply['재적인원 대비 수료누계'] = (df_apply['수료누계'] / df_apply['재적인원'] * 100).round(1)
         # 다 합쳐서 반환
         return df_apply
     
