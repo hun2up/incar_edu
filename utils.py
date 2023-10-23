@@ -125,7 +125,9 @@ class CallData:
         for modify_apply in range(df_apply.shape[0]):
             df_apply.iloc[modify_apply,1] = df_apply.iloc[modify_apply,0].split(")")[0].replace('(','')
         # df_apply: 컬럼 추가 (신청인원)
-        df_apply = df_apply.groupby(['날짜','과정코드','소속부문'])['사원번호'].count().reset_index(name='신청인원')
+        df_apply = df_apply.groupby(['날짜','과정코드','소속부문','파트너','사원번호','성명'])['사원번호'].count().reset_index(name='신청인원')
+        # df_apply: 컬럼 추가 (신청인원)
+        # df_apply = df_apply.groupby(['날짜','과정코드','소속부문'])['사원번호'].count().reset_index(name='신청인원')
         # df_course2: 데이터 변경 ([지역]+과정명)
         df_course['과정명'] = '['+df_course['지역']+'] '+df_course['과정명']
         # df_apply의 '과정코드' 열을 문자열로 변환
