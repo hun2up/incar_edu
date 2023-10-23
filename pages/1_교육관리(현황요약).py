@@ -61,8 +61,6 @@ if authentication_status:
     st.header("교육운영 현황요약")
     st.markdown("<hr>", unsafe_allow_html=True)
     df_sums = instance.make_set_sums(instance.make_set_status(df_all,*['소속부문']))
-    df_sums['재적인원 대비 고유인원'] = (df_sums['고유인원']/df_sums['재적인원']*100).round(1)
-    df_sums['재적인원 대비 누계인원'] = (df_sums['누계인원']/df_sums['재적인원']*100).round(1)
 
     pie_line, pie_fee, pie_attend_rate, pie_imo_rate = st.columns(4)
     # 집합/온라인 과정현황
@@ -79,7 +77,6 @@ if authentication_status:
     df_imo_rate = pd.DataFrame({'구분':['IMO','IIMS'],'신청률':[(df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1), (100-df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1)]})
     pie_imo_rate.plotly_chart(instance.make_piechart(label=df_imo_rate['구분'],value=df_imo_rate['신청률']), use_container_width=True)
 
-    st.dataframe(df_sums, use_container_width=True)
     hbar_sums, hbar_sums_people = st.columns(2)
     hbar_sums.plotly_chart(instance.make_hbarchart_group(
         df=df_sums,
@@ -87,6 +84,12 @@ if authentication_status:
         axis_a='고유인원',
         axis_b='누계인원',
         title='신청/수료 현황'), use_container_width=True)
+    hbar_sums_people.plotly_chart(instance.make_hbarchart_group(
+        df=df_sums,
+        category='비고',
+        axis_a='재적인원 대비 고유인원',
+        axis_b='재적인원 대비 누계인원',
+        title='재적인원 대비 신청/수료 현황'), use_container_width=True)
 
 
     ##########################################################################################################################
