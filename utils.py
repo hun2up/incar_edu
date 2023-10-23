@@ -87,6 +87,8 @@ class CallData:
     def call_regist_channel(self):
         df_regist = pd.read_csv(st.secrets["regist_url"].replace("/edit#gid=", "/export?format=csv&gid="))
         df_regist = df_regist[df_regist['구분'] == '소속부문']
+        df_regist.rename(columns={'항목':'소속부문'}, inplace=True)
+        df_regist = df_regist.drop(columns='구분')
         return df_regist
 
     # -------------------------------   수료현황 테이블 정리 및 테이블 병합 (신청현황 & 과정현황)   ------------------------------------ 
