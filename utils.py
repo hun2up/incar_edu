@@ -247,8 +247,8 @@ class MakeSet(CallData):
         df_sums_atd = df_sums_atd.reset_index()
         df_sums_atd = df_sums_atd.rename(columns={'index':'비고'})
         df_sums = pd.concat([df_sums_atd, df_sums_apl], axis=0)
-        df_sums['재적인원 대비 고유인원'] = (df_sums['고유인원']/df_sums['재적인원']*100).round(1)
-        df_sums['재적인원 대비 누계인원'] = (df_sums['누계인원']/df_sums['재적인원']*100).round(1)
+        # df_sums['재적인원 대비 고유인원'] = (df_sums['고유인원']/df_sums['재적인원']*100).round(1)
+        # df_sums['재적인원 대비 누계인원'] = (df_sums['누계인원']/df_sums['재적인원']*100).round(1)
         return df_sums
 
 class Chart(MakeSet):
