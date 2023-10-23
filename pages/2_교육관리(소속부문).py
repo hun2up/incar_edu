@@ -60,6 +60,7 @@ if authentication_status:
     st.header("소속부문별 교육지표")
     
     st.dataframe(df_channel, use_container_width=True)
+    st.dataframe(instance.make_set_status(df_channel, *['소속부문']), use_container_width=True)
 
     # 첫번째 행 (신청인원)
     hbar_apply, hbar_apply_people = st.columns(2)
