@@ -83,10 +83,16 @@ class CallData:
     def __init__(self):
         pass
 
+    #
+    def call_regist_channel(self):
+        df_regist = pd.read_csv(st.secrets["regist_url"].replace("/edit#gid=", "/export?format=csv&gid="))
+        df_regist = df_regist[df_regist['구분'] == '소속부문']
+        return df_regist
+
     # -------------------------------   수료현황 테이블 정리 및 테이블 병합 (신청현황 & 과정현황)   ------------------------------------ 
     def call_data_attend(self, select):
         df_attend, df_course = call_data(select)
-        # df_registred = call_data("regist")
+        df_regist = pd.read_csv(st.secrets["regist_url"].replace("/edit#gid=", "/export?format=csv&gid="))
         # df_attend: 컬럼 생성 (과정코드)
         df_attend.insert(loc=1, column='과정코드', value=None)
         # 데이터 정리 (과정코드)
@@ -114,6 +120,7 @@ class CallData:
         df_result = pd.merge(df_course, df_attend, on=['과정코드'])
         # df_atd: 컬럼명 변경 (교육일자 -> 월)
         df_result.rename(columns={'교육일자':'월'}, inplace=True)
+        
         ###### df_atd = [과정코드, 과정분류, 과정명, 보험사, 월, 과정형태, 수강료, 지역, 교육장소, 정원, 목표인원, 소속부문, 소속총괄, 소속부서, 파트너, 사원번호, 성함, IMO신청여부, 수료현황, 입사연차]
         return df_result
 
