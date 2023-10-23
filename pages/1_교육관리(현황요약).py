@@ -77,6 +77,7 @@ if authentication_status:
     df_imo_rate = pd.DataFrame({'구분':['IMO','IIMS'],'신청률':[(df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1), (100-df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1)]})
     pie_imo_rate.plotly_chart(instance.make_piechart(label=df_imo_rate['구분'],value=df_imo_rate['신청률']), use_container_width=True)
 
+    st.dataframe(df_sums, use_container_width=True)
     hbar_sums, hbar_sums_people = st.columns(2)
     hbar_sums.plotly_chart(instance.make_hbarchart_group(
         df=df_sums,
@@ -84,6 +85,7 @@ if authentication_status:
         axis_a='고유인원',
         axis_b='누계인원',
         title='신청/수료 현황'), use_container_width=True)
+
 
     ##########################################################################################################################
     ##############################################     스타일 카드 (랭킹)     #################################################
