@@ -61,7 +61,7 @@ def call_sheets(select):
 @st.cache_data(ttl=600)
 def call_data(select):
     # 데이터베이스 호출 & 컬럼 삭제 (번호)
-    df_select = pd.read_csv(st.secrets["attend_url"].replace("/edit#gid=", "/export?format=csv&gid=")).drop(columns=['번호'])
+    df_select = call_sheets(select).drop(columns=['번호'])
     df_select.rename(columns={'성함':'성명'}, inplace=True)
     # 과정현황 데이터베이스 호출 (과정현황) & 컬럼 삭제 (번호)
     df_course = pd.read_csv(st.secrets["course_url"].replace("/edit#gid=", "/export?format=csv&gid=")).drop(columns=['번호'])
