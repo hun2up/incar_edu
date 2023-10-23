@@ -196,8 +196,8 @@ class MakeSet(CallData):
             # 수료율/IMO신청률 합치기
             df_attend = pd.merge(df_attend, df_attend_total, on=[*columns])
             df_apply = pd.merge(df_apply, df_attend, on=[*columns])
-        df_apply['재적인원 대비 신청인원'] = df['신청인원'] / df['재적인원'] * 100
-        df_apply['재적인원 대비 신청누계'] = df['신청누계'] / df['재적인원'] * 100
+        df_apply['재적인원 대비 신청인원'] = (df_apply['신청인원'] / df_apply['재적인원'] * 100).round(1)
+        df_apply['재적인원 대비 신청누계'] = (df_apply['신청누계'] / df_apply['재적인원'] * 100).round(1)
         # 다 합쳐서 반환
         return df_apply
     
