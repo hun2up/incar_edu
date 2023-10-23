@@ -54,18 +54,6 @@ if authentication_status:
     df_apply_list = df_apply_result[['교육일자','과정명','소속부문','파트너','사원번호','성명']]
     df_apply_list['사원번호'] = df_apply_list['사원번호'].astype(str)
     df_apply_bar = df_apply_result.groupby(['날짜','과정명','목표인원'])['신청인원'].sum().reset_index(name='신청인원')
-    
-    # -----------------------------------------------------  사이드바  ---------------------------------------------------------
-    # 사이드바 헤더
-    st.sidebar.header("원하는 옵션을 선택하세요")
-    #사이드바 제작
-    course = make_sidebar(df_apply_result,'과정명') # 월도 선택 사이드바
-    channel = make_sidebar(df_apply_result,'소속부문') # 부문 선택 사이드바
-    branch = make_sidebar(df_apply_result,'파트너') # 지점 선택 사이드바
-    # 데이터와 사이드바 연결
-    df_apply_result = df_apply_result.query(
-        "과정명 == @course & 소속부문 == @channel & 파트너 == @branch"
-    )
 
     bar_today, line_today = st.columns(2)
     bar_today.plotly_chart(instance.make_vbarchart(
