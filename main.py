@@ -51,9 +51,8 @@ if authentication_status:
     # df_apply_bar = ['날짜','과정명','목표인원','신청인원']
     df_apply_bar = df_apply.drop(df_apply[df_apply.iloc[:,0] != df_apply.iloc[-1,0]].index)
     month_today = pd.to_datetime(df_apply_bar.iloc[-1]['날짜'], format="%Y. %m. %d").month
+    df_apply_list = df_apply_bar
     df_apply_bar = df_apply_bar.groupby(['날짜','과정명','목표인원'])['신청인원'].sum().reset_index(name='신청인원')
-    # df_apply_list = df_apply_bar.groupby()
-
     
     # -----------------------------------------------------  사이드바  ---------------------------------------------------------
     # 사이드바 헤더
@@ -67,7 +66,7 @@ if authentication_status:
         "과정명 == @course"
     )
 
-    st.dataframe(df_apply_bar)
+    st.dataframe(df_apply_list)
     bar_today, line_today = st.columns(2)
     bar_today.plotly_chart(instance.make_vbarchart(
         df=df_apply_bar,
