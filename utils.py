@@ -431,7 +431,7 @@ class Chart(MakeSet):
             # 카드 5개 씩 만들기
             sector = st.columns(6)
             for i in range(6):
-                sector[i].metric(df.iat[i, 0], df.iat[i, index_column[loop]])
+                sector[i].metric(df.iat[i, 0], f"{df.iat[i, index_column[loop]]} ({index_units[loop]})")
 
 ########################################################################################################################
 ##############################################     Class 정의 (보장분석)     ############################################
