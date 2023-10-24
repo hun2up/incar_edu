@@ -58,8 +58,6 @@ if authentication_status:
     # --------------------------------------------------  페이지 타이틀  -------------------------------------------------------
     # 메인페이지 타이틀
     st.header("소속부문별 교육지표")
-    st.dataframe(call_sheets("attend"),use_container_width=True)
-    st.dataframe(call_sheets("course"),use_container_width=True)
 
     # 첫번째 행 (신청인원)
     hbar_apply, hbar_apply_people = st.columns(2)
