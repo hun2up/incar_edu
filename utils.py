@@ -232,10 +232,18 @@ class MakeSet(CallData):
             # 수료인원이랑 수료누계 합치기
             df_attend = pd.merge(df_attend_unique, df_attend_total, on=['월',*columns])
             df_apply = pd.merge(df_apply, df_attend, on=['월',*columns])
-        orders = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
-        category = pd.CategoricalDtype(categories=orders, ordered=True)
-        df_apply['월'] = df['월'].astype(category)
-        df_apply = df_apply.sort_values(by='월')
+        # Sample list of month names
+        month_names = df_apply['월']
+
+        # Custom sorting key function to sort month names in the desired order
+        def custom_sort_key(month_name):
+            # Extract the numeric part of the month name and convert it to an integer
+            # For '10월', this will extract '10' and convert it to 10
+            return int(month_name[:-1])
+
+        # Sort the month names using the custom sorting key
+        sorted_months = sorted(month_names, key=custom_sort_key)
+        df_apply['월'] = sorted_months
         # 다 합쳐서 반환
         return df_apply
 
