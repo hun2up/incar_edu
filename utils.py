@@ -151,9 +151,9 @@ class CallData:
         # df_atd: 컬럼명 변경 (교육일자 -> 월)
         df_result.rename(columns={'교육일자':'월'}, inplace=True)
         if theme == '입사연차':
-            df_result = pd.merge(df_result, self.call_regist_career(), on=['월','입사연차'], how='outer')
+            df_result = pd.merge(df_result, self.call_regist_career(), on=['월','입사연차'])
         elif theme == '소속부문':
-            df_result = pd.merge(df_result, self.call_regist_channel(), on=['월','소속부문'], how='outer')
+            df_result = pd.merge(df_result, self.call_regist_channel(), on=['월','소속부문'])
 
         st.write("결과확인2")
         st.dataframe(df_result, use_container_width=True)
