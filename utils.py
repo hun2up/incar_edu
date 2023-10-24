@@ -242,7 +242,7 @@ class MakeSet(CallData):
             return int(month_name[:-1])
 
         # Sort the month names using the custom sorting key
-        sorted_month = sorted(month_names, key=custom_sort_key)
+        sorted_month = pd.DataFrame(sorted(month_names, key=custom_sort_key))
         df_apply = pd.merge(sorted_month, df_apply, on=['월'])
         # 다 합쳐서 반환
         return df_apply
