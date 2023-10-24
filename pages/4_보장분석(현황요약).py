@@ -70,7 +70,7 @@ if authentication_status:
         '라이프사이클출력건수'
     ])
     for i in index:
-        df_summary = pd.concat([df_summary, instance_register.make_service_summary(call_sheets("sep"))], axis=0)
+        df_summary = pd.concat([df_summary, instance_register.make_service_summary(call_sheets(index[i]))], axis=0)
     st.dataframe(df_summary)
 
     # 요약보고서 제작
