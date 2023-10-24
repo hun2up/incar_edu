@@ -69,7 +69,7 @@ if authentication_status:
         '라이프사이클접속건수',
         '라이프사이클출력건수'
     ])
-    st.dataframe(instance_register.make_service_summary(call_sheets('sep')))
+    st.dataframe(instance_register.make_service_summary(call_sheets('jan')))
     '''
     for i in range(len(index)):
         df_summary = pd.concat([df_summary, instance_register.make_service_summary(call_sheets(index[i]))], axis=0)
