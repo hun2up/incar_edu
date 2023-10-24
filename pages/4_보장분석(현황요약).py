@@ -2,6 +2,7 @@
 ##############################################     라이브러리 호출하기     ##################################################
 ########################################################################################################################
 import time
+import pandas as pd
 import streamlit as st
 import streamlit_authenticator as stauth
 hashed_passwords = stauth.Hasher(['XXX']).generate()
@@ -43,6 +44,33 @@ if authentication_status:
     # ----------------------------------------    Google Sheet 데이터베이스 호출    --------------------------------------------- 
     
     instance_register = ServiceData()
-    st.dataframe(instance_register.make_service_summary(call_sheets("sep")))
+    index = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec']
+    df_summary = pd.DataFrame(columns=[
+        '로그인수',
+        '보장분석접속건수',
+        '보장분석고객등록수',
+        '보장분석컨설팅고객수',
+        '보장분석출력건수',
+        '간편보장_접속건수',
+        '간편보장_출력건수',
+        'APP 보험다보여전송건수',
+        'APP 주요보장합계조회건수',
+        'APP 명함_접속건수',
+        'APP 의료비/보험금조회건수',
+        '보험료비교접속건수',
+        '보험료비교출력건수',
+        '한장보험료비교_접속건수',
+        '약관조회',
+        '상품비교설명확인서_접속건수',
+        '영업자료접속건수',
+        '영업자료출력건수',
+        '(NEW)영업자료접속건수',
+        '(NEW)영업자료출력건수',
+        '라이프사이클접속건수',
+        '라이프사이클출력건수'
+    ])
+    for i in index:
+        df_summary = pd.concat([df_summary, instance_register.make_service_summary(call_sheets("sep"))], axis=0)
+    st.dataframe(df_summary)
 
     # 요약보고서 제작
