@@ -74,8 +74,7 @@ if authentication_status:
     for i in range(len(index)):
         with st.spinner(f"{index[i]}월 데이터를 불러오는 중입니다."):
             try: df_summary = pd.concat([df_summary, instance_register.make_service_summary(call_sheets(index[i]))], axis=0)
-            except: pass
-        st.success('자료 호출 완료')
+            except: break
     st.dataframe(df_summary)
     
 
