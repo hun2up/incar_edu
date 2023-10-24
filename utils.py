@@ -234,13 +234,11 @@ class MakeSet(CallData):
             df_apply = pd.merge(df_apply, df_attend, on=['월',*columns])
         # Sample list of month names
         month_names = df_apply['월']
-
         # Custom sorting key function to sort month names in the desired order
         def custom_sort_key(month_name):
             # Extract the numeric part of the month name and convert it to an integer
             # For '10월', this will extract '10' and convert it to 10
             return int(month_name[:-1])
-
         # Sort the month names using the custom sorting key
         sorted_month = {'월' : sorted(month_names, key=custom_sort_key)}
         df_apply = pd.merge(pd.DataFrame(sorted_month), df_apply, on=['월'])
@@ -407,6 +405,7 @@ class Chart(MakeSet):
         index_card = [['신청누계','수료율'], ['수료누계','수료율'], ['수료율','수료누계'], ['수료율','수료누계']]
         index_ascending = [False, False, False, True]
         index_columns = [3,5,6,6]
+        index_units = ['회','회','%','%']
         # 랭킹 항목 4개씩 만들기
         for loop in range(4):
             st.write(select[loop])
@@ -414,7 +413,7 @@ class Chart(MakeSet):
             # 카드 5개 씩 만들기
             sector = st.columns(5)
             for i in range(5):
-                sector[i].metric(f"{df.iat[i,1]} ({df.iat[i, 0]})", df.iat[i, index_columns[loop]])
+                sector[i].metric(f"{df.iat[i,1]} ({df.iat[i, 0]})", df.iat[i, index_columns[loop]]+index_units[loop])
 
     # ------------------------------------------------  랭킹 (스타일 카드 제작)  ----------------------------------------------------
     # 스타일카드 : 소속부문, 입사연차
