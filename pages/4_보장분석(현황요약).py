@@ -41,8 +41,8 @@ if authentication_status:
     ##################################################     자료 제작     #####################################################
     ########################################################################################################################
     # ----------------------------------------    Google Sheet 데이터베이스 호출    --------------------------------------------- 
-    df_month = call_sheets("sep")
+    
     instance_register = ServiceData()
-    st.dataframe(instance_register.make_service_summary(df_month))
+    st.dataframe(instance_register.make_service_summary(call_sheets("sep")))
 
     # 요약보고서 제작
