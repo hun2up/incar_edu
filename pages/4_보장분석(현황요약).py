@@ -72,7 +72,10 @@ if authentication_status:
     # st.dataframe(instance_register.make_service_summary(call_sheets('jan')))
     
     for i in range(len(index)):
+        start = time.time()
         df_summary = pd.concat([df_summary, instance_register.make_service_summary(call_sheets(index[i]))], axis=0)
+        end = time.time()
+        st.write(f"{index[i]} : {end-start} sec")
     st.dataframe(df_summary)
     
 
