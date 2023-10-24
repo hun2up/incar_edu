@@ -105,7 +105,7 @@ if authentication_status:
     # 네번째 행 (신청누계 & 수료누계 추이그래프) 수료율, IMO신청률)
     line_apply, line_attend = st.columns(2)
     line_apply.plotly_chart(instance.make_linechart(
-        df=instance.make_set_trend(df=df_channel, columns='소속부문'),
+        df=instance.make_set_trend(df_channel, *['소속부문']),
         category='소속부문',
         xaxis='월',
         yaxis='신청누계',
