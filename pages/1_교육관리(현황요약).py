@@ -62,7 +62,6 @@ if authentication_status:
     st.markdown("<hr>", unsafe_allow_html=True)
     df_sums = instance.make_set_sums(instance.make_set_status(df_all,*['소속부문']))
 
-    st.dataframe(df_sums)
     pie_line, pie_fee, pie_attend_rate, pie_imo_rate = st.columns(4)
     # 집합/온라인 과정현황
     df_line = df_all.groupby(['과정형태'])['과정코드'].count().reset_index(name='횟수')
