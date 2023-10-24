@@ -72,7 +72,7 @@ if authentication_status:
     df_fee = df_all.groupby(['유무료'])['과정코드'].count().reset_index(name='횟수')
     pie_fee.plotly_chart(instance.make_piechart(label=df_fee['유무료'], value=df_fee['횟수']), use_container_width=True)
     # 수료율
-    df_attend_rate = pd.DataFrame({'구분':['수료','미수료'],'수료율':[(df_sums.iloc[0,1]/df_sums.iloc[1,1]*100).round(1), (100-df_sums.iloc[0,1]/df_sums.iloc[1,1]*100).round(1)]})
+    df_attend_rate = pd.DataFrame({'구분':['수료','미수료'],'수료율':[(df_sums.iloc[0,3]/df_sums.iloc[1,3]*100).round(1), (100-df_sums.iloc[0,3]/df_sums.iloc[1,3]*100).round(1)]})
     pie_attend_rate.plotly_chart(instance.make_piechart(label=df_attend_rate['구분'],value=df_attend_rate['수료율']), use_container_width=True)
     # IMO신청률
     df_imo_rate = pd.DataFrame({'구분':['IMO','IIMS'],'신청률':[(df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1), (100-df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1)]})
