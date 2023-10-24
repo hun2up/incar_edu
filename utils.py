@@ -91,6 +91,7 @@ class CallData:
         df_regist = df_regist.drop(columns='구분')
         return df_regist
     
+    # 
     def call_regist_career(self):
         df_regist = pd.read_csv(st.secrets["regist_url"].replace("/edit#gid=", "/export?format=csv&gid="))
         df_regist = df_regist[df_regist['구분'] == '입사연차']
@@ -231,7 +232,9 @@ class MakeSet(CallData):
             # 수료인원이랑 수료누계 합치기
             df_attend = pd.merge(df_attend_unique, df_attend_total, on=['월',*columns])
             df_apply = pd.merge(df_apply, df_attend, on=['월',*columns])
-            
+        orders = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
+        category = pd.CategoricalDtype(categories=orders, ordered=True)
+        df_apply['월'] = df['월'].astype(category)
         # 다 합쳐서 반환
         return df_apply
 
@@ -430,10 +433,6 @@ class ServiceData:
 
     # 데이터프레임 만들기 (보고서용)
     def make_service_data(self, df):
-        # 컬럼 삭제
-        df_result = df.drop(columns=['본부','지점'])
-        # 컬럼 정리 (보고서 순으로)
-        # df_result = df_result[['기준일자','컨설턴트ID','컨설턴트성명','로그인수','보장분석접속건수','보장분석고객등록수','보장분석컨설팅고객수','보장분석출력건수','간편보장_접속건수','간편보장_출력건수','APP 보험다보여전송건수','APP 주요보장합계조회건수','APP 명함_접속건수','APP 의료비/보험금조회건수','보험료비교접속건수','보험료비교출력건수','한장보험료비교_접속건수','상품비교설명확인서_접속건수','영업자료접속건수','영업자료출력건수','(NEW)영업자료접속건수','(NEW)영업자료출력건수','라이프사이클접속건수','라이프사이클출력건수']]
         # 컬럼명 변경
         df_result = df_result.rename(columns={'컨설턴트ID':'사원번호','컨설턴트성명':'성명'})
         # 약관조회 컬럼 추가
