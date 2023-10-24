@@ -69,7 +69,7 @@ if authentication_status:
         '라이프사이클접속건수',
         '라이프사이클출력건수'
     ])
-    for i in index:
+    for i in len(index):
         df_summary = pd.concat([df_summary, instance_register.make_service_summary(call_sheets(index[i]))], axis=0)
     st.dataframe(df_summary)
 
