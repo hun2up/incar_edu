@@ -72,11 +72,10 @@ if authentication_status:
     # st.dataframe(instance_register.make_service_summary(call_sheets('jan')))
     
     for i in range(len(index)):
-        start = time.time()
-        try: df_summary = pd.concat([df_summary, instance_register.make_service_summary(call_sheets(index[i]))], axis=0)
-        except: pass
-        end = time.time()
-        st.write(f"{index[i]} : {end-start} sec")
+        with st.spinner(f"{index[i]}월 데이터를 불러오는 중입니다."):
+            try: df_summary = pd.concat([df_summary, instance_register.make_service_summary(call_sheets(index[i]))], axis=0)
+            except: pass
+        st.success('자료 호출 완료')
     st.dataframe(df_summary)
     
 
