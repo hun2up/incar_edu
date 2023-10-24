@@ -409,7 +409,7 @@ class Chart(MakeSet):
         # 랭킹 항목 4개씩 만들기
         for loop in range(4):
             st.write(select[loop])
-            df = df.sort_values(by=[*index_card[loop]], ascending=[index_ascending[loop], False])
+            df = df.sort_values(by=[index_card[loop]], ascending=[index_ascending[loop], False])
             # 카드 5개 씩 만들기
             sector = st.columns(5)
             for i in range(5):
