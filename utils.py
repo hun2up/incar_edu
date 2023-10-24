@@ -413,7 +413,7 @@ class Chart(MakeSet):
             # 카드 5개 씩 만들기
             sector = st.columns(5)
             for i in range(5):
-                sector[i].metric(f"{df.iat[i,1]} ({df.iat[i, 0]})", df.iat[i, index_columns[loop]]+index_units[loop])
+                sector[i].metric(f"{df.iat[i,1]} ({df.iat[i, 0]})", f"{df.iat[i, index_columns[loop]]} ({index_units[loop]})")
 
     # ------------------------------------------------  랭킹 (스타일 카드 제작)  ----------------------------------------------------
     # 스타일카드 : 소속부문, 입사연차
