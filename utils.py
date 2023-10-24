@@ -404,7 +404,7 @@ class Chart(MakeSet):
         st.markdown(title)
         index_card = [['신청누계','수료율'], ['수료누계','수료율'], ['수료율','수료누계'], ['수료율','수료누계']]
         index_ascending = [False, False, False, True]
-        index_columns = [3,5,6,6]
+        index_columns = [3,6,7,7]
         index_units = ['회','회','%','%']
         # 랭킹 항목 4개씩 만들기
         for loop in range(4):
