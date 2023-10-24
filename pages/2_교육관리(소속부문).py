@@ -58,6 +58,7 @@ if authentication_status:
     # --------------------------------------------------  페이지 타이틀  -------------------------------------------------------
     # 메인페이지 타이틀
     st.header("소속부문별 교육지표")
+    st.dataframe(df_channel)
 
     # 첫번째 행 (신청인원)
     hbar_apply, hbar_apply_people = st.columns(2)
@@ -117,7 +118,6 @@ if authentication_status:
         yaxis='수료누계',
         title='소속부문별 수료인원 추이 (수료누계 기준)'), use_container_width=True)
     
-    st.dataframe(instance.make_set_trend(df_channel, *['소속부문']))
     # 다섯번째 행 (수료율 & IMO신청률 추이그래프)
     line_attend_rate, line_imo_rate = st.columns(2)
     line_attend_rate.plotly_chart(instance.make_linechart(
