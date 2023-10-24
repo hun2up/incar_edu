@@ -443,7 +443,7 @@ class ServiceData:
     # 데이터프레임 만들기 (보고서용)
     def make_service_data(self, df):
         # 컬럼명 변경
-        df_result = df_result.rename(columns={'컨설턴트ID':'사원번호','컨설턴트성명':'성명'})
+        df_result = df.rename(columns={'컨설턴트ID':'사원번호','컨설턴트성명':'성명'})
         # 약관조회 컬럼 추가
         df_result['약관조회'] = 0
         # 사번정리
