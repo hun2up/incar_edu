@@ -506,7 +506,7 @@ class ServiceData:
                 except: break
                 df_month.rename(columns={'기준일자':'월'})
                 df_month['월'] = month_name
-                df_month = df_month.groupby(['월','소속부문','소속총괄','소속부서','파트너'])['파트너'].count().reset_index(name='접속횟수')
+                df_month = df_month.groupby(['월','소속부문','소속총괄','소속부서'])['소속부서'].count().reset_index(name='접속횟수')
                 st.dataframe(df_month)
 
 class Register:
