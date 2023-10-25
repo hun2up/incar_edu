@@ -462,6 +462,7 @@ class ServiceData:
     
     def make_service_summary(self):
         df_summary = pd.DataFrame(columns=[
+            '월',
             '로그인수',
             '보장분석접속건수',
             '보장분석고객등록수',
