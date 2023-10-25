@@ -485,12 +485,12 @@ class ServiceData:
             '라이프사이클접속건수',
             '라이프사이클출력건수',
         ])
-        columns_sum = {}
         for month_key, month_name in month_dict.items():
             with st.spinner(f"{month_name} 데이터를 불러오는 중입니다."):
+                columns_sum = {}
+                try: df_month = self.make_service_data(month_key).drop(columns=['기준일자','소속부문','소속총괄','소속부서','파트너','사원번호','성명'])
+                except: break
                 for column_name in df_summary.columns:
-                    try: df_month = self.make_service_data(month_key).drop(columns=['기준일자','소속부문','소속총괄','소속부서','파트너','사원번호','성명'])
-                    except: break
                     columns_sum[column_name] = [df_month[column_name].sum()]
                 df_result = pd.DataFrame(columns_sum)
                 df_result.insert(0,'월',month_name)
