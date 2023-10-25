@@ -462,6 +462,7 @@ class ServiceData:
     
     def make_service_summary(self):
         df_summary = pd.DataFrame(columns=[
+            '월',
             '로그인수',
             '보장분석접속건수',
             '보장분석고객등록수',
@@ -493,9 +494,8 @@ class ServiceData:
                     except: break
                     columns_sum[column_name] = [df_month[column_name].sum()]
                 df_result = pd.DataFrame(columns_sum)
-                st.write(f"{month_name} 데이터 제작 완료")
+                df_result.insert(0, '월', month_name)
                 df_summary = pd.concat([df_summary, df_result], axis=0)
-                st.dataframe(df_summary)
         return df_summary
 
     '''
