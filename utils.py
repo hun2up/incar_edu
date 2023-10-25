@@ -491,6 +491,7 @@ class ServiceData:
                 try: df_month = self.make_service_data(month_key).drop(columns=['소속부문','소속총괄','소속부서','파트너','사원번호','성명'])
                 except: break
                 df_month.rename(columns={'기준일자':'월'})
+                st.dataframe(df_month)
                 for column_name in df_summary.columns:
                     columns_sum[column_name] = [df_month[column_name].sum()]
                 df_result = pd.DataFrame(columns_sum)
