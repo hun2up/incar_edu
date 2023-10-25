@@ -486,12 +486,12 @@ class ServiceData:
             '라이프사이클출력건수'
         ])
         columns_sum = {}
-        for i in range(month_dict):
-            with st.spinner(f"{month_dict[i]} 데이터를 불러오는 중입니다."):
-                for i in range(len(df_summary.columns)):
-                    columns_sum[df_summary[i]] = [self.make_service_data(month_dict[i])[df_summary[i]].sum()]
+        for month_key, month_name in month_dict.items():
+            with st.spinner(f"{month_name} 데이터를 불러오는 중입니다."):
+                for column_name in df_summary.columns:
+                    columns_sum[column_name] = [self.make_service_data(month_key)[column_name].sum()]
                 df_result = pd.DataFrame(columns_sum)
-                st.write(f"{month_dict[i]} 데이터 제작 완료")
+                st.write(f"{month_name} 데이터 제작 완료")
                 try: df_summary = pd.concat(df_summary, df_result, axis=0)
                 except: break
         return df_summary
