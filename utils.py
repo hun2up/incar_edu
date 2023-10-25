@@ -488,12 +488,14 @@ class ServiceData:
         for month_key, month_name in month_dict.items():
             with st.spinner(f"{month_name} 데이터를 불러오는 중입니다."):
                 columns_sum = {}
-                try: df_month = self.make_service_data(month_key).drop(columns=['기준일자','소속부문','소속총괄','소속부서','파트너','사원번호','성명'])
+                try: df_month = self.make_service_data(month_key).drop(columns=['소속부문','소속총괄','소속부서','파트너','사원번호','성명'])
                 except: break
+                df_month.rename(columns={'기준일자':'월'})
+                df_month['월'] = month_name
                 for column_name in df_summary.columns:
-                    columns_sum[column_name] = [df_month[column_name].sum()]
+                    columns_sum[column_name+1] = [df_month[column_name+1].sum()]
                 df_result = pd.DataFrame(columns_sum)
-                df_result.insert(0,'월',month_name)
+                # df_result.insert(0,'월',month_name)
                 st.dataframe(df_result)
                 df_summary = pd.concat([df_summary, df_result], axis=0)
         return df_summary
