@@ -493,7 +493,7 @@ class ServiceData:
                 df_month.rename(columns={'기준일자':'월'})
                 df_month['월'] = month_name
                 for column_name in df_summary.columns:
-                    columns_sum[column_name+1] = [df_month[column_name+1].sum()]
+                    columns_sum[column_name] = [df_month[column_name].sum()]
                 df_result = pd.DataFrame(columns_sum)
                 # df_result.insert(0,'월',month_name)
                 st.dataframe(df_result)
