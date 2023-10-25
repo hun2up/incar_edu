@@ -462,7 +462,6 @@ class ServiceData:
     
     def make_service_summary(self):
         df_summary = pd.DataFrame(columns=[
-            '월',
             '로그인수',
             '보장분석접속건수',
             '보장분석고객등록수',
@@ -484,7 +483,8 @@ class ServiceData:
             '(NEW)영업자료접속건수',
             '(NEW)영업자료출력건수',
             '라이프사이클접속건수',
-            '라이프사이클출력건수'
+            '라이프사이클출력건수',
+            '월'
         ])
         columns_sum = {}
         for month_key, month_name in month_dict.items():
