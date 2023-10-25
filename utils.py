@@ -487,6 +487,8 @@ class ServiceData:
         ])
         columns_sum = {}
         for month_key, month_name in month_dict.items():
+            st.write(month_key)
+            st.write(month_dict)
             with st.spinner(f"{month_name} 데이터를 불러오는 중입니다."):
                 for column_name in df_summary.columns:
                     columns_sum[column_name] = [self.make_service_data(month_key)[column_name].sum()]
