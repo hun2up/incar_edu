@@ -45,39 +45,5 @@ if authentication_status:
     
     instance_register = ServiceData()
     st.dataframe(instance_register.make_service_summary())
-    '''
-    index = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec']
-    df_summary = pd.DataFrame(columns=[
-        '로그인수',
-        '보장분석접속건수',
-        '보장분석고객등록수',
-        '보장분석컨설팅고객수',
-        '보장분석출력건수',
-        '간편보장_접속건수',
-        '간편보장_출력건수',
-        'APP 보험다보여전송건수',
-        'APP 주요보장합계조회건수',
-        'APP 명함_접속건수',
-        'APP 의료비/보험금조회건수',
-        '보험료비교접속건수',
-        '보험료비교출력건수',
-        '한장보험료비교_접속건수',
-        '약관조회',
-        '상품비교설명확인서_접속건수',
-        '영업자료접속건수',
-        '영업자료출력건수',
-        '(NEW)영업자료접속건수',
-        '(NEW)영업자료출력건수',
-        '라이프사이클접속건수',
-        '라이프사이클출력건수'
-    ])
-    # st.dataframe(instance_register.make_service_summary(call_sheets('jan')))
-    
-    for i in range(len(index)):
-        with st.spinner(f"{index[i]}월 데이터를 불러오는 중입니다."):
-            try: df_summary = pd.concat([df_summary, instance_register.make_service_summary(call_sheets(index[i]))], axis=0)
-            except: break
-    st.dataframe(df_summary)
-    '''
 
     # 요약보고서 제작

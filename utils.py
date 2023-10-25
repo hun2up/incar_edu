@@ -494,43 +494,9 @@ class ServiceData:
                     except: break
                     columns_sum[column_name] = [df_month[column_name].sum()]
                 df_result = pd.DataFrame(columns_sum)
-                df_result.insert(0, '월', month_name)
+                df_result['월'] = month_name
                 df_summary = pd.concat([df_summary, df_result], axis=0)
         return df_summary
-
-    '''
-    # 보고서용 요약자료
-    def make_service_summary(self, month):
-        columns = [
-            '로그인수',
-            '보장분석접속건수',
-            '보장분석고객등록수',
-            '보장분석컨설팅고객수',
-            '보장분석출력건수',
-            '간편보장_접속건수',
-            '간편보장_출력건수',
-            'APP 보험다보여전송건수',
-            'APP 주요보장합계조회건수',
-            'APP 명함_접속건수',
-            'APP 의료비/보험금조회건수',
-            '보험료비교접속건수',
-            '보험료비교출력건수',
-            '한장보험료비교_접속건수',
-            '약관조회',
-            '상품비교설명확인서_접속건수',
-            '영업자료접속건수',
-            '영업자료출력건수',
-            '(NEW)영업자료접속건수',
-            '(NEW)영업자료출력건수',
-            '라이프사이클접속건수',
-            '라이프사이클출력건수'
-        ]
-        columns_sums = {}
-        for i in range(len(columns)):
-            columns_sums[columns[i]] = [self.make_service_data(month)[columns[i]].sum()]
-        df_result = pd.DataFrame(columns_sums)
-        return df_result
-    '''
 
 class Register:
     def __init__(self):
