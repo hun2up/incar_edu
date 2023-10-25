@@ -504,12 +504,12 @@ class ServiceData:
             with st.spinner(f"{month_name} 데이터를 불러오는 중입니다."):
                 try: df_month = self.make_service_data(month_key).drop(columns=['사원번호','성명'])
                 except: break
-                df_month = df_month.drop(df_month[df_month['파트너'] == ' 인카본사'].index)
-                st.dataframe(df_month)
+                df_month = df_month.drop(df_month[df_month['파트너'] == '인카본사'].index)
+                
                 df_month.rename(columns={'기준일자':'월'})
                 df_month['월'] = month_name
                 df_month = df_month.groupby(['월','소속부문','소속총괄','소속부서'])['소속부서'].count().reset_index(name='접속횟수')
-                
+                st.dataframe(df_month)
 
 class Register:
     def __init__(self):
