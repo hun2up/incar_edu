@@ -494,7 +494,7 @@ class ServiceData:
                 df_result = pd.DataFrame(columns_sum)
                 st.dataframe(df_result)
                 st.write(f"{month_name} 데이터 제작 완료")
-                try: df_summary = pd.concat(df_summary, df_result, axis=0)
+                try: df_summary = pd.concat([df_summary, df_result], axis=0)
                 except: break
         return df_summary
 
