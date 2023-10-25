@@ -441,7 +441,8 @@ class ServiceData:
         pass
 
     # 데이터프레임 만들기 (보고서용)
-    def make_service_data(self, df):
+    def make_service_data(self, month):
+        df = call_sheets(month)
         # 컬럼명 변경
         df_result = df.rename(columns={'컨설턴트ID':'사원번호','컨설턴트성명':'성명'})
         # 약관조회 컬럼 추가
@@ -458,9 +459,46 @@ class ServiceData:
     def make_service_branch(self, df):
         df_result = self.make_service_data(df).groupby(['사원번호'])['사원번호'].count().reset_index(name='접속수')
         return df_result
+    
+    def make_service_summary(self):
+        df_summary = pd.DataFrame(columns=[
+            '로그인수',
+            '보장분석접속건수',
+            '보장분석고객등록수',
+            '보장분석컨설팅고객수',
+            '보장분석출력건수',
+            '간편보장_접속건수',
+            '간편보장_출력건수',
+            'APP 보험다보여전송건수',
+            'APP 주요보장합계조회건수',
+            'APP 명함_접속건수',
+            'APP 의료비/보험금조회건수',
+            '보험료비교접속건수',
+            '보험료비교출력건수',
+            '한장보험료비교_접속건수',
+            '약관조회',
+            '상품비교설명확인서_접속건수',
+            '영업자료접속건수',
+            '영업자료출력건수',
+            '(NEW)영업자료접속건수',
+            '(NEW)영업자료출력건수',
+            '라이프사이클접속건수',
+            '라이프사이클출력건수'
+        ])
+        columns_sum = {}
+        for i in range(month_dict):
+            with st.spinner(f"{month_dict[i]} 데이터를 불러오는 중입니다."):
+                for i in range(len(df_summary.columns)):
+                    columns_sum[df_summary[i]] = [self.make_service_data(month_dict[i])[df_summary[i]].sum()]
+                df_result = pd.DataFrame(columns_sum)
+                st.write(f"{month_dict[i]} 데이터 제작 완료")
+                try: df_summary = pd.concat(df_summary, df_result, axis=0)
+                except: break
+        return df_summary
 
+    '''
     # 보고서용 요약자료
-    def make_service_summary(self, df):
+    def make_service_summary(self, month):
         columns = [
             '로그인수',
             '보장분석접속건수',
@@ -487,24 +525,10 @@ class ServiceData:
         ]
         columns_sums = {}
         for i in range(len(columns)):
-            columns_sums[columns[i]] = [self.make_service_data(df)[columns[i]].sum()]
+            columns_sums[columns[i]] = [self.make_service_data(month)[columns[i]].sum()]
         df_result = pd.DataFrame(columns_sums)
         return df_result
-
-    # 1~12월 전체자료 불러오기
     '''
-    month = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec']
-    start_all = time.time()
-    for i in range(9):
-        start = time.time()
-        st.write(month[i])
-        st.dataframe(instance.make_service_data(call_sheets(month[i])))
-        end = time.time()
-        st.write(f"시간측정({month[i]}) : {end-start} 초")
-    end_all = time.time()
-    st.write(f"시간측정(전체) : {end_all-start_all} sec")
-    '''
-
 
 class Register:
     def __init__(self):
