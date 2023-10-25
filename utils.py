@@ -462,7 +462,6 @@ class ServiceData:
     
     def make_service_summary(self):
         df_summary = pd.DataFrame(columns=[
-            '월',
             '로그인수',
             '보장분석접속건수',
             '보장분석고객등록수',
@@ -489,7 +488,7 @@ class ServiceData:
         columns_sum = {}
         for month_key, month_name in month_dict.items():
             with st.spinner(f"{month_name} 데이터를 불러오는 중입니다."):
-                for column_name in range(22):
+                for column_name in df_summary.index:
                     try:
                         df_month = self.make_service_data(month_key).drop(columns=['기준일자','소속부문','소속총괄','소속부서','파트너','사원번호','성명'])
                     except: break
