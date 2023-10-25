@@ -494,7 +494,8 @@ class ServiceData:
                         df_month = self.make_service_data(month_key).drop(columns=['소속부문','소속총괄','소속부서','파트너','사원번호','성명'])
                         df_month.rename(columns={'기준일자':'월'})
                     except: break
-                    if column_name == 0: columns_sum[column_name] = month_name
+                    # 맨 처음 칼럼('월')은 month_name으로 채우고, 나머지 컬럼은 보장분석 현황 자료의 합계 데이터를 삽입
+                    if column_name == 0: columns_sum['월'] = month_name
                     else: columns_sum[column_name] = [df_month[column_name].sum()]
                 df_result = pd.DataFrame(columns_sum)
                 # df_result.insert(0,'월',month_name)
