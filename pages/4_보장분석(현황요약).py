@@ -44,6 +44,8 @@ if authentication_status:
     # ----------------------------------------    Google Sheet 데이터베이스 호출    --------------------------------------------- 
     
     instance_register = ServiceData()
+    st.dataframe(instance_register.make_service_summary())
+    '''
     index = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec']
     df_summary = pd.DataFrame(columns=[
         '로그인수',
@@ -76,6 +78,6 @@ if authentication_status:
             try: df_summary = pd.concat([df_summary, instance_register.make_service_summary(call_sheets(index[i]))], axis=0)
             except: break
     st.dataframe(df_summary)
-    
+    '''
 
     # 요약보고서 제작
