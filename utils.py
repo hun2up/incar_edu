@@ -499,6 +499,16 @@ class ServiceData:
                 df_summary = pd.concat([df_summary, df_result], axis=0)
         return df_summary
 
+    def make_service_branch(self):
+        for month_key, month_name in month_dict.items():
+            with st.spinner(f"{month_name} 데이터를 불러오는 중입니다."):
+                try: df_month = self.make_service_data(month_key).drop(columns=['사원번호','성명'])
+                except: break
+                df_month.rename(columns={'기준일자':'월'})
+                df_month['월'] = month_name
+                df_month = df_month.groupby(['기준일자','소속부문','소속총괄','소속부서','파트너'])['월','로그인수','보장분석접속건수','보장분석고객등록수','보장분석컨설팅고객수','보장분석출력건수','간편보장_접속건수','간편보장_출력건수','APP 보험다보여전송건수','APP 주요보장합계조회건수','APP 명함_접속건수','APP 의료비/보험금조회건수','보험료비교접속건수','보험료비교출력건수','한장보험료비교_접속건수','약관조회','상품비교설명확인서_접속건수','영업자료접속건수','영업자료출력건수','(NEW)영업자료접속건수','(NEW)영업자료출력건수','라이프사이클접속건수','라이프사이클출력건수',].sum()
+                st.dataframe(df_month)
+
 class Register:
     def __init__(self):
         self.dates = {'jan':'20230201','feb':'20230301','mar':'20230401','apr':'20230501','may':'20230601','jun':'20230701','jul':'20230801','aug':'20230901','sep':'20231001','oct':'20231101','nov':'20231201','dec':'20240101'}

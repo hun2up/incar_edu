@@ -45,5 +45,6 @@ if authentication_status:
     
     instance_register = ServiceData()
     st.dataframe(instance_register.make_service_summary())
+    instance_register.make_service_branch()
 
     # 요약보고서 제작
