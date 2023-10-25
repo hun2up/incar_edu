@@ -484,7 +484,6 @@ class ServiceData:
             '(NEW)영업자료출력건수',
             '라이프사이클접속건수',
             '라이프사이클출력건수',
-            '월'
         ])
         columns_sum = {}
         for month_key, month_name in month_dict.items():
@@ -494,8 +493,6 @@ class ServiceData:
                     except: break
                     columns_sum[column_name] = [df_month[column_name].sum()]
                 df_result = pd.DataFrame(columns_sum)
-                df_result['월'] = month_name
-                st.dataframe(df_result)
                 df_summary = pd.concat([df_summary, df_result], axis=0)
         return df_summary
 
