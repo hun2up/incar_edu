@@ -491,7 +491,8 @@ class ServiceData:
             st.write(month_name)
             with st.spinner(f"{month_name} 데이터를 불러오는 중입니다."):
                 for column_name in df_summary.columns:
-                    columns_sum[column_name] = [self.make_service_data(f"{month_key}")[column_name].sum()]
+                    df_month = self.make_service_data(month_key).drop(columns=['기준일자','소속부문','소속총괄','소속부서','파트너','사원번호','성명'])
+                    columns_sum[column_name] = [df_month[column_name].sum()]
                 df_result = pd.DataFrame(columns_sum)
                 st.write(f"{month_name} 데이터 제작 완료")
                 try: df_summary = pd.concat(df_summary, df_result, axis=0)
