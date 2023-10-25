@@ -502,7 +502,7 @@ class ServiceData:
     def make_service_branch(self):
         for month_key, month_name in month_dict.items():
             with st.spinner(f"{month_name} 데이터를 불러오는 중입니다."):
-                try: df_month = self.make_service_data(month_key).drop(columns=['사원번호','성명'])
+                try: df_month = self.make_service_data(month_key)
                 except: break
                 df_month = df_month.drop(df_month[df_month['파트너'] == '인카본사'].index)
                 
