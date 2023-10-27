@@ -250,7 +250,8 @@ class MakeSet(CallData):
         # 수료인원, 수료누계, IMO신청인원, IMO신청누계
         for i in range(len(self.index)):
             df_two_total = df.groupby(['월',*columns])[self.index[i][0]].sum().reset_index(name=self.index[i][2]) # 수료현황 또는 IMO신청여부 : 전체 더하기 (수료누계 및 IMO신청누계)
-            st.dataframe(df_two_total)
+            df_two_unique = pd.DataFrame(df[df[self.index[i][0]] != 0]).groupby(['월',*columns])['사원번호'].count().reset_index(name=self.index[i][1]) # 수료현황 또는 IMO신청여부 : 값이 1인 사원번호의 개수 (수료인원 및 IMO신청인원)
+            st.dataframe(df_two_unique)
         return df_apply
 
 
