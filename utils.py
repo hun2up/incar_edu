@@ -90,7 +90,7 @@ class CallData:
         df_regist = df_regist[df_regist['구분'] == theme] # [구분] 컬럼을 '소속부문' 또는 '입사연차'에 따라 분류
         df_regist.rename(columns={'항목':theme}, inplace=True) # [항목] 컬럼을 '소속부문' 또는 '입사연차'로 변경
         df_regist = df_regist.drop(columns='구분') # [구분] 컬럼 삭제
-        st.dataframe(df_regist)
+        # df_regist : | 월 | 소속부문/입사연차 | 재적인원
         return df_regist
     
     # --------------------         수료현황 테이블 정리 & 테이블 병합 (신청현황+과정현황)          -------------------------
@@ -379,7 +379,7 @@ class Chart(MakeSet):
     # -----------------------------------          수평막대그래프 제작 (Single)          -------------------------------------
     def make_hbarchart_single(self, df, category, axis_a, title):
         # axis_a : 신청인원, 수료인원, 수료율, IMO신청률
-        fig_chart = pl.graph_objs.Bar(
+        fig = pl.graph_objs.Bar(
             x=df[axis_a],
             y=df[category],
             width=0.3,
@@ -388,9 +388,8 @@ class Chart(MakeSet):
             marker={'color':self.generate_chart_colors(df)},
             orientation='h'
         )
-        data_chart = [fig_chart]
         layout_chart = pl.graph_objs.Layout(title=title,yaxis={'categoryorder':'array', 'categoryarray':self.generate_barchart_orders(df,category)}) # 여기수정
-        return_chart = pl.graph_objs.Figure(data=data_chart,layout=layout_chart)
+        return_chart = pl.graph_objs.Figure(data=[fig],layout=layout_chart)
         return_chart.update_traces(textposition=self.generate_chart_outsides(df))
         return_chart.update_layout(showlegend=False) 
         return return_chart
@@ -398,7 +397,7 @@ class Chart(MakeSet):
     # -----------------------------------          수평막대그래프 제작 (Grouped)          ------------------------------------
     def make_hbarchart_group(self, df, category, axis_a, axis_b, title):
         # axis_a: 고유값 (신청인원, 수료인원) / axis_b: 누계값 (신청누계, 수료누계)
-        fig_chart_a = pl.graph_objs.Bar(
+        fig_a = pl.graph_objs.Bar(
             x=df[axis_a],
             y=df[category],
             name=axis_a,
@@ -406,7 +405,7 @@ class Chart(MakeSet):
             marker={'color':'grey'},
             orientation='h'
         )
-        fig_chart_b = pl.graph_objs.Bar(
+        fig_b = pl.graph_objs.Bar(
             x=df[axis_b],
             y=df[category],
             name=axis_b,
@@ -414,9 +413,8 @@ class Chart(MakeSet):
             marker={'color':self.generate_chart_colors(df)},
             orientation='h'
         )
-        data_chart = [fig_chart_a, fig_chart_b]
         layout_chart = pl.graph_objs.Layout(title=title,yaxis={'categoryorder':'array', 'categoryarray':self.generate_barchart_orders(df,category)}, annotations=[dict(text='색상 차트는 누적인원(중복포함), 회색 차트는 고유인원(중복제거)',showarrow=False,xref='paper',yref='paper',x=0,y=1.1)])
-        return_chart = pl.graph_objs.Figure(data=data_chart,layout=layout_chart)
+        return_chart = pl.graph_objs.Figure(data=[fig_a, fig_b],layout=layout_chart)
         return_chart.update_traces(textposition=self.generate_chart_outsides(df))
         return_chart.update_layout(showlegend=False)
         return return_chart
@@ -424,7 +422,7 @@ class Chart(MakeSet):
     # -----------------------------------          수직막대그래프 제작 (Grouped)          ------------------------------------
     def make_vbarchart(self, df, title):
         # axis_a: 고유값 (신청인원, 수료인원) / axis_b: 누계값 (신청누계, 수료누계)
-        fig_chart_a = pl.graph_objs.Bar(
+        fig_a = pl.graph_objs.Bar(
             x=df['과정명'],
             y=df['목표인원'],
             name='목표인원',
@@ -432,7 +430,7 @@ class Chart(MakeSet):
             marker={'color':'grey'},
             orientation='v'
         )
-        fig_chart_b = pl.graph_objs.Bar(
+        fig_b = pl.graph_objs.Bar(
             x=df['과정명'],
             y=df['신청인원'],
             name='신청인원',
@@ -440,9 +438,8 @@ class Chart(MakeSet):
             marker={'color':self.generate_chart_colors(df)},
             orientation='v'
         )
-        data_chart = [fig_chart_a, fig_chart_b]
         layout_chart = pl.graph_objs.Layout(title=title,yaxis={'categoryorder':'array', 'categoryarray':self.generate_barchart_orders(df, None)})
-        return_chart = pl.graph_objs.Figure(data=data_chart,layout=layout_chart)
+        return_chart = pl.graph_objs.Figure(data=[fig_a,fig_b],layout=layout_chart)
         return_chart.update_traces(textposition=self.generate_chart_outsides(df))
         return_chart.update_layout(showlegend=False)
         return return_chart
@@ -450,18 +447,18 @@ class Chart(MakeSet):
     # ----------------------------------------          꺾은선그래프 제작          ------------------------------------------
     def make_linechart(self, df, category, xaxis, yaxis, title):
         # xaxis : '월'(df_apply), '날짜'(df_attend) / yaxis : 데이터 (신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청률 등)
-        fig_chart = pl.graph_objs.Figure()
+        fig = pl.graph_objs.Figure()
         # Iterate over unique channels and add a trace for each
         for reference in df[category].unique():
             line_data = df[df[category] == reference]
-            fig_chart.add_trace(pl.graph_objs.Scatter(
+            fig.add_trace(pl.graph_objs.Scatter(
                 x=line_data[xaxis],
                 y=line_data[yaxis],
                 mode='lines+markers',
                 name=reference,
             ))
         # Update the layout
-        fig_chart.update_layout(
+        fig.update_layout(
             title=title,
             xaxis_title=xaxis,
             yaxis_title=yaxis,
@@ -469,7 +466,7 @@ class Chart(MakeSet):
             hovermode='x',
             template='plotly_white'  # You can choose different templates if you prefer
         )
-        return fig_chart
+        return fig
 
     # -----------------------------------------          원형그래프 제작          -------------------------------------------
     def make_piechart(self, label, value):
