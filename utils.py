@@ -218,13 +218,13 @@ class MakeSet(CallData):
         # df : | 과정코드 | 과정분류 | 과정명 | 보험사 | 월 | 과정형태 | 수강료 | 지역 | 교육장소 | 정원 | 목표인원 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 성명 | IMO신청여부 | 수료현황 | 입사연차
         # 신청인원 및 신청누계 구하기
         df_apply_total = df.groupby([*columns,'사원번호']).size().reset_index(name='신청누계') # 신청누계 : df를 *columns로 묶고, 사원번호의 누적개수 구하기
-        df_apply_unique = df_apply_total.groupby([*columns])['사원번호'].count().reset_index(name='신청인원') # 신청인원 : df를 *columns로 묶고, 사원번호의 고유개수 구하기
+        df_apply_unique = df_apply_total.groupby([*columns])['사원번호'].nunique().reset_index(name='신청인원') # 신청인원 : df를 *columns로 묶고, 사원번호의 고유개수 구하기
         df_apply = pd.merge(df_apply_unique, df_apply_total.groupby([*columns])['신청누계'].sum().reset_index(name='신청누계'), on=['소속부문']) # 신청인원과 신청누계 병합
         # ---------------------------------------------------------------------------------------------------------------
         # 수료인원, 수료누계, 수료율 및 IMO신청인원, IMO신청누계, IMO신청률
         for i in range(len(self.index)):
             df_two_total = df.groupby([*columns])[self.index[i][0]].sum().reset_index(name=self.index[i][2]) # 수료현황 또는 IMO신청여부 : 전체 더하기 (수료누계 및 IMO신청누계)
-            df_two_unique = pd.DataFrame(df[df[self.index[i][0]] != 0]).groupby([*columns])['사원번호'].count().reset_index(name=self.index[i][1]) # 수료현황 또는 IMO신청여부 : 값이 1인 사원번호의 개수 (수료인원 및 IMO신청인원)
+            df_two_unique = pd.DataFrame(df[df[self.index[i][0]] != 0]).groupby([*columns])['사원번호'].nunique().reset_index(name=self.index[i][1]) # 수료현황 또는 IMO신청여부 : 값이 1인 사원번호의 개수 (수료인원 및 IMO신청인원)
             df_two = pd.merge(df_two_unique, df_two_total, on=[*columns]) # 수료인원+수료누계 & IMO신청인원+IMO신청누계
             df_two[self.index[i][3]] = (df_two[self.index[i][2]]/df_apply['신청누계']*100).round(1) # 수료율 및 IMO신청률 구하기
             df_apply = pd.merge(df_apply, df_two, on=[*columns]) # 신청+수료+IMO
@@ -243,7 +243,7 @@ class MakeSet(CallData):
         # df : | 과정코드 | 과정분류 | 과정명 | 보험사 | 월 | 과정형태 | 수강료 | 지역 | 교육장소 | 정원 | 목표인원 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 성명 | IMO신청여부 | 수료현황 | 입사연차
         # 신청인원 및 신청누계 구하기 (월별)
         df_apply_total = df.groupby(['월',*columns,'사원번호']).size().reset_index(name='신청누계') # 신청누계 : df를 월과 *column(소속부문/입사연차)로 묶고, 사원번호의 누적개수 구하기
-        df_apply_unique = df_apply_total.groupby(['월',*columns])['사원번호'].count().reset_index(name='신청인원') # 신청인원 : df를 *columns로 묶고, 사원번호의 고유개수 구하기
+        df_apply_unique = df_apply_total.groupby(['월',*columns])['사원번호'].nunique().reset_index(name='신청인원') # 신청인원 : df를 *columns로 묶고, 사원번호의 고유개수 구하기
         df_apply = pd.merge(df_apply_unique, df_apply_total.groupby(['월',*columns])['신청누계'].sum().reset_index(name='신청누계'), on=['월',*columns]) # 신청인원과 신청누계 병합
         st.dataframe(df_apply)
         # ---------------------------------------------------------------------------------------------------------------
