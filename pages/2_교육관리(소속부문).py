@@ -67,13 +67,13 @@ if authentication_status:
     # 첫번째 행 (신청인원)
     hbar_apply, hbar_apply_people = st.columns(2)
     hbar_apply.plotly_chart(instance.make_hbarchart_group(
-        df=instance.make_set_status(df_channel,'소속부문', *['소속부문']),
+        df=instance.make_set_status(df_channel,*['소속부문']),
         category='소속부문',
         axis_a='신청인원',
         axis_b='신청누계',
         title='소속부문별 교육신청 현황'), use_container_width=True)
     hbar_apply_people.plotly_chart(instance.make_hbarchart_group(
-        df=instance.make_set_status(df_channel,'소속부문', *['소속부문']),
+        df=instance.make_set_status(df_channel,*['소속부문']),
         category='소속부문',
         axis_a='재적인원 대비 신청인원',
         axis_b='재적인원 대비 신청누계',
@@ -82,13 +82,13 @@ if authentication_status:
     # 두번째 행 (수료인원)
     hbar_attend, hbar_attend_people = st.columns(2)
     hbar_attend.plotly_chart(instance.make_hbarchart_group(
-        df=instance.make_set_status(df_channel,'소속부문', *['소속부문']),
+        df=instance.make_set_status(df_channel,*['소속부문']),
         category='소속부문',
         axis_a='수료인원',
         axis_b='수료누계',
         title='소속부문별 교육수료 현황'), use_container_width=True)
     hbar_attend_people.plotly_chart(instance.make_hbarchart_group(
-        df=instance.make_set_status(df_channel,'소속부문', *['소속부문']),
+        df=instance.make_set_status(df_channel,*['소속부문']),
         category='소속부문',
         axis_a='재적인원 대비 수료인원',
         axis_b='재적인원 대비 수료누계',
@@ -97,12 +97,12 @@ if authentication_status:
     # 세번째 행 (수료율 & IMO신청률)
     hbar_attend_rate, hbar_imo_rate = st.columns(2)
     hbar_attend_rate.plotly_chart(instance.make_hbarchart_single(
-        df=instance.make_set_status(df_channel,'소속부문', *['소속부문']),
+        df=instance.make_set_status(df_channel,*['소속부문']),
         category='소속부문',
         axis_a='수료율',
         title='소속부문별 수료율'), use_container_width=True)
     hbar_imo_rate.plotly_chart(instance.make_hbarchart_single(
-        df=instance.make_set_status(df_channel,'소속부문', *['소속부문']),
+        df=instance.make_set_status(df_channel,*['소속부문']),
         category='소속부문',
         axis_a='IMO신청률',
         title='소속부문별 IMO신청률'), use_container_width=True)
@@ -110,13 +110,13 @@ if authentication_status:
     # 네번째 행 (신청누계 & 수료누계 추이그래프) 수료율, IMO신청률)
     line_apply, line_attend = st.columns(2)
     line_apply.plotly_chart(instance.make_linechart(
-        df=instance.make_set_trend(df_channel, *['소속부문']),
+        df=instance.make_set_trend(df_channel,'소속부문',*['소속부문']),
         category='소속부문',
         xaxis='월',
         yaxis='신청누계',
         title='소속부문별 신청인원 추이 (신청누계 기준)'), use_container_width=True)
     line_attend.plotly_chart(instance.make_linechart(
-        df=instance.make_set_trend(df_channel, *['소속부문']),
+        df=instance.make_set_trend(df_channel,'소속부문',*['소속부문']),
         category='소속부문',
         xaxis='월',
         yaxis='수료누계',
@@ -125,13 +125,13 @@ if authentication_status:
     # 다섯번째 행 (수료율 & IMO신청률 추이그래프)
     line_attend_rate, line_imo_rate = st.columns(2)
     line_attend_rate.plotly_chart(instance.make_linechart(
-        df=instance.make_set_trend(df_channel, *['소속부문']),
+        df=instance.make_set_trend(df_channel,'소속부문',*['소속부문']),
         category='소속부문',
         xaxis='월',
         yaxis='수료율',
         title='소속부문별 수료율 추이'), use_container_width=True)
     line_imo_rate.plotly_chart(instance.make_linechart(
-        df=instance.make_set_trend(df_channel, *['소속부문']),
+        df=instance.make_set_trend(df_channel,'소속부문',*['소속부문']),
         category='소속부문',
         xaxis='월',
         yaxis='IMO신청률',
