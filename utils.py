@@ -241,15 +241,11 @@ class MakeSet(CallData):
     # ------------------------------          소속부문별 고유값 및 누계값 (월별추이)          ------------------------------------
     def make_set_change(self, df, *columns):
         # df : | 과정코드 | 과정분류 | 과정명 | 보험사 | 월 | 과정형태 | 수강료 | 지역 | 교육장소 | 정원 | 목표인원 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 성명 | IMO신청여부 | 수료현황 | 입사연차
-        # 월, 소속부문, 사원번호, 그리고 신청누계(추가)
-        df_apply = df.groupby(['월',*columns,'사원번호']).size().reset_index(name='신청누계')
+        # 신청인원 및 신청누계 구하기 (월별)
+        df_apply_total = df.groupby(['월',*columns,'사원번호']).size().reset_index(name='신청누계') # 신청누계 : df를 월과 *column(소속부문/입사연차)로 묶고, 사원번호의 누적개수 구하기
+        df_apply_unique = df_apply.groupby(['월',*columns])['사원번호'].count().reset_index(name='신청인원') # 신청인원 : df를 *columns로 묶고, 사원번호의 고유개수 구하기
+        df_apply = pd.merge(df_apply_unique, df_apply_total.groupby(['월',*columns])['신청누계'].sum().reset_index(name='신청누계'), on=['월',*columns]) # 신청인원과 신청누계 병합
         st.dataframe(df_apply)
-        # 월, 소속부문, 그리고 신청인원 (df_func_monthly에서 사원번호 중복제거) (추가)
-        df_apply_unique = df_apply.groupby(['월',*columns])['사원번호'].count().reset_index(name='신청인원')
-        # 월, 소속부문, 신청인원 (df_func_monthly에서 사원번호 없애고 신청누계 다 더하기)
-        df_apply_total = df_apply.groupby(['월',*columns])['신청누계'].sum().reset_index(name='신청누계')
-        # 월, 소속부문, 신청누계, 신청인원 (df_func_unique와 df_func_total 합치기)
-        df_apply = pd.merge(df_apply_total, df_apply_unique, on=['월',*columns])
         # 수료인원, 수료누계, IMO신청인원, IMO신청누계
         for groups in range(len(self.index)):
             # 수료현황, IMO신청여부 1로 묶기
