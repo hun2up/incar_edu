@@ -110,7 +110,11 @@ class CallData:
         # 데이터형식 정리
         df_attend['IMO신청여부'] = df_attend['IMO신청여부'].replace({'Y':1, 'N':0}) # IMO신청여부: Y ▶ 1
         df_attend['수료현황'] = pd.to_numeric(df_attend['수료현황'], errors='coerce') # 수료현황 : 텍스트 ▶ 숫자
+        # df_attend.insert(6, column='입사연차', value=(datetime.now().year%100 + 1 - df_attend['사원번호'].astype(str).str[:2].astype(int, errors='ignore')).apply(lambda x: f'{x}년차'))
+        start = time.time()
         df_attend['입사연차'] = (datetime.now().year%100 + 1 - df_attend['사원번호'].astype(str).str[:2].astype(int, errors='ignore')).apply(lambda x: f'{x}년차')
+        end = time.time()
+        st.write(f"{end-start} sec")
         
         st.dataframe(df_attend)
 
