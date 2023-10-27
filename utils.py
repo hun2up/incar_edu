@@ -84,16 +84,18 @@ class CallData:
 
     # -----------------------------------         재적인원 데이터 호출          ------------------------------------------
     def call_regist(self, theme):
+        # [매월]재적인원 시트 호출 (https://docs.google.com/spreadsheets/d/1AG89W1nwRzZxYreM6i1qmwS6APf-8GM2K_HDyX7REG4/edit#gid=1608447947)
+        # df_regist : | 월 | 구분 | 항목 | 재적인원
         df_regist = pd.read_csv(st.secrets["regist_url"].replace("/edit#gid=", "/export?format=csv&gid=")) # 시트호출
-        st.dataframe(df_regist)
         df_regist = df_regist[df_regist['구분'] == theme] # [구분] 컬럼을 '소속부문' 또는 '입사연차'에 따라 분류
         df_regist.rename(columns={'항목':theme}, inplace=True) # [항목] 컬럼을 '소속부문' 또는 '입사연차'로 변경
         df_regist = df_regist.drop(columns='구분') # [구분] 컬럼 삭제
+        st.dataframe(df_regist)
         return df_regist
     
     # --------------------         수료현황 테이블 정리 & 테이블 병합 (신청현황+과정현황)          -------------------------
     def call_data_change(self, select, theme):
-        # [매월]교육과정수료현황 시트 호출
+        # [매월]교육과정수료현황 시트 호출 ()
         # df_attend : | 과정명 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 성명 | IMO신청여부 | 수료현황 | 비고
         df_attend = call_sheets(select=select).drop(columns=['번호','비고']).rename(columns={'성함':'성명'}) # 시트 호출 & 컬럼 삭제 (번호) & 컬럼명 변경 (성함 ▶ 성명)
         df_attend = df_attend.drop(df_attend[df_attend['파트너'] == '인카본사'].index) # [파트너]에서 '인카본사' 삭제
