@@ -213,7 +213,6 @@ class MakeSet(CallData):
     # ----------------------------          소속부문별 고유값 및 누계값 (상태값)          ---------------------------------
     def make_set_change(self, df, theme, *columns): # *columns : '소속부문' 또는 '입사연차'
         # df : | 과정코드 | 과정분류 | 과정명 | 보험사 | 월 | 과정형태 | 수강료 | 지역 | 교육장소 | 정원 | 목표인원 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 성명 | IMO신청여부 | 수료현황 | 입사연차
-        st.dataframe(df)
         # 신청인원 및 신청누계 구하기
         df_apply_total = df.groupby([*columns,'사원번호']).size().reset_index(name='신청누계') # 신청누계 : df를 *columns로 묶고, 사원번호의 누적개수 구하기
         df_apply_unique = df_apply_total.groupby([*columns])['사원번호'].count().reset_index(name='신청인원') # 신청인원 : df를 *columns로 묶고, 사원번호의 고유개수 구하기
@@ -227,12 +226,14 @@ class MakeSet(CallData):
             df_two[self.index[i][3]] = (df_two[self.index[i][2]]/df_apply['신청누계']*100).round(1) # 수료율 및 IMO신청률 구하기
             df_apply = pd.merge(df_apply, df_two, on=[*columns]) # 신청+수료+IMO
 
+        # 재적인원
         df_units = df.groupby([*columns])['재적인원'].median().reset_index(name='재적인원') # 소속부문별/입사연차별 재적인원
-        df_apply = pd.merge(df_apply, df_units, on=theme)
+        df_apply = pd.merge(df_apply, df_units, on=theme) # 기존 데이터프레임과 재적인원 데이터프레임 병합
         units_index = ['재적인원 대비 신청인원', '재적인원 대비 신청누계', '재적인원 대비 수료인원', '재적인원 대비 수료누계', '재적인원 대비 IMO신청인원', '재적인원 대비 IMO신청률']
         for c in range(len(units_index)):
-            df_apply[units_index[c]] = (df_apply[units_index[c].split(" ")[2]] / df_apply['재적인원'] * 100).round(1)
-        st.dataframe(df_apply)
+            df_apply[units_index[c]] = (df_apply[units_index[c].split(" ")[2]] / df_apply['재적인원'] * 100).round(1) # 각 요소별 재적인원 대비 인원비율 구하기
+        # df_apply : | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률 | 재적인원 | 재적인원 대비 신청인원 | 재적인원 대비 신청누계 | 재적인원 대비 수료인원 | 재적인원 대비 수료누계 | 재적인원 대비 IMO신청인원 | 재적인원 대비 IMO신청률'
+        return df_apply
         
 
     # ----------------------------          소속부문별 고유값 및 누계값 (상태값)          ---------------------------------
