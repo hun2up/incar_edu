@@ -64,16 +64,13 @@ if authentication_status:
 
     # --------------------------------------------          차트제작          ------------------------------------------------
     # 첫번째 행 (신청인원)
-    hbar_apply, hbar_apply_people = st.columns(2)
+    hbar_apply, hbar_attend = st.columns(2)
     hbar_apply.plotly_chart(instance.make_hbarchart_group(
         df=instance.make_set_status(df_channel, *['소속부문']),
         category='소속부문',
         axis_a='신청인원',
         axis_b='신청누계',
         title='소속부문별 교육신청 현황'), use_container_width=True)
-    
-    # 두번째 행 (수료인원)
-    hbar_attend, hbar_attend_people = st.columns(2)
     hbar_attend.plotly_chart(instance.make_hbarchart_group(
         df=instance.make_set_status(df_channel, *['소속부문']),
         category='소속부문',
