@@ -101,18 +101,15 @@ class CallData:
     def call_data_change(self, select):
         # [매월]교육과정수료현황 시트 호출
         # | 과정명 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 성명 | IMO신청여부 | 수료현황 | 비고
-        df_attend = call_sheets(select=select).drop(columns='번호').rename(columns={'성함':'성명'}) # 시트 호출 & 컬럼 삭제 (번호) & 컬럼명 변경 (성함 > 성명)
+        df_attend = call_sheets(select=select).drop(columns=['번호','비고']).rename(columns={'성함':'성명'}) # 시트 호출 & 컬럼 삭제 (번호) & 컬럼명 변경 (성함 ▶ 성명)
+        df_attend = df_attend.drop(df_attend[df_attend.iloc[:,4] == '인카본사'].index)
         # 과정코드 정리
-        df_attend.insert(0, column='과정코드', value=None)  # 첫번째 컬럼에 [과정코드] 컬럼 추가
-        start = time.time()
-        df_attend['과정코드'] = [df_attend.iloc[change,1].split(")")[0].replace('(','') for change in range(df_attend.shape[0])]
-        # df_attend['과정코드'] = code
-        end = time.time()
-        st.write(f"{end-start} sec")
-        '''
-        for change in range(df_attend.shape[0]):
-            df_attend.iloc[change,0] = df_attend.iloc[change,1].split(")")[0].replace('(','') 
-        '''
+        df_attend.insert(0, column='과정코드', value=None) # 첫번째 컬럼에 [과정코드] 컬럼 추가
+        df_attend['과정코드'] = [df_attend.iloc[change,1].split(")")[0].replace('(','') for change in range(df_attend.shape[0])] # 과정명에서 과정코드만 추출하여 [과정코드] 칼럼에 추가
+        df_attend = df_attend.drop(columns=['과정명'])
+        # 데이터형식 정리
+        df_attend['IMO신청여부'] = df_attend['IMO신청여부'].replace({'Y':1, 'N':0}) # IMO신청여부: Y ▶ 1
+        df_attend['수료현황'] = pd.to_numeric(df_attend['수료현황'], errors='coerce') # 수료현황 : 텍스트 ▶ 숫자
         
         st.dataframe(df_attend)
 
