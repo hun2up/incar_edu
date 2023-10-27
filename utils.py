@@ -208,7 +208,7 @@ class MakeSet(CallData):
         df_apply_channel = df.groupby(['소속부문'])
         # df_apply_total = df.groupby([*columns,'사원번호']).size().reset_index(name='신청누계') # 신청누계 : df를 *columns로 묶고, 사원번호의 누적개수 구하기
         # df_apply_unique = df_apply_total.groupby([*columns])['사원번호'].count().reset_index(name='신청인원')
-        st.dataframe(df_set)
+        st.dataframe(df_apply_channel)
 
     # ----------------------------          소속부문별 고유값 및 누계값 (상태값)          ---------------------------------
     def make_set_status(self, df, *columns):
