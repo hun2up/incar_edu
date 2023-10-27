@@ -97,25 +97,21 @@ class CallData:
         df_attend['수료현황'] = pd.to_numeric(df_attend['수료현황'], errors='coerce') # 수료현황 : 텍스트 ▶ 숫자
         df_attend['입사연차'] = (datetime.now().year%100 + 1 - df_attend['사원번호'].astype(str).str[:2].astype(int, errors='ignore')).apply(lambda x: f'{x}년차') # [입사연차] 컬럼 추가 및 데이터(입사연차) 삽입
         # df_attend : | 과정코드 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 입사연차 | 성명 | IMO신청여부 | 수료현황
-        
+        # ---------------------------------------------------------------------------------------------------------------
         # [매월]과정현황 시트 호출 및 [교육일자] 데이터 변경
         # df_course = | 과정코드 | 과정분류 | 과정명 | 보험사 | 교육일자 | 과정형태 | 수강료 | 지역 | 교육장소 | 정원 | 목표인원
         df_course = call_sheets("course").drop(columns=['번호']) # 시트 호출
         df_course.insert(4, column='월', value=None) # 네번째 컬럼에 [월] 컬럼 추가
         df_course['월'] = [f"{pd.to_datetime(df_course.at[short, '교육일자'], format='%Y. %m. %d').month}월" for short in range(df_course.shape[0])] # [교육일자]에서 '월' 데이터만 추출하여 [월] 컬럼에 추가
         df_course = df_course.drop(columns=['교육일자']) # 기존 교육일자 컬럼 삭제
-        st.dataframe(df_course)
-
+        # df_course : | 과정코드 | 과정분류 | 과정명 | 보험사 | 월 | 과정형태 | 수강료 | 지역| 교육장소 | 정원 | 목표인원
+        # ---------------------------------------------------------------------------------------------------------------
         # 테이블 병합 : df_attend(수료현황) + df_course(과정현황)
         df_attend['과정코드'] = df_attend['과정코드'].astype(str)
         df_course['과정코드'] = df_course['과정코드'].astype(str)
         df_merge = pd.merge(df_course, df_attend, on=['과정코드']) # [과정코드] 컬럼을 기준으로 두 데이터프레임 병합
         # df_merge : | 과정코드 | 과정분류 | 과정명 | 보험사 | 월 | 과정형태 | 수강료 | 지역 | 교육장소 | 정원 | 목표인원 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 성명 | IMO신청여부 | 수료현황 | 입사연차
         return df_merge
-
-
-
-
 
 
 
@@ -137,10 +133,7 @@ class CallData:
         df_regist = df_regist.drop(columns='구분')
         return df_regist
 
-        
-
-
-    # -------------------------         수료현황 테이블 정리 & 테이블 병합 (신청현황+과정현황)          ------------------------------
+    # --------------------         수료현황 테이블 정리 & 테이블 병합 (신청현황+과정현황)          -------------------------
     def call_data_attend(self, select, theme):
         df_attend, df_course = call_data(select)
         # df_attend: 컬럼 생성 (과정코드)
@@ -177,7 +170,7 @@ class CallData:
         ###### df_atd = [과정코드, 과정분류, 과정명, 보험사, 월, 과정형태, 수강료, 지역, 교육장소, 정원, 목표인원, 소속부문, 소속총괄, 소속부서, 파트너, 사원번호, 성함, IMO신청여부, 수료현황, 입사연차]
         return df_result
 
-    # -------------------------         신청현황 테이블 정리 & 테이블 병합 (신청현황+과정현황)          ------------------------------
+    # --------------------         신청현황 테이블 정리 & 테이블 병합 (신청현황+과정현황)          -------------------------
     def call_data_apply(self, select):
         df_apply, df_course = call_data(select)
         # df_apply: 컬럼 생성 (과정코드)
@@ -208,7 +201,14 @@ class MakeSet(CallData):
         super().__init__()
         self.index = [['수료현황', '수료인원', '수료누계', '수료율'], ['IMO신청여부', 'IMO신청인원', 'IMO신청누계', 'IMO신청률']]
 
-    # -------------------------------          소속부문별 고유값 및 누계값 (상태값)          -------------------------------------
+    # ----------------------------          소속부문별 고유값 및 누계값 (상태값)          ---------------------------------
+    def make_set_change(self, df, *columns):
+        # 소속부문별 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률
+        # dfv_atd를 '소속부문', '사원번호' 칼럼으로 묶고, 누적개수 구하기
+        df_apply = df.groupby([*columns,'사원번호']).size().reset_index(name='신청누계')
+        st.dataframe(df_apply)
+
+    # ----------------------------          소속부문별 고유값 및 누계값 (상태값)          ---------------------------------
     def make_set_status(self, df, *columns):
         # 소속부문별 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률
         # dfv_atd를 '소속부문', '사원번호' 칼럼으로 묶고, 누적개수 구하기

@@ -62,7 +62,8 @@ if authentication_status:
     )
 
     # --------------------------------------------          차트제작          ------------------------------------------------
-    # instance.call_data_change("attend")
+    df_channel_change = instance.call_data_change("attend")
+    instance.make_set_change(df_channel_change, *['소속부문'])
 
     # 첫번째 행 (신청인원)
     hbar_apply, hbar_apply_people = st.columns(2)
