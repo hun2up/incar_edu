@@ -61,7 +61,8 @@ if authentication_status:
         "월 == @month & 지역 == @region & 보험사 == @partner & 과정형태 == @line & 과정분류 == @theme & 과정명 == @name & 소속부문 == @channel & 입사연차 == @career"
     )
 
-    instance.call_data_change("attend")
+    # --------------------------------------------          차트제작          ------------------------------------------------
+    # instance.call_data_change("attend")
 
     # 첫번째 행 (신청인원)
     hbar_apply, hbar_apply_people = st.columns(2)
