@@ -43,7 +43,6 @@ if authentication_status:
     # ------------------------------------------          인스턴스 생성          ---------------------------------------------
     instance = Chart()
     df_channel = instance.call_data_change("attend")
-    instance.make_set_status(df_channel,*['소속부문'])
     instance.make_set_change(df_channel,'소속부문',*['소속부문'])
 
     # --------------------------------------------          사이드바          ------------------------------------------------
@@ -110,13 +109,13 @@ if authentication_status:
     # 네번째 행 (신청누계 & 수료누계 추이그래프) 수료율, IMO신청률)
     line_apply, line_attend = st.columns(2)
     line_apply.plotly_chart(instance.make_linechart(
-        df=instance.make_set_trend(df_channel,'소속부문',*['소속부문']),
+        df=instance.make_set_trend(df_channel,*['소속부문']),
         category='소속부문',
         xaxis='월',
         yaxis='신청누계',
         title='소속부문별 신청인원 추이 (신청누계 기준)'), use_container_width=True)
     line_attend.plotly_chart(instance.make_linechart(
-        df=instance.make_set_trend(df_channel,'소속부문',*['소속부문']),
+        df=instance.make_set_trend(df_channel,*['소속부문']),
         category='소속부문',
         xaxis='월',
         yaxis='수료누계',
@@ -125,13 +124,13 @@ if authentication_status:
     # 다섯번째 행 (수료율 & IMO신청률 추이그래프)
     line_attend_rate, line_imo_rate = st.columns(2)
     line_attend_rate.plotly_chart(instance.make_linechart(
-        df=instance.make_set_trend(df_channel,'소속부문',*['소속부문']),
+        df=instance.make_set_trend(df_channel,*['소속부문']),
         category='소속부문',
         xaxis='월',
         yaxis='수료율',
         title='소속부문별 수료율 추이'), use_container_width=True)
     line_imo_rate.plotly_chart(instance.make_linechart(
-        df=instance.make_set_trend(df_channel,'소속부문',*['소속부문']),
+        df=instance.make_set_trend(df_channel,*['소속부문']),
         category='소속부문',
         xaxis='월',
         yaxis='IMO신청률',
