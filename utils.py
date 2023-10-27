@@ -118,7 +118,7 @@ class CallData:
         df_course = call_sheets("course").drop(columns=['번호']) # 시트 호출
         start = time.time()
         df_course.insert(4, column='월', value=None)
-        df_course['월'] = [(pd.to_datetime(df_course.at[short, '교육일자'], format="%Y. %m. %d").month).join('월') for short in range(df_course.shape[0])]
+        df_course['월'] = [f"{pd.to_datetime(df_course.at[short, '교육일자'], format='%Y. %m. %d').month}월" for short in range(df_course.shape[0])]
         end = time.time()
 
         '''
