@@ -210,9 +210,19 @@ class MakeSet(CallData):
         df_apply_unique = df_apply_total.groupby([*columns])['사원번호'].count().reset_index(name='신청인원') # 신청인원 : df를 *columns로 묶고, 사원번호의 고유개수 구하기
         df_apply = pd.merge(df_apply_unique, df_apply_total.groupby([*columns])['신청누계'].sum().reset_index(name='신청누계'), on=['소속부문']) # 신청인원과 신청누계 병합
         
-        df_attend = df.groupby([*columns,'사원번호'])['IMO신청여부'].get_group(1)
+        for i in range(len(self.index)):
+            # df_attend = df.groupby(self.index[i][0]).get_group(1) # 수료현황 또는 IMO신청여부 : '1'로 묶기
+            df_two_total = df.groupby([*columns])[self.index[i][0]].sum().reset_index(name=self.index[i][2]) # 수료현황 또는 IMO신청여부 : 전체 더하기 (수료누계 및 IMO신청누계)
+            df_two_unique = df[df[self.index[i][0] == 0]].groupby([*columns])['사원번호'].count().reset_index(name=self.index[i[1]]) # 수료현황 또는 IMO신청여부 : 값이 1인 사원번호 개수 구하기 (수료인원 및 IMO신청인원)
+            df_two = pd.merge(df_two_unique, df_two_total, on=[*columns]) # 수료인원이랑 수료누계 합치기
+            df_two[self.index[i][3]] = (df_two[self.index[i][2]]/df_apply['신청누계']*100).round(1) # 수료율 및 IMO신청률 구하기
+            df_total = pd.merge(df_apply, df_two, on=[*columns])
+            # df_attend_total = df_attend_total.drop(columns=[self.index[i][2]])
+            # 수료율/IMO신청률 합치기
+            # df_attend = pd.merge(df_attend, df_attend_total, on=[*columns])
+            # df_apply = pd.merge(df_apply, df_attend, on=[*columns])
         # df_units = df.groupby([*columns])['재적인원'].median().reset_index(name='재적인원')
-        st.dataframe(df_attend)
+        st.dataframe(df_total)
 
     # ----------------------------          소속부문별 고유값 및 누계값 (상태값)          ---------------------------------
     def make_set_status(self, df, *columns):
