@@ -231,6 +231,7 @@ class MakeSet(CallData):
         # ---------------------------------------------------------------------------------------------------------------
         # 재적인원
         df_units = df.groupby([*columns])['재적인원'].median().reset_index(name='재적인원') # 소속부문별/입사연차별 재적인원
+        st.dataframe(df_units)
         df_apply = pd.merge(df_apply, df_units, on=theme) # 기존 데이터프레임과 재적인원 데이터프레임 병합
         units_index = ['재적인원 대비 신청인원', '재적인원 대비 신청누계', '재적인원 대비 수료인원', '재적인원 대비 수료누계', '재적인원 대비 IMO신청인원', '재적인원 대비 IMO신청률']
         for c in range(len(units_index)):
