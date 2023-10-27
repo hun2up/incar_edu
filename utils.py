@@ -246,34 +246,11 @@ class MakeSet(CallData):
         df_apply_unique = df_apply.groupby(['월',*columns])['사원번호'].count().reset_index(name='신청인원') # 신청인원 : df를 *columns로 묶고, 사원번호의 고유개수 구하기
         df_apply = pd.merge(df_apply_unique, df_apply_total.groupby(['월',*columns])['신청누계'].sum().reset_index(name='신청누계'), on=['월',*columns]) # 신청인원과 신청누계 병합
         st.dataframe(df_apply)
+        # ---------------------------------------------------------------------------------------------------------------
         # 수료인원, 수료누계, IMO신청인원, IMO신청누계
-        for groups in range(len(self.index)):
-            # 수료현황, IMO신청여부 1로 묶기
-            df_attend = df.groupby(self.index[groups][0]).get_group(1)
-            # 수료현황(1,0)별 사원번호 개수 (수료인원)
-            df_attend_unique = df.groupby(['월',*columns,self.index[groups][0]])['사원번호'].count().reset_index(name=self.index[groups][1])
-            # 수료현항 0인 row 날리기
-            df_attend_unique = df_attend_unique[df_attend_unique[self.index[groups][0]] != 0]
-            # 수료현황 column 날리기
-            df_attend_unique = df_attend_unique.drop(columns=[self.index[groups][0]])
-            # 수료현황 전체 더하기 (수료누계)
-            df_attend_total = df.groupby(['월',*columns])[self.index[groups][0]].sum().reset_index(name=self.index[groups][2])
-            # 수료율
-            df_attend_total[self.index[groups][3]] = (df_attend_total[self.index[groups][2]]/df_apply['신청누계']*100).round(1)
-            # 수료인원이랑 수료누계 합치기
-            df_attend = pd.merge(df_attend_unique, df_attend_total, on=['월',*columns])
-            df_apply = pd.merge(df_apply, df_attend, on=['월',*columns])
-        # Sample list of month names
-        month_names = df_apply['월']
-        # Custom sorting key function to sort month names in the desired order
-        def custom_sort_key(month_name):
-            # Extract the numeric part of the month name and convert it to an integer
-            # For '10월', this will extract '10' and convert it to 10
-            return int(month_name[:-1])
-        # Sort the month names using the custom sorting key
-        sorted_month = {'월' : sorted(month_names, key=custom_sort_key)}
-        df_apply = pd.merge(pd.DataFrame(sorted_month), df_apply, on=['월'])
-        # 다 합쳐서 반환
+        for i in range(len(self.index)):
+            df_two_total = df.groupby(['월',*columns])[self.index[i][0]].sum().reset_index(name=self.index[i][2]) # 수료현황 또는 IMO신청여부 : 전체 더하기 (수료누계 및 IMO신청누계)
+            st.dataframe(df_two_total)
         return df_apply
 
 
