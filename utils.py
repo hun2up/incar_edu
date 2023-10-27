@@ -211,7 +211,7 @@ class MakeSet(CallData):
         self.index = [['수료현황', '수료인원', '수료누계', '수료율'], ['IMO신청여부', 'IMO신청인원', 'IMO신청누계', 'IMO신청률']]
 
     # ----------------------------          소속부문별 고유값 및 누계값 (상태값)          ---------------------------------
-    def make_set_change(self, df, *columns, theme): # *columns : '소속부문' 또는 '입사연차'
+    def make_set_change(self, df, theme, *columns): # *columns : '소속부문' 또는 '입사연차'
         # df : | 과정코드 | 과정분류 | 과정명 | 보험사 | 월 | 과정형태 | 수강료 | 지역 | 교육장소 | 정원 | 목표인원 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 성명 | IMO신청여부 | 수료현황 | 입사연차
         st.dataframe(df)
         # 신청인원 및 신청누계 구하기
