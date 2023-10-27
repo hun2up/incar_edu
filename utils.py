@@ -230,7 +230,7 @@ class MakeSet(CallData):
         # ---------------------------------------------------------------------------------------------------------------
         # 재적인원
         # df_units = df.groupby([*columns])['재적인원'].median().reset_index(name='재적인원') # 소속부문별/입사연차별 재적인원
-        df_apply = pd.merge(df_apply, self.call_regist(theme).groupby([theme])['재적인원'].sum(), on=theme) # 기존 데이터프레임과 재적인원 데이터프레임 병합
+        df_apply = pd.merge(df_apply, self.call_regist(theme).groupby([theme])['재적인원'].median(), on=theme) # 기존 데이터프레임과 재적인원 데이터프레임 병합
         units_index = ['재적인원 대비 신청인원', '재적인원 대비 신청누계', '재적인원 대비 수료인원', '재적인원 대비 수료누계', '재적인원 대비 IMO신청인원', '재적인원 대비 IMO신청률']
         for c in range(len(units_index)):
             df_apply[units_index[c]] = (df_apply[units_index[c].split(" ")[2]] / df_apply['재적인원'] * 100).round(1) # 각 요소별 재적인원 대비 인원비율 구하기
