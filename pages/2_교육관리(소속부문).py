@@ -43,6 +43,7 @@ if authentication_status:
     # ------------------------------------------          인스턴스 생성          ---------------------------------------------
     instance = Chart()
     df_channel = instance.call_data_change("attend", '소속부문')
+    instance.make_set_change(df_channel,*['소속부문'])
 
     # --------------------------------------------          사이드바          ------------------------------------------------
     # 사이드바 헤더
@@ -62,8 +63,6 @@ if authentication_status:
     )
 
     # --------------------------------------------          차트제작          ------------------------------------------------
-    # df_channel_change = instance.call_data_change("attend", "소속부문")
-
     # 첫번째 행 (신청인원)
     hbar_apply, hbar_apply_people = st.columns(2)
     hbar_apply.plotly_chart(instance.make_hbarchart_group(

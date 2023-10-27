@@ -237,7 +237,53 @@ class MakeSet(CallData):
             df_apply[units_index[c]] = (df_apply[units_index[c].split(" ")[2]] / df_apply['재적인원'] * 100).round(1) # 각 요소별 재적인원 대비 인원비율 구하기
         # df_apply : | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률 | 재적인원 | 재적인원 대비 신청인원 | 재적인원 대비 신청누계 | 재적인원 대비 수료인원 | 재적인원 대비 수료누계 | 재적인원 대비 IMO신청인원 | 재적인원 대비 IMO신청률'
         return df_apply
-            
+
+    # ------------------------------          소속부문별 고유값 및 누계값 (월별추이)          ------------------------------------
+    def make_set_change(self, df, *columns):
+        # df : | 과정코드 | 과정분류 | 과정명 | 보험사 | 월 | 과정형태 | 수강료 | 지역 | 교육장소 | 정원 | 목표인원 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 성명 | IMO신청여부 | 수료현황 | 입사연차
+        # 월, 소속부문, 사원번호, 그리고 신청누계(추가)
+        df_apply = df.groupby(['월',*columns,'사원번호']).size().reset_index(name='신청누계')
+        st.dataframe(df_apply)
+        # 월, 소속부문, 그리고 신청인원 (df_func_monthly에서 사원번호 중복제거) (추가)
+        df_apply_unique = df_apply.groupby(['월',*columns])['사원번호'].count().reset_index(name='신청인원')
+        # 월, 소속부문, 신청인원 (df_func_monthly에서 사원번호 없애고 신청누계 다 더하기)
+        df_apply_total = df_apply.groupby(['월',*columns])['신청누계'].sum().reset_index(name='신청누계')
+        # 월, 소속부문, 신청누계, 신청인원 (df_func_unique와 df_func_total 합치기)
+        df_apply = pd.merge(df_apply_total, df_apply_unique, on=['월',*columns])
+        # 수료인원, 수료누계, IMO신청인원, IMO신청누계
+        for groups in range(len(self.index)):
+            # 수료현황, IMO신청여부 1로 묶기
+            df_attend = df.groupby(self.index[groups][0]).get_group(1)
+            # 수료현황(1,0)별 사원번호 개수 (수료인원)
+            df_attend_unique = df.groupby(['월',*columns,self.index[groups][0]])['사원번호'].count().reset_index(name=self.index[groups][1])
+            # 수료현항 0인 row 날리기
+            df_attend_unique = df_attend_unique[df_attend_unique[self.index[groups][0]] != 0]
+            # 수료현황 column 날리기
+            df_attend_unique = df_attend_unique.drop(columns=[self.index[groups][0]])
+            # 수료현황 전체 더하기 (수료누계)
+            df_attend_total = df.groupby(['월',*columns])[self.index[groups][0]].sum().reset_index(name=self.index[groups][2])
+            # 수료율
+            df_attend_total[self.index[groups][3]] = (df_attend_total[self.index[groups][2]]/df_apply['신청누계']*100).round(1)
+            # 수료인원이랑 수료누계 합치기
+            df_attend = pd.merge(df_attend_unique, df_attend_total, on=['월',*columns])
+            df_apply = pd.merge(df_apply, df_attend, on=['월',*columns])
+        # Sample list of month names
+        month_names = df_apply['월']
+        # Custom sorting key function to sort month names in the desired order
+        def custom_sort_key(month_name):
+            # Extract the numeric part of the month name and convert it to an integer
+            # For '10월', this will extract '10' and convert it to 10
+            return int(month_name[:-1])
+        # Sort the month names using the custom sorting key
+        sorted_month = {'월' : sorted(month_names, key=custom_sort_key)}
+        df_apply = pd.merge(pd.DataFrame(sorted_month), df_apply, on=['월'])
+        # 다 합쳐서 반환
+        return df_apply
+
+
+
+
+
     # ------------------------------          소속부문별 고유값 및 누계값 (월별추이)          ------------------------------------
     def make_set_trend(self, df, *columns):
         # 월별, 소속부문별 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률
