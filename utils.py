@@ -228,6 +228,7 @@ class MakeSet(CallData):
             df_two[self.index[i][3]] = (df_two[self.index[i][2]]/df_apply['신청누계']*100).round(1) # 수료율 및 IMO신청률 구하기
             df_apply = pd.merge(df_apply, df_two, on=[*columns]) # 신청+수료+IMO
         # df_apply : | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률
+        st.dataframe(df_apply)
         return df_apply
 
     # ------------------------------          소속부문별 고유값 및 누계값 (월별추이)          ------------------------------------
@@ -237,7 +238,6 @@ class MakeSet(CallData):
         df_apply_total = df.groupby(['월',*columns,'사원번호']).size().reset_index(name='신청누계') # 신청누계 : df를 월과 *column(소속부문/입사연차)로 묶고, 사원번호의 누적개수 구하기
         df_apply_unique = df_apply_total.groupby(['월',*columns])['사원번호'].nunique().reset_index(name='신청인원') # 신청인원 : df를 *columns로 묶고, 사원번호의 고유개수 구하기
         df_apply = pd.merge(df_apply_unique, df_apply_total.groupby(['월',*columns])['신청누계'].sum().reset_index(name='신청누계'), on=['월',*columns]) # 신청인원과 신청누계 병합
-        st.dataframe(df_apply)
         # ---------------------------------------------------------------------------------------------------------------
         # 수료인원, 수료누계, IMO신청인원, IMO신청누계
         for i in range(len(self.index)):
@@ -252,7 +252,7 @@ class MakeSet(CallData):
         units_index = ['재적인원 대비 신청인원', '재적인원 대비 신청누계', '재적인원 대비 수료인원', '재적인원 대비 수료누계', '재적인원 대비 IMO신청인원', '재적인원 대비 IMO신청률']
         for c in range(len(units_index)):
             df_apply[units_index[c]] = (df_apply[units_index[c].split(" ")[2]] / df_apply['재적인원'] * 100).round(1) # 각 요소별 재적인원 대비 인원비율 구하기
-            st.dataframe(df_apply)
+        st.dataframe(df_apply)
         return df_apply
 
 
