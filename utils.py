@@ -105,8 +105,8 @@ class CallData:
         # 과정코드 정리
         df_attend.insert(0, column='과정코드', value=None)  # 첫번째 컬럼에 [과정코드] 컬럼 추가
         start = time.time()
-        code = [df_attend.iloc[change,1].split(")")[0].replace('(','') for change in range(df_attend.shape[0])]
-        df_attend['과정코드'] = code
+        df_attend['과정코드'] = [df_attend.iloc[change,1].split(")")[0].replace('(','') for change in range(df_attend.shape[0])]
+        # df_attend['과정코드'] = code
         end = time.time()
         st.write(f"{end-start} sec")
         '''
