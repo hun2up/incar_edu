@@ -102,7 +102,7 @@ class CallData:
         # [매월]교육과정수료현황 시트 호출
         # | 과정명 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 성명 | IMO신청여부 | 수료현황 | 비고
         df_attend = call_sheets(select=select).drop(columns=['번호','비고']).rename(columns={'성함':'성명'}) # 시트 호출 & 컬럼 삭제 (번호) & 컬럼명 변경 (성함 ▶ 성명)
-        df_attend = df_attend.drop(df_attend[df_attend['파트너'] == '인카본사'].index)
+        df_attend = df_attend.drop(df_attend[df_attend['파트너'] == '인카본사'].index) # [파트너]에서 '인카본사' 삭제
         # 과정코드 정리
         df_attend.insert(0, column='과정코드', value=None) # 첫번째 컬럼에 [과정코드] 컬럼 추가
         df_attend['과정코드'] = [df_attend.iloc[change,1].split(")")[0].replace('(','') for change in range(df_attend.shape[0])] # 과정명에서 과정코드만 추출하여 [과정코드] 칼럼에 추가
@@ -110,6 +110,7 @@ class CallData:
         # 데이터형식 정리
         df_attend['IMO신청여부'] = df_attend['IMO신청여부'].replace({'Y':1, 'N':0}) # IMO신청여부: Y ▶ 1
         df_attend['수료현황'] = pd.to_numeric(df_attend['수료현황'], errors='coerce') # 수료현황 : 텍스트 ▶ 숫자
+        df_attend['입사연차'] = (datetime.now().year%100 + 1 - df_attend['사원번호'].astype(str).str[:2].astype(int, errors='ignore')).apply(lambda x: f'{x}년차')
         
         st.dataframe(df_attend)
 
