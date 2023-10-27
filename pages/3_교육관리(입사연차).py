@@ -42,22 +42,22 @@ if authentication_status:
 
     # ------------------------------------------          인스턴스 생성          ---------------------------------------------
     instance = Chart()
-    df_channel = instance.call_data_attend("attend")
+    df_career = instance.call_data_attend("attend")
 
     # --------------------------------------------          사이드바          ------------------------------------------------
     # 사이드바 헤더
     st.sidebar.header("원하는 옵션을 선택하세요")
     #사이드바 제작
-    month = make_sidebar(df_channel,'월') # 월도 선택 사이드바
-    region = make_sidebar(df_channel,'지역') # 지역 선택 사이드바
-    partner = make_sidebar(df_channel,'보험사') # 보험사 선택 사이드바
-    line = make_sidebar(df_channel,'과정형태') # 과정 온오프라인 선택 사이드바
-    theme = make_sidebar(df_channel,'과정분류') # 과정 테마 선택 사이드바
-    name = make_sidebar(df_channel,'과정명') # 세부과정 선택 사이드바
-    channel = make_sidebar(df_channel,'소속부문') # 입사연차 선택 사이드바
-    career = make_sidebar(df_channel,'입사연차') # 입사연차 선택 사이드바
+    month = make_sidebar(df_career,'월') # 월도 선택 사이드바
+    region = make_sidebar(df_career,'지역') # 지역 선택 사이드바
+    partner = make_sidebar(df_career,'보험사') # 보험사 선택 사이드바
+    line = make_sidebar(df_career,'과정형태') # 과정 온오프라인 선택 사이드바
+    theme = make_sidebar(df_career,'과정분류') # 과정 테마 선택 사이드바
+    name = make_sidebar(df_career,'과정명') # 세부과정 선택 사이드바
+    channel = make_sidebar(df_career,'소속부문') # 입사연차 선택 사이드바
+    career = make_sidebar(df_career,'입사연차') # 입사연차 선택 사이드바
     # 데이터와 사이드바 연결
-    df_channel = df_channel.query(
+    df_career = df_career.query(
         "월 == @month & 지역 == @region & 보험사 == @partner & 과정형태 == @line & 과정분류 == @theme & 과정명 == @name & 소속부문 == @channel & 입사연차 == @career"
     )
 
@@ -65,13 +65,13 @@ if authentication_status:
     # 첫번째 행 (신청인원)
     hbar_apply, hbar_attend = st.columns(2)
     hbar_apply.plotly_chart(instance.make_hbarchart_group(
-        df=instance.make_set_status(df_channel,*['입사연차']),
+        df=instance.make_set_status(df_career,*['입사연차']),
         category='입사연차',
         axis_a='신청인원',
         axis_b='신청누계',
         title='입사연차별 교육신청 현황'), use_container_width=True)
     hbar_attend.plotly_chart(instance.make_hbarchart_group(
-        df=instance.make_set_status(df_channel,*['입사연차']),
+        df=instance.make_set_status(df_career,*['입사연차']),
         category='입사연차',
         axis_a='수료인원',
         axis_b='수료누계',
@@ -80,12 +80,12 @@ if authentication_status:
     # 두번째 행 (수료율 & IMO신청률)
     hbar_attend_rate, hbar_imo_rate = st.columns(2)
     hbar_attend_rate.plotly_chart(instance.make_hbarchart_single(
-        df=instance.make_set_status(df_channel,*['입사연차']),
+        df=instance.make_set_status(df_career,*['입사연차']),
         category='입사연차',
         axis_a='수료율',
         title='입사연차별 수료율'), use_container_width=True)
     hbar_imo_rate.plotly_chart(instance.make_hbarchart_single(
-        df=instance.make_set_status(df_channel,*['입사연차']),
+        df=instance.make_set_status(df_career,*['입사연차']),
         category='입사연차',
         axis_a='IMO신청률',
         title='입사연차별 IMO신청률'), use_container_width=True)
@@ -93,13 +93,13 @@ if authentication_status:
     # 세번째 행 (신청누계 & 수료누계 추이그래프) 수료율, IMO신청률)
     line_apply, line_attend = st.columns(2)
     line_apply.plotly_chart(instance.make_linechart(
-        df=instance.make_set_trend(df_channel,'입사연차',*['입사연차']),
+        df=instance.make_set_trend(df_career,'입사연차',*['입사연차']),
         category='입사연차',
         xaxis='월',
         yaxis='신청누계',
         title='입사연차별 신청인원 추이 (신청누계 기준)'), use_container_width=True)
     line_attend.plotly_chart(instance.make_linechart(
-        df=instance.make_set_trend(df_channel,'입사연차',*['입사연차']),
+        df=instance.make_set_trend(df_career,'입사연차',*['입사연차']),
         category='입사연차',
         xaxis='월',
         yaxis='수료누계',
@@ -108,13 +108,13 @@ if authentication_status:
     # 네번째 행 (재적인원 대비 신청누계 & 재적인원 대비 수료누계)
     line_apply_per, line_attend_per = st.columns(2)
     line_apply_per.plotly_chart(instance.make_linechart(
-        df=instance.make_set_trend(df_channel,'입사연차',*['입사연차']),
+        df=instance.make_set_trend(df_career,'입사연차',*['입사연차']),
         category='입사연차',
         xaxis='월',
         yaxis='재적인원 대비 신청누계',
         title='재적인원 대비 신청인원 추이 (신청누계 기준)'), use_container_width=True)
     line_attend_per.plotly_chart(instance.make_linechart(
-        df=instance.make_set_trend(df_channel,'입사연차',*['입사연차']),
+        df=instance.make_set_trend(df_career,'입사연차',*['입사연차']),
         category='입사연차',
         xaxis='월',
         yaxis='재적인원 대비 수료누계',
@@ -123,13 +123,13 @@ if authentication_status:
     # 다섯번째 행 (수료율 & IMO신청률 추이그래프)
     line_attend_rate, line_imo_rate = st.columns(2)
     line_attend_rate.plotly_chart(instance.make_linechart(
-        df=instance.make_set_trend(df_channel,'입사연차',*['입사연차']),
+        df=instance.make_set_trend(df_career,'입사연차',*['입사연차']),
         category='입사연차',
         xaxis='월',
         yaxis='수료율',
         title='입사연차별 수료율 추이'), use_container_width=True)
     line_imo_rate.plotly_chart(instance.make_linechart(
-        df=instance.make_set_trend(df_channel,'입사연차',*['입사연차']),
+        df=instance.make_set_trend(df_career,'입사연차',*['입사연차']),
         category='입사연차',
         xaxis='월',
         yaxis='IMO신청률',
