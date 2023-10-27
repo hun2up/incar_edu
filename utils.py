@@ -217,7 +217,7 @@ class MakeSet(CallData):
         df_apply_total = df.groupby([*columns,'사원번호']).size().reset_index(name='신청누계') # 신청누계 : df를 *columns로 묶고, 사원번호의 누적개수 구하기
         df_apply_unique = df_apply_total.groupby([*columns])['사원번호'].count().reset_index(name='신청인원') # 신청인원 : df를 *columns로 묶고, 사원번호의 고유개수 구하기
         df_apply = pd.merge(df_apply_unique, df_apply_total.groupby([*columns])['신청누계'].sum().reset_index(name='신청누계'), on=['소속부문']) # 신청인원과 신청누계 병합
-        
+        # ---------------------------------------------------------------------------------------------------------------
         # 수료인원, 수료누계, 수료율 및 IMO신청인원, IMO신청누계, IMO신청률
         for i in range(len(self.index)):
             df_two_total = df.groupby([*columns])[self.index[i][0]].sum().reset_index(name=self.index[i][2]) # 수료현황 또는 IMO신청여부 : 전체 더하기 (수료누계 및 IMO신청누계)
@@ -225,7 +225,7 @@ class MakeSet(CallData):
             df_two = pd.merge(df_two_unique, df_two_total, on=[*columns]) # 수료인원+수료누계 & IMO신청인원+IMO신청누계
             df_two[self.index[i][3]] = (df_two[self.index[i][2]]/df_apply['신청누계']*100).round(1) # 수료율 및 IMO신청률 구하기
             df_apply = pd.merge(df_apply, df_two, on=[*columns]) # 신청+수료+IMO
-
+        # ---------------------------------------------------------------------------------------------------------------
         # 재적인원
         df_units = df.groupby([*columns])['재적인원'].median().reset_index(name='재적인원') # 소속부문별/입사연차별 재적인원
         df_apply = pd.merge(df_apply, df_units, on=theme) # 기존 데이터프레임과 재적인원 데이터프레임 병합
