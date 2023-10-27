@@ -213,7 +213,7 @@ class MakeSet(CallData):
         for i in range(len(self.index)):
             # df_attend = df.groupby(self.index[i][0]).get_group(1) # 수료현황 또는 IMO신청여부 : '1'로 묶기
             df_two_total = df.groupby([*columns])[self.index[i][0]].sum().reset_index(name=self.index[i][2]) # 수료현황 또는 IMO신청여부 : 전체 더하기 (수료누계 및 IMO신청누계)
-            df_two_unique = pd.DataFrame(df[df[self.index[i][0]] != 0])
+            df_two_unique = pd.DataFrame(df[df[self.index[i][0]] != 0]).groupby([*columns])['사원번호'].count().reset_index(name=self.index[i[1]])
             st.dataframe(df_two_unique)
             '''
             df_two_unique = df_two_unique.groupby([*columns])['사원번호'].count().reset_index(name=self.index[i[1]]) # 수료현황 또는 IMO신청여부 : 값이 1인 사원번호 개수 구하기 (수료인원 및 IMO신청인원)
