@@ -113,11 +113,16 @@ class CallData:
         df_attend['입사연차'] = (datetime.now().year%100 + 1 - df_attend['사원번호'].astype(str).str[:2].astype(int, errors='ignore')).apply(lambda x: f'{x}년차') # [입사연차] 컬럼 추가 및 데이터(입사연차) 삽입
         # df_attend : | 과정코드 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 입사연차 | 성명 | IMO신청여부 | 수료현황
         
-        # [매월]과정현황 시트 호출
-        #
+        # [매월]과정현황 시트 호출 및 교육일자 데이터 변경 ('월')
+        # df_course = | 번호 | 과정코드 | 과정분류 | 과정명 | 보험사 | 교육일자 | 과정형태 | 수강료 | 지역 | 교육장소 | 정원 | 목표인원
         df_course = call_sheets("course")
+        for short in range(df_course.shape[0]):
+            value_date = pd.to_datetime(df_course.at[short, '교육일자'], format="%Y. %m. %d")
+            month = value_date.month
+            df_course.at[short, '교육일자'] = f'{month}월'
         
         st.dataframe(df_course)
+        
 
 
     # -------------------------         수료현황 테이블 정리 & 테이블 병합 (신청현황+과정현황)          ------------------------------
