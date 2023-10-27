@@ -1,6 +1,7 @@
 #########################################################################################################################
 ################                                    라이브러리 호출                                     ##################
 #########################################################################################################################
+import time
 import pandas as pd             # Documents (API reference) : https://pandas.pydata.org/docs/reference/index.html
 import streamlit as st          # Documents (API reference) : https://docs.streamlit.io/library/api-reference
 import plotly as pl             # Documents (Graphing Library) : https://plotly.com/python/
@@ -103,9 +104,13 @@ class CallData:
         df_attend = call_sheets(select=select).drop(columns='번호').rename(columns={'성함':'성명'}) # 시트 호출 & 컬럼 삭제 (번호) & 컬럼명 변경 (성함 > 성명)
         # 과정코드 정리
         df_attend.insert(0, column='과정코드', value=None)  # 첫번째 컬럼에 [과정코드] 컬럼 추가
-
+        start = time.time()
         for change in range(df_attend.shape[0]):
             df_attend.iloc[change,0] = df_attend.iloc[change,1].split(")")[0].replace('(','')
+        end = time.time()
+        st.write(f"{end-start} sec")
+
+        
 
         
         st.dataframe(df_attend)
