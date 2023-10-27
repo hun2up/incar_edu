@@ -43,6 +43,7 @@ if authentication_status:
     # ------------------------------------------          인스턴스 생성          ---------------------------------------------
     instance = Chart()
     df_career = instance.call_data_attend("attend")
+    st.dataframe(df_career)
     st.dataframe(instance.make_set_status(df_career,*['입사연차']))
 
     # --------------------------------------------          사이드바          ------------------------------------------------
