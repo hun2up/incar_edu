@@ -115,7 +115,7 @@ class CallData:
         
         # [매월]과정현황 시트 호출
         #
-        df_course = call_sheets(select=select)
+        df_course = call_sheets("course")
         
         st.dataframe(df_course)
 
