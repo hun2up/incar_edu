@@ -124,63 +124,6 @@ class CallData:
         # df_merge : | 과정코드 | 과정분류 | 과정명 | 보험사 | 월 | 과정형태 | 수강료 | 지역 | 교육장소 | 정원 | 목표인원 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 성명 | IMO신청여부 | 수료현황 | 입사연차
         return df_merge
 
-
-
-
-
-    #
-    def call_regist_channel(self):
-        df_regist = pd.read_csv(st.secrets["regist_url"].replace("/edit#gid=", "/export?format=csv&gid="))
-        df_regist = df_regist[df_regist['구분'] == '소속부문']
-        df_regist.rename(columns={'항목':'소속부문'}, inplace=True)
-        df_regist = df_regist.drop(columns='구분')
-        return df_regist
-    
-    # 
-    def call_regist_career(self):
-        df_regist = pd.read_csv(st.secrets["regist_url"].replace("/edit#gid=", "/export?format=csv&gid="))
-        df_regist = df_regist[df_regist['구분'] == '입사연차']
-        df_regist.rename(columns={'항목':'입사연차'}, inplace=True)
-        df_regist = df_regist.drop(columns='구분')
-        return df_regist
-
-    # --------------------         수료현황 테이블 정리 & 테이블 병합 (신청현황+과정현황)          -------------------------
-    def call_data_change(self, select, theme):
-        df_attend, df_course = call_data(select)
-        # df_attend: 컬럼 생성 (과정코드)
-        df_attend.insert(loc=1, column='과정코드', value=None)
-        # 데이터 정리 (과정코드)
-        for modify_attend in range(df_attend.shape[0]):
-            df_attend.iloc[modify_attend,1] = df_attend.iloc[modify_attend,0].split(")")[0].replace('(','')
-        # df_attend: 컬럼 삭제 (과정명, 비고)
-        df_attend = df_attend.drop(columns=['과정명','비고'])
-        # df_attend: 데이터 정리 (IMO신청여부: Y -> 1)
-        df_attend['IMO신청여부'] = df_attend['IMO신청여부'].replace({'Y':1, 'N':0})
-        # df_attend: 데이터 정리 (수료현황: 텍스트 -> 숫자)
-        df_attend['수료현황'] = pd.to_numeric(df_attend['수료현황'], errors='coerce')
-        # df_attend: 컬럼 추가 및 데이터 삽입 (입사연차)
-        df_attend['입사연차'] = (datetime.now().year%100 + 1 - df_attend['사원번호'].astype(str).str[:2].astype(int, errors='ignore')).apply(lambda x: f'{x}년차')
-        # df_attend: 데이터 삭제 (파트너: 인카본사)
-        df_attend = df_attend.drop(df_attend[df_attend.iloc[:,4] == '인카본사'].index)
-        df_attend['과정코드'] = df_attend['과정코드'].astype(str)
-        # df_course1: 컬럼명 & 데이터 변경 (course1_date -> 월)
-        for date in range(df_course.shape[0]):
-            value_date = pd.to_datetime(df_course.at[date, '교육일자'], format="%Y. %m. %d")
-            month = value_date.month
-            df_course.at[date, '교육일자'] = f'{month}월'
-        df_course['과정코드'] = df_course['과정코드'].astype(str)
-        ###### df_course1 = [과정코드, 과정분류, 과정명, 보험사, 교육일자, 과정형태, 수강료, 지역, 교육장소, 정원, 목표인원]
-        # 테이블 병합 (과정현황 + 수료현황)
-        df_result = pd.merge(df_course, df_attend, on=['과정코드'])    
-        # df_atd: 컬럼명 변경 (교육일자 -> 월)
-        df_result.rename(columns={'교육일자':'월'}, inplace=True)
-        if theme == '입사연차':
-            df_result = pd.merge(df_result, self.call_regist_career(), on=['월','입사연차'])
-        elif theme == '소속부문':
-            df_result = pd.merge(df_result, self.call_regist_channel(), on=['월','소속부문'])
-        ###### df_atd = [과정코드, 과정분류, 과정명, 보험사, 월, 과정형태, 수강료, 지역, 교육장소, 정원, 목표인원, 소속부문, 소속총괄, 소속부서, 파트너, 사원번호, 성함, IMO신청여부, 수료현황, 입사연차]
-        return df_result
-
     # --------------------         신청현황 테이블 정리 & 테이블 병합 (신청현황+과정현황)          -------------------------
     def call_data_apply(self, select):
         df_apply, df_course = call_data(select)
