@@ -14,6 +14,7 @@ from utils import Chart
 ########################################################################################################################
 ################################################     인증페이지 설정     ###################################################
 ########################################################################################################################
+'''
 instance = Chart()
 df_channel = instance.call_data_attend("attend", '소속부문')
 # -----------------------------------------------------  사이드바  ---------------------------------------------------------
@@ -32,6 +33,7 @@ career = make_sidebar(df_channel,'입사연차') # 입사연차 선택 사이드
 df_channel = df_channel.query(
     "월 == @month & 지역 == @region & 보험사 == @partner & 과정형태 == @line & 과정분류 == @theme & 과정명 == @name & 소속부문 == @channel & 입사연차 == @career"
 )
+'''
 
 # -------------------------------------------------  인증페이지 삽입  -------------------------------------------------------
 # 인증모듈 기본설정
@@ -59,22 +61,44 @@ if authentication_status:
     # 메인페이지 타이틀
     st.header("소속부문별 교육지표")
 
+    # --------------------------------------------------  인스턴스 생성  -------------------------------------------------------
+    instance = Chart()
+    df_channel = instance.call_data_attend("attend", '소속부문')
+
+    # -----------------------------------------------------  사이드바  ---------------------------------------------------------
+    # 사이드바 헤더
+    st.sidebar.header("원하는 옵션을 선택하세요")
+    #사이드바 제작
+    month = make_sidebar(df_channel,'월') # 월도 선택 사이드바
+    region = make_sidebar(df_channel,'지역') # 지역 선택 사이드바
+    partner = make_sidebar(df_channel,'보험사') # 보험사 선택 사이드바
+    line = make_sidebar(df_channel,'과정형태') # 과정 온오프라인 선택 사이드바
+    theme = make_sidebar(df_channel,'과정분류') # 과정 테마 선택 사이드바
+    name = make_sidebar(df_channel,'과정명') # 세부과정 선택 사이드바
+    channel = make_sidebar(df_channel,'소속부문') # 소속부문 선택 사이드바
+    career = make_sidebar(df_channel,'입사연차') # 입사연차 선택 사이드바
+    # 데이터와 사이드바 연결
+    df_channel = df_channel.query(
+        "월 == @month & 지역 == @region & 보험사 == @partner & 과정형태 == @line & 과정분류 == @theme & 과정명 == @name & 소속부문 == @channel & 입사연차 == @career"
+    )
+
     instance.call_data_change("attend")
 
     # 첫번째 행 (신청인원)
-    hbar_apply, hbar_apply_people = st.columns(2)
-    hbar_apply.plotly_chart(instance.make_hbarchart_group(
-        df=instance.make_set_status(df_channel, *['소속부문']),
-        category='소속부문',
-        axis_a='신청인원',
-        axis_b='신청누계',
-        title='소속부문별 교육신청 현황'), use_container_width=True)
-    hbar_apply_people.plotly_chart(instance.make_hbarchart_group(
-        df=instance.make_set_status(df_channel, *['소속부문']),
-        category='소속부문',
-        axis_a='재적인원 대비 신청인원',
-        axis_b='재적인원 대비 신청누계',
-        title='소속부문별 재적인원 대비비 교육신청 현황'), use_container_width=True)
+    with st.spinner("데이터를 불러오는 중입니다."):
+        hbar_apply, hbar_apply_people = st.columns(2)
+        hbar_apply.plotly_chart(instance.make_hbarchart_group(
+            df=instance.make_set_status(df_channel, *['소속부문']),
+            category='소속부문',
+            axis_a='신청인원',
+            axis_b='신청누계',
+            title='소속부문별 교육신청 현황'), use_container_width=True)
+        hbar_apply_people.plotly_chart(instance.make_hbarchart_group(
+            df=instance.make_set_status(df_channel, *['소속부문']),
+            category='소속부문',
+            axis_a='재적인원 대비 신청인원',
+            axis_b='재적인원 대비 신청누계',
+            title='소속부문별 재적인원 대비비 교육신청 현황'), use_container_width=True)
     
     # 두번째 행 (수료인원)
     hbar_attend, hbar_attend_people = st.columns(2)
