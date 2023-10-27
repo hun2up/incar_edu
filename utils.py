@@ -116,15 +116,18 @@ class CallData:
         # [매월]과정현황 시트 호출 및 [교육일자] 데이터 변경
         # df_course = | 번호 | 과정코드 | 과정분류 | 과정명 | 보험사 | 교육일자 | 과정형태 | 수강료 | 지역 | 교육장소 | 정원 | 목표인원
         df_course = call_sheets("course") # 시트 호출
+
+        start = time.time()
         for short in range(df_course.shape[0]): # [교육일자] 데이터 변경 : 일자 ▶ 월
             value_date = pd.to_datetime(df_course.at[short, '교육일자'], format="%Y. %m. %d")
             month = value_date.month
             df_course.at[short, '교육일자'] = f'{month}월'
-        
+        end = time.time()
         # 테이블 병합 : df_attend(수료현황) + df_course(과정현황)
         df_attend['과정코드'] = df_attend['과정코드'].astype(str)
         df_course['과정코드'] = df_course['과정코드'].astype(str)
         df_merge = pd.merge(df_course, df_attend, on=['과정코드']) # [과정코드] 컬럼을 기준으로 두 데이터프레임 병합
+        st.write(f"{end-start} sec")
         st.dataframe(df_attend)
         st.dataframe(df_course)
         
