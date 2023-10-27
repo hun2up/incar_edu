@@ -84,10 +84,11 @@ class CallData:
 
     # -----------------------------------         재적인원 데이터 호출          ------------------------------------------
     def call_regist(self, theme):
-        df_regist = pd.read_csv(st.secrets["regist_url"].replace("/edit#gid=", "/export?format=csv&gid="))
-        df_regist = df_regist[df_regist['구분'] == theme]
-        df_regist.rename(columns={'항목':theme}, inplace=True)
-        df_regist = df_regist.drop(columns='구분')     
+        df_regist = pd.read_csv(st.secrets["regist_url"].replace("/edit#gid=", "/export?format=csv&gid=")) # 시트호출
+        st.dataframe(df_regist)
+        df_regist = df_regist[df_regist['구분'] == theme] # [구분] 컬럼을 '소속부문' 또는 '입사연차'에 따라 분류
+        df_regist.rename(columns={'항목':theme}, inplace=True) # [항목] 컬럼을 '소속부문' 또는 '입사연차'로 변경
+        df_regist = df_regist.drop(columns='구분') # [구분] 컬럼 삭제
         return df_regist
     
     # --------------------         수료현황 테이블 정리 & 테이블 병합 (신청현황+과정현황)          -------------------------
