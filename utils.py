@@ -207,7 +207,7 @@ class MakeSet(CallData):
         # 신청인원 및 신청누계 구하기
         df_apply_total = df.groupby([*columns,'사원번호']).size().reset_index(name='신청누계') # 신청누계 : df를 *columns로 묶고, 사원번호의 누적개수 구하기
         df_apply_unique = df_apply_total.groupby([*columns])['사원번호'].count().reset_index(name='신청인원') # 신청인원 : df를 *columns로 묶고, 사원번호의 고유개수 구하기
-        df_apply_total = df_apply_total.groupby([*columns])['신청누계'].sum().reset_index(name='신청누계') # 신청누계 : 각 부문별 신청누계
+        df_apply_total = pd.merge(df_apply_unique, df_apply_total.groupby([*columns])['신청누계'].sum().reset_index(name='신청누계'), on=['소속부문']) # 신청인원과 신청누계 병합
         st.dataframe(df_apply_total)
 
     # ----------------------------          소속부문별 고유값 및 누계값 (상태값)          ---------------------------------
