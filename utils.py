@@ -98,8 +98,16 @@ class CallData:
         return df_regist
     # -------------------------         수료현황 테이블 정리 & 테이블 병합 (신청현황+과정현황)          ------------------------------
     def call_data_change(self, select):
-        # | 과정명 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 성함 | IMO신청여부 | 수료현황 | 비고
-        df_attend = call_sheets(select=select).drop(columns='번호').rename(columns={'성함':'성명'})
+        # [매월]교육과정수료현황 시트 호출
+        # | 과정명 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 성명 | IMO신청여부 | 수료현황 | 비고
+        df_attend = call_sheets(select=select).drop(columns='번호').rename(columns={'성함':'성명'}) # 시트 호출 & 컬럼 삭제 (번호) & 컬럼명 변경 (성함 > 성명)
+        # 과정코드 정리
+        df_attend.insert(0, column='과정코드', value=None)  # 첫번째 컬럼에 [과정코드] 컬럼 추가
+
+        for modify_attend in range(df_attend.shape[0]):
+            df_attend.iloc[modify_attend,1] = df_attend.iloc[modify_attend,0].split(")")[0].replace('(','')
+
+        
         st.dataframe(df_attend)
 
 
