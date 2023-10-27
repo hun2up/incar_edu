@@ -203,12 +203,11 @@ class MakeSet(CallData):
 
     # ----------------------------          소속부문별 고유값 및 누계값 (상태값)          ---------------------------------
     def make_set_change(self, df, *columns): # *columns : '소속부문' 또는 '입사연차'
-        df_set = pd.DataFrame(columns=['소속부문','신청인원','신청누계','재적인원','수료인원','수료누계','수료율','IMO신청인원','IMO신청누계','IMO신청률','재적인원대비 신청인원','재적인원대비 신청누계','재적인원 대비 수료인원','재적인원 대비 수료누계'])
         # df : | 과정코드 | 과정분류 | 과정명 | 보험사 | 월 | 과정형태 | 수강료 | 지역 | 교육장소 | 정원 | 목표인원 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 성명 | IMO신청여부 | 수료현황 | 입사연차
-        df_set['소속부문'] = [df.groupby(['소속부문'])][0]
-        # df_apply_total = df.groupby([*columns,'사원번호']).size().reset_index(name='신청누계') # 신청누계 : df를 *columns로 묶고, 사원번호의 누적개수 구하기
-        # df_apply_unique = df_apply_total.groupby([*columns])['사원번호'].count().reset_index(name='신청인원')
-        st.dataframe(df_set)
+        # 신청인원 및 신청누계 구하기
+        df_apply_total = df.groupby([*columns,'사원번호']).size().reset_index(name='신청누계') # 신청누계 : df를 *columns로 묶고, 사원번호의 누적개수 구하기
+        df_apply_unique = df_apply_total.groupby([*columns])['사원번호'].count().reset_index(name='신청인원') # 신청인원 : df를 *columns로 묶고, 사원번호의 고유개수 구하기
+        st.dataframe(df_apply_total)
 
     # ----------------------------          소속부문별 고유값 및 누계값 (상태값)          ---------------------------------
     def make_set_status(self, df, *columns):
