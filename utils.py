@@ -104,8 +104,8 @@ class CallData:
         # 과정코드 정리
         df_attend.insert(0, column='과정코드', value=None)  # 첫번째 컬럼에 [과정코드] 컬럼 추가
 
-        for modify_attend in range(df_attend.shape[0]):
-            df_attend.iloc[modify_attend,1] = df_attend.iloc[modify_attend,0].split(")")[0].replace('(','')
+        for change in range(df_attend.shape[0]):
+            df_attend.iloc[change,0] = df_attend.iloc[change,1].split(")")[1].replace('(','')
 
         
         st.dataframe(df_attend)
