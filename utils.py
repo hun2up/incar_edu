@@ -254,7 +254,7 @@ class MakeSet(CallData):
             df_two = pd.merge(df_two_unique, df_two_total, on=['월',*columns]) # 수료인원+수료누계 & IMO신청인원+IMO신청누계
             df_two[self.index[i][3]] = (df_two[self.index[i][3]]/df_apply['신청누계']*100).round(1) # 수료율 및 IMO신청률 구하기
             df_apply = pd.merge(df_apply, df_two, on=['월',*columns]) # 신청+수료+IMO
-            st.dataframe(df_two_two)
+            st.dataframe(df_apply)
         return df_apply
 
 
