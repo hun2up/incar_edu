@@ -90,22 +90,7 @@ if authentication_status:
         axis_a='IMO신청률',
         title='소속부문별 IMO신청률'), use_container_width=True)
     
-    # 세번째 행 (재적인원 대비 신청누계 & 재적인원 대비 수료누계)
-    line_apply_per, line_attend_per = st.columns(2)
-    line_apply_per.plotly_chart(instance.make_linechart(
-        df=instance.make_set_trend(df_channel,'소속부문',*['소속부문']),
-        category='소속부문',
-        xaxis='월',
-        yaxis='재적인원 대비 신청누계',
-        title='재적인원 대비 신청인원 추이 (신청누계 기준)'), use_container_width=True)
-    line_attend_per.plotly_chart(instance.make_linechart(
-        df=instance.make_set_trend(df_channel,'소속부문',*['소속부문']),
-        category='소속부문',
-        xaxis='월',
-        yaxis='재적인원 대비 수료누계',
-        title='재적인원 대비 수료인원 추이 (신청누계 기준)'), use_container_width=True)
-    
-    # 네번째 행 (신청누계 & 수료누계 추이그래프) 수료율, IMO신청률)
+    # 세번째 행 (신청누계 & 수료누계 추이그래프) 수료율, IMO신청률)
     line_apply, line_attend = st.columns(2)
     line_apply.plotly_chart(instance.make_linechart(
         df=instance.make_set_trend(df_channel,'소속부문',*['소속부문']),
@@ -119,6 +104,21 @@ if authentication_status:
         xaxis='월',
         yaxis='수료누계',
         title='소속부문별 수료인원 추이 (수료누계 기준)'), use_container_width=True)
+    
+    # 네번째 행 (재적인원 대비 신청누계 & 재적인원 대비 수료누계)
+    line_apply_per, line_attend_per = st.columns(2)
+    line_apply_per.plotly_chart(instance.make_linechart(
+        df=instance.make_set_trend(df_channel,'소속부문',*['소속부문']),
+        category='소속부문',
+        xaxis='월',
+        yaxis='재적인원 대비 신청누계',
+        title='재적인원 대비 신청인원 추이 (신청누계 기준)'), use_container_width=True)
+    line_attend_per.plotly_chart(instance.make_linechart(
+        df=instance.make_set_trend(df_channel,'소속부문',*['소속부문']),
+        category='소속부문',
+        xaxis='월',
+        yaxis='재적인원 대비 수료누계',
+        title='재적인원 대비 수료인원 추이 (신청누계 기준)'), use_container_width=True)
     
     # 다섯번째 행 (수료율 & IMO신청률 추이그래프)
     line_attend_rate, line_imo_rate = st.columns(2)
