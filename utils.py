@@ -105,8 +105,8 @@ class CallData:
         df_attend = df_attend.drop(df_attend[df_attend['파트너'] == '인카본사'].index) # [파트너]에서 '인카본사' 삭제
         # 과정코드 정리
         df_attend.insert(0, column='과정코드', value=None) # 첫번째 컬럼에 [과정코드] 컬럼 추가
-        df_attend['과정코드'] = [df_attend.iloc[change,1].split(")")[0].replace('(','') for change in range(df_attend.shape[0])] # 과정명에서 과정코드만 추출하여 [과정코드] 칼럼에 추가
-        df_attend = df_attend.drop(columns=['과정명'])
+        df_attend['과정코드'] = [df_attend.iloc[change,1].split(")")[0].replace('(','') for change in range(df_attend.shape[0])] # [과정명]에서 '과정코드'만 추출하여 [과정코드] 컬럼에 추가
+        df_attend = df_attend.drop(columns=['과정명']) # 기존 과정명 컬럼 삭제
         # 데이터형식 정리
         df_attend['IMO신청여부'] = df_attend['IMO신청여부'].replace({'Y':1, 'N':0}) # IMO신청여부: Y ▶ 1
         df_attend['수료현황'] = pd.to_numeric(df_attend['수료현황'], errors='coerce') # 수료현황 : 텍스트 ▶ 숫자
@@ -116,27 +116,16 @@ class CallData:
         # [매월]과정현황 시트 호출 및 [교육일자] 데이터 변경
         # df_course = | 과정코드 | 과정분류 | 과정명 | 보험사 | 교육일자 | 과정형태 | 수강료 | 지역 | 교육장소 | 정원 | 목표인원
         df_course = call_sheets("course").drop(columns=['번호']) # 시트 호출
-        start = time.time()
-        df_course.insert(4, column='월', value=None)
-        df_course['월'] = [f"{pd.to_datetime(df_course.at[short, '교육일자'], format='%Y. %m. %d').month}월" for short in range(df_course.shape[0])]
-        df_course = df_course.drop(columns=['교육일자'])
-        end = time.time()
+        df_course.insert(4, column='월', value=None) # 네번째 컬럼에 [월] 컬럼 추가
+        df_course['월'] = [f"{pd.to_datetime(df_course.at[short, '교육일자'], format='%Y. %m. %d').month}월" for short in range(df_course.shape[0])] # [교육일자]에서 '월' 데이터만 추출하여 [월] 컬럼에 추가
+        df_course = df_course.drop(columns=['교육일자']) # 기존 교육일자 컬럼 삭제
 
-        '''
-        start = time.time()
-        for short in range(df_course.shape[0]): # [교육일자] 데이터 변경 : 일자 ▶ 월
-            value_date = pd.to_datetime(df_course.at[short, '교육일자'], format="%Y. %m. %d")
-            month = value_date.month
-            df_course.at[short, '교육일자'] = f'{month}월'
-        end = time.time()
-        '''
         # 테이블 병합 : df_attend(수료현황) + df_course(과정현황)
         df_attend['과정코드'] = df_attend['과정코드'].astype(str)
         df_course['과정코드'] = df_course['과정코드'].astype(str)
         df_merge = pd.merge(df_course, df_attend, on=['과정코드']) # [과정코드] 컬럼을 기준으로 두 데이터프레임 병합
-        st.write(f"{end-start} sec")
-        st.dataframe(df_attend)
-        st.dataframe(df_course)
+        st.dataframe(df_merge)
+        return df_merge
         
 
 
