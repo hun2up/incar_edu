@@ -94,7 +94,7 @@ class CallData:
         return df_regist
     
     # --------------------         수료현황 테이블 정리 & 테이블 병합 (신청현황+과정현황)          -------------------------
-    def call_data_change(self, select, theme):
+    def call_data_change(self, select):
         # [매월]교육과정수료현황 시트 호출 ()
         # df_attend : | 과정명 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 성명 | IMO신청여부 | 수료현황 | 비고
         df_attend = call_sheets(select=select).drop(columns=['번호','비고']).rename(columns={'성함':'성명'}) # 시트 호출 & 컬럼 삭제 (번호) & 컬럼명 변경 (성함 ▶ 성명)
@@ -121,7 +121,6 @@ class CallData:
         df_attend['과정코드'] = df_attend['과정코드'].astype(str)
         df_course['과정코드'] = df_course['과정코드'].astype(str)
         df_merge = pd.merge(df_course, df_attend, on=['과정코드']) # [과정코드] 컬럼을 기준으로 두 데이터프레임 병합
-        df_merge = pd.merge(df_merge, self.call_regist(theme), on=['월',theme])
         # df_merge : | 과정코드 | 과정분류 | 과정명 | 보험사 | 월 | 과정형태 | 수강료 | 지역 | 교육장소 | 정원 | 목표인원 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 성명 | IMO신청여부 | 수료현황 | 입사연차
         return df_merge
 
@@ -214,7 +213,7 @@ class MakeSet(CallData):
         self.index = [['수료현황', '수료인원', '수료누계', '수료율'], ['IMO신청여부', 'IMO신청인원', 'IMO신청누계', 'IMO신청률']]
 
     # ----------------------------          소속부문별 고유값 및 누계값 (상태값)          ---------------------------------
-    def make_set_status(self, df, theme, *columns): # *columns : '소속부문' 또는 '입사연차'
+    def make_set_status(self, df, *columns): # *columns : '소속부문' 또는 '입사연차'
         # df : | 과정코드 | 과정분류 | 과정명 | 보험사 | 월 | 과정형태 | 수강료 | 지역 | 교육장소 | 정원 | 목표인원 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 성명 | IMO신청여부 | 수료현황 | 입사연차
         # 신청인원 및 신청누계 구하기
         df_apply_total = df.groupby([*columns,'사원번호']).size().reset_index(name='신청누계') # 신청누계 : df를 *columns로 묶고, 사원번호의 누적개수 구하기
@@ -228,19 +227,11 @@ class MakeSet(CallData):
             df_two = pd.merge(df_two_unique, df_two_total, on=[*columns]) # 수료인원+수료누계 & IMO신청인원+IMO신청누계
             df_two[self.index[i][3]] = (df_two[self.index[i][2]]/df_apply['신청누계']*100).round(1) # 수료율 및 IMO신청률 구하기
             df_apply = pd.merge(df_apply, df_two, on=[*columns]) # 신청+수료+IMO
-        # ---------------------------------------------------------------------------------------------------------------
-        # 재적인원
-        df_units = df.groupby([*columns])['재적인원'].median().reset_index(name='재적인원') # 소속부문별/입사연차별 재적인원
-        st.dataframe(df_units)
-        df_apply = pd.merge(df_apply, df_units, on=theme) # 기존 데이터프레임과 재적인원 데이터프레임 병합
-        units_index = ['재적인원 대비 신청인원', '재적인원 대비 신청누계', '재적인원 대비 수료인원', '재적인원 대비 수료누계', '재적인원 대비 IMO신청인원', '재적인원 대비 IMO신청률']
-        for c in range(len(units_index)):
-            df_apply[units_index[c]] = (df_apply[units_index[c].split(" ")[2]] / df_apply['재적인원'] * 100).round(1) # 각 요소별 재적인원 대비 인원비율 구하기
-        # df_apply : | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률 | 재적인원 | 재적인원 대비 신청인원 | 재적인원 대비 신청누계 | 재적인원 대비 수료인원 | 재적인원 대비 수료누계 | 재적인원 대비 IMO신청인원 | 재적인원 대비 IMO신청률'
+        # df_apply : | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률
         return df_apply
 
     # ------------------------------          소속부문별 고유값 및 누계값 (월별추이)          ------------------------------------
-    def make_set_change(self, df, *columns):
+    def make_set_change(self, df, theme, *columns):
         # df : | 과정코드 | 과정분류 | 과정명 | 보험사 | 월 | 과정형태 | 수강료 | 지역 | 교육장소 | 정원 | 목표인원 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 성명 | IMO신청여부 | 수료현황 | 입사연차
         # 신청인원 및 신청누계 구하기 (월별)
         df_apply_total = df.groupby(['월',*columns,'사원번호']).size().reset_index(name='신청누계') # 신청누계 : df를 월과 *column(소속부문/입사연차)로 묶고, 사원번호의 누적개수 구하기
@@ -256,16 +247,12 @@ class MakeSet(CallData):
             df_two[self.index[i][3]] = (df_two[self.index[i][2]]/df_apply['신청누계']*100).round(1) # 수료율 및 IMO신청률 구하기
             df_apply = pd.merge(df_apply, df_two, on=['월',*columns]) # 신청+수료+IMO
         # ---------------------------------------------------------------------------------------------------------------
-        '''
         # 재적인원
-        df_units = df.groupby(['월',*columns])['재적인원'].median().reset_index(name='재적인원') # 소속부문별/입사연차별 재적인원
-        df_apply = pd.merge(df_apply, df_units, on=theme) # 기존 데이터프레임과 재적인원 데이터프레임 병합
+        df_apply = pd.merge(df_apply, self.call_regist(theme), on=['월',theme]) # 기존 데이터프레임과 재적인원 데이터프레임 병합
         units_index = ['재적인원 대비 신청인원', '재적인원 대비 신청누계', '재적인원 대비 수료인원', '재적인원 대비 수료누계', '재적인원 대비 IMO신청인원', '재적인원 대비 IMO신청률']
         for c in range(len(units_index)):
             df_apply[units_index[c]] = (df_apply[units_index[c].split(" ")[2]] / df_apply['재적인원'] * 100).round(1) # 각 요소별 재적인원 대비 인원비율 구하기
-            
             st.dataframe(df_apply)
-        '''
         return df_apply
 
 
