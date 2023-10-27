@@ -8,7 +8,7 @@ import yaml
 from yaml.loader import SafeLoader
 with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
-from utils import make_sidebar, call_sheets
+from utils import make_sidebar
 from utils import Chart
 
 #########################################################################################################################
@@ -134,22 +134,5 @@ if authentication_status:
         xaxis='월',
         yaxis='IMO신청률',
         title='소속부문별 IMO신청률 추이'), use_container_width=True)
-    
-    st.dataframe(instance.make_set_trend(df_channel,'소속부문',*['소속부문']))
-    
-    # 다섯번째 행 (재적인원 대비 수료율 & 재적인원 대비 IMO신청률)
-    line_attend_rate_per, line_imo_rate_per = st.columns(2)
-    line_attend_rate_per.plotly_chart(instance.make_linechart(
-        df=instance.make_set_trend(df_channel,'소속부문',*['소속부문']),
-        category='소속부문',
-        xaxis='월',
-        yaxis='재적인원 대비 수료율',
-        title='재적인원 대비 수료율 추이 (신청누계 기준)'), use_container_width=True)
-    line_imo_rate_per.plotly_chart(instance.make_linechart(
-        df=instance.make_set_trend(df_channel,'소속부문',*['소속부문']),
-        category='소속부문',
-        xaxis='월',
-        yaxis='재적인원 대비 IMO신청률',
-        title='재적인원 대비 IMO신청률 추이 (신청누계 기준)'), use_container_width=True)
     
     
