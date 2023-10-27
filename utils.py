@@ -231,7 +231,7 @@ class MakeSet(CallData):
         return df_apply
 
     # ------------------------------          소속부문별 고유값 및 누계값 (월별추이)          ------------------------------------
-    def make_set_change(self, df, theme, *columns):
+    def make_set_trend(self, df, theme, *columns):
         # df : | 과정코드 | 과정분류 | 과정명 | 보험사 | 월 | 과정형태 | 수강료 | 지역 | 교육장소 | 정원 | 목표인원 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 성명 | IMO신청여부 | 수료현황 | 입사연차
         # 신청인원 및 신청누계 구하기 (월별)
         df_apply_total = df.groupby(['월',*columns,'사원번호']).size().reset_index(name='신청누계') # 신청누계 : df를 월과 *column(소속부문/입사연차)로 묶고, 사원번호의 누적개수 구하기
@@ -271,7 +271,7 @@ class MakeSet(CallData):
 
 
     # ------------------------------          소속부문별 고유값 및 누계값 (월별추이)          ------------------------------------
-    def make_set_trend(self, df, *columns):
+    def make_set_change(self, df, *columns):
         # 월별, 소속부문별 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률
         # 월, 소속부문, 사원번호, 그리고 신청누계(추가)
         df_apply = df.groupby(['월',*columns,'사원번호']).size().reset_index(name='신청누계')
