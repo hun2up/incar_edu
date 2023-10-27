@@ -97,7 +97,7 @@ class CallData:
         df_regist = df_regist.drop(columns='구분')
         return df_regist
     # -------------------------         수료현황 테이블 정리 & 테이블 병합 (신청현황+과정현황)          ------------------------------
-    def call_data_change(self, select, theme):
+    def call_data_change(self, select):
         df_attend = call_sheets(select=select)
         st.dataframe(df_attend)
 

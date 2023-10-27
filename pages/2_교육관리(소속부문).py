@@ -59,7 +59,7 @@ if authentication_status:
     # 메인페이지 타이틀
     st.header("소속부문별 교육지표")
 
-    instance.call_data_change()
+    instance.call_data_change("attend")
 
     # 첫번째 행 (신청인원)
     hbar_apply, hbar_apply_people = st.columns(2)
