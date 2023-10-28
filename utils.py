@@ -161,7 +161,7 @@ class MakeSet(CallData):
         # 신청인원 및 신청누계 구하기
         df_apply_total = df.groupby([*columns,'사원번호']).size().reset_index(name='신청누계') # 신청누계 : df를 *columns로 묶고, 사원번호의 누적개수 구하기
         df_apply_unique = df_apply_total.groupby([*columns])['사원번호'].nunique().reset_index(name='신청인원') # 신청인원 : df를 *columns로 묶고, 사원번호의 고유개수 구하기
-        df_apply = pd.merge(df_apply_unique, df_apply_total.groupby([*columns])['신청누계'].sum().reset_index(name='신청누계'), on=['소속부문']) # 신청인원과 신청누계 병합
+        df_apply = pd.merge(df_apply_unique, df_apply_total.groupby([*columns])['신청누계'].sum().reset_index(name='신청누계'), on=[*columns]) # 신청인원과 신청누계 병합
         # ---------------------------------------------------------------------------------------------------------------
         # 수료인원, 수료누계, 수료율 및 IMO신청인원, IMO신청누계, IMO신청률
         for i in range(len(self.index)):
