@@ -384,9 +384,9 @@ class EduPages(Charts):
         monthly_sums = df_summary.groupby(['월'])[['신청누계', '수료누계','재적인원']].sum()
         monthly_sums['재적인원 대비 신청누계'] = (monthly_sums['신청누계']/monthly_sums['재적인원']*100).round(1)
         monthly_sums['재적인원 대비 수료누계'] = (monthly_sums['수료누계']/monthly_sums['재적인원']*100).round(1)
-        '''
+        
         # 월 데이터 오름차순 정렬
-        month_names = monthly_sums['월']
+        month_names = monthly_sums.index
         # Custom sorting key function to sort month names in the desired order
         def custom_sort_key(month_name):
             # Extract the numeric part of the month name and convert it to an integer
@@ -394,7 +394,7 @@ class EduPages(Charts):
             return int(month_name[:-1])
         sorted_month = {'월' : sorted(month_names, key=custom_sort_key)}
         monthly_sums = pd.merge(pd.DataFrame(sorted_month), monthly_sums, on=['월'])
-        '''
+        
         return monthly_sums
         '''
         return pd.DataFrame({
