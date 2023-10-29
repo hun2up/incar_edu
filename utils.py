@@ -382,7 +382,8 @@ class EduPages(Charts):
             summary_data['값'] = summary_data[columns] # 새로 만든 데이터프레임의 [값] 컬럼에 '재적인원 대비 신청인원' 또는 '재적인원 대비 수료인원' 데이터를 계산하여 삽입
         summary_data.drop(columns=[columns,'재적인원'],inplace=True) # '신청인원' 또는 '수료인원' 컬럼과 '재적인원' 컬럼 삭제
         return summary_data
-        
+    
+    # ------------------------------          현황요약 (신청인원 및 수료인원)          ------------------------------------
     def make_trend_all(self, df):
         # df_summary : | 월 | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률 | 재적인원 대비 신청인원 | 재적인원 대비 신청누계 | 재적인원 대비 수료인원 | 재적인원 대비 수료누계 | 재적인원 대비 IMO신청인원 | 재적인원 대비 IMO신청률'
         df_all = self.make_set_trend(df,'소속부문', *['월','소속부문'])
@@ -396,19 +397,13 @@ class EduPages(Charts):
         return df_summary   
     
     # ------------------------------          현황요약 (재적인원 대비 신청인원 및 수료인원)          ------------------------------------
-    def make_summary_trend(self, df):
+    def make_trend_people(self, df):
         # df_summary : | 월 | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률 | 재적인원 대비 신청인원 | 재적인원 대비 신청누계 | 재적인원 대비 수료인원 | 재적인원 대비 수료누계 | 재적인원 대비 IMO신청인원 | 재적인원 대비 IMO신청률'
         df_all = self.make_set_trend(df,'소속부문', *['월','소속부문'])
         # ---------------------------------------------------------------------------------------------------------------
         # 재적인원 대비 신청누계 및 재적인원 대비 수료누계
-        def calculate_summary_data(df, column_name):
-            summary_data = df.groupby(['월'])[[column_name,'재적인원']].sum() # df_all 데이터프레임으로 부터 신청인원 및 수료인원 관련 컬럼 추출
-            summary_data['값'] = (summary_data[column_name] / summary_data['재적인원'] * 100).round(1) # 새로 만든 데이터프레임의 [값] 컬럼에 '재적인원 대비 신청인원' 또는 '재적인원 대비 수료인원' 데이터를 계산하여 삽입
-            summary_data['구분'] = column_name # 새로 만든 데이터프레임의 [구분] 컬럼에 '재적인원 대비 신청인원' 또는 '재적인원 대비 수료인원'을 텍스트로 삽입
-            summary_data.drop(columns=[column_name, '재적인원'], inplace=True) # '신청인원' 또는 '수료인원' 컬럼과 '재적인원' 컬럼 삭제
-            return summary_data
-        df_summary_apply = calculate_summary_data(df_all, '신청누계')
-        df_summary_attend = calculate_summary_data(df_all, '수료누계')
+        df_summary_apply = self.calculate_summary(df=df_all, columns='신청누계', percentage=True)
+        df_summary_attend = self.calculate_summary(df=df_all, columns='수료누계', percentage=True)
         # ---------------------------------------------------------------------------------------------------------------
         # 재적인원 대비 신청누계 및 재적인원 대비 수료누계 병합
         df_summary = pd.merge(pd.DataFrame({'월': sorted(df_summary_attend.index, key=self.sort_month)}), pd.concat([df_summary_apply, df_summary_attend], axis=0), on=['월'])
