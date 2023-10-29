@@ -250,6 +250,8 @@ class EduMain(Charts):
         # 신청인원 컬럼 추가
         df_main = df_main.groupby(['신청일자','과정코드','소속부문','파트너','사원번호','성명'])['사원번호'].count().reset_index(name='신청인원')
         df_main['과정코드'] = df_main['과정코드'].astype(str) # df_main의 '과정코드' 열을 문자열로 변환
+        # 입사연차 컬럼 추가
+        df_main['입사연차'] = (datetime.now().year%100 + 1 - df_main['사원번호'].astype(str).str[:2].astype(int, errors='ignore')).apply(lambda x: f'{x}년차') # [입사연차] 컬럼 추가 및 데이터(입사연차) 삽입
         # ---------------------------------------------------------------------------------------------------------------
         df_course = call_sheets("course")
         df_course['과정명'] = '['+df_course['지역']+'] '+df_course['과정명']
