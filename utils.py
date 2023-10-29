@@ -391,7 +391,7 @@ class EduPages(Charts):
         df_summary_attend = df_summary.groupby(['월'])[['수료누계','재적인원']].sum()
         df_summary_attend['구분'] = '재적인원 대비 수료누계'
         df_summary_attend['값'] = (df_summary_attend['수료누계']/df_summary_attend['재적인원']*100).round(1)
-        df_summary = pd.merge(df_summary_apply, df_summary_attend, on=['월','구분','값'])
+        df_summary = pd.concat([df_summary_apply, df_summary_attend], axis=0)
 
         '''
         monthly_sums = df_summary.groupby(['월'])[['신청누계', '수료누계','재적인원']].sum()
