@@ -292,7 +292,7 @@ class EduPages(Charts):
         return df_regist
 
     # --------------------         수료현황 테이블 정리 & 테이블 병합 (신청현황+과정현황)          -------------------------
-    def call_data(self):
+    def call_data_pages(self):
         # [매월]교육과정수료현황 시트 호출 ()
         # df_attend : | 과정명 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 성명 | IMO신청여부 | 수료현황 | 비고
         df_attend = call_sheets("attend").drop(columns=['번호','비고']).rename(columns={'성함':'성명'}) # 시트 호출 & 컬럼 삭제 (번호) & 컬럼명 변경 (성함 ▶ 성명)
@@ -373,6 +373,7 @@ class EduPages(Charts):
             '누계인원':[df_summary['신청누계'].sum(), df_summary['수료누계'].sum()]
         })
     
+    # ------------------------------          요약추이 제작을 위한 내부함수          ------------------------------------
     def calculate_summary(self, df, columns, percentage):
         summary_data = df.groupby(['월'])[[columns,'재적인원']].sum() # df_all 데이터프레임으로 부터 신청인원 및 수료인원 관련 컬럼 추출
         summary_data['구분'] = columns # 새로 만든 데이터프레임의 [값] 컬럼에 '신청인원' 또는 '수료인원' 데이터를 계산하여 삽입
