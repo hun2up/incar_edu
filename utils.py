@@ -248,8 +248,14 @@ class EduMain(Charts):
         super().__init__()
 
     def call_data_main(self):
-        df_main = call_sheets("month")
-        # drop(columns=['번호']).rename(columns={'성함':'성명'}, inplace=True) # 시트 호출 & 컬럼 삭제 (번호) & 컬럼명 변경 (성함 ▶ 성명)
+        # [매일] 시트 호출 ()
+        # df_attend : | 과정명 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 성명 | IMO신청여부 | 수료현황 | 비고
+        df_main = call_sheets("month").drop(columns=['번호','비고']).rename(columns={'성함':'성명'}) # 시트 호출 & 컬럼 삭제 (번호) & 컬럼명 변경 (성함 ▶ 성명)
+        df_main = df_main.drop(df_main[df_main['파트너'] == '인카본사'].index) # [파트너]에서 '인카본사' 삭제
+        # 과정코드 정리
+        df_main.insert(0, column='과정코드', value=None) # 첫번째 컬럼에 [과정코드] 컬럼 추가
+        df_main['과정코드'] = [df_main.iloc[change,1].split(")")[0].replace('(','') for change in range(df_main.shape[0])] # [과정명]에서 '과정코드'만 추출하여 [과정코드] 컬럼에 추가
+        df_main = df_main.drop(columns=['과정명']) # 기존 과정명 컬럼 삭제
         return df_main
     
     '''
