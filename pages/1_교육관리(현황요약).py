@@ -46,8 +46,8 @@ if authentication_status:
     st.header("교육운영 현황요약")
 
 
-    df_sums = instance.make_set_sums(instance.make_set_status(df_all,*['소속부문']))
     st.dataframe(instance.make_set_status(df_all,*['소속부문']))
+    df_sums = instance.make_set_sums(instance.make_set_status(df_all,*['소속부문']))
     st.dataframe(df_sums)
 
 
