@@ -73,7 +73,7 @@ if authentication_status:
     # df_imo_rate = pd.DataFrame({'구분':['IMO','IIMS'],'신청률':[(df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1), (100-df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1)]})
     pie_imo_rate.plotly_chart(instance.make_piechart(
         label=make_rates(item_a='IMO',item_b='IIMS',reference='IMO신청여부',column='IMO신청률')['구분'],
-        value=make_rates(item_a='IMO',item_b='IIMS',reference='IMO신청여부',column='IMO신청률')['신청률']),
+        value=make_rates(item_a='IMO',item_b='IIMS',reference='IMO신청여부',column='IMO신청률')['IMO신청률']),
         use_container_width=True)
 
 
