@@ -69,4 +69,8 @@ if authentication_status:
         xaxis='신청일자',
         yaxis='신청인원',
         title=f'{pd.to_datetime(df_main.iloc[-1,0], format="%Y. %m. %d").month}월 신청인원 추이'), use_container_width=True)
+    
+    st.dataframe(instance.make_set_main(df_main))
+
+
     st.dataframe(df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['교육일자','과정명','소속부문','파트너','사원번호','성명']]) # 마지막 신청일자 제외한 나머지 신청내역 삭제
