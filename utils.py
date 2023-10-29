@@ -340,13 +340,12 @@ class EduPages(Charts):
     def make_rates(self, df, item_a, item_b, reference, column):
         return pd.DataFrame({
             '구분':[item_a,item_b],
-            column:[(df[reference].sum()/df.shape[0]*100).round(1), (100-df[reference].sum()/df.shape[0]*100).round(1)]})
+            column:[(df[reference].sum()/df.shape[0]*100).round(1), (100-df[reference].sum()/df.shape[0]*100).round(1)]
+        })
 
-
-
-    def make_set_change(self, df):
+    def make_summary(self, df):
         # df_sum : | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률
-        df_summary = self.make_set_status(df, *['소속부문'])
+        df_summary = self.make_set_status(df, *['소속부문']) # 전체 현황 데이터 호출
         return pd.DataFrame({
             '구분':['신청','수료'],
             '고유인원':[df_summary['신청인원'].sum(), df_summary['수료인원'].sum()],

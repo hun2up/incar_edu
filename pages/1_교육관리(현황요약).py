@@ -79,7 +79,7 @@ if authentication_status:
     # 두번 째 행
     hbar_sums, hbar_sums_people = st.columns(2)
     hbar_sums.plotly_chart(instance.make_hbarchart_group(
-        df=instance.make_set_summary,
+        df=instance.make_summary(df_all),
         category='비고',
         axis_a='고유인원',
         axis_b='누계인원',
