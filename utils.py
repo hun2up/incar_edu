@@ -385,23 +385,22 @@ class EduPages(Charts):
     def make_summary_trend(self, df):
         # df_summary : | 월 | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률 | 재적인원 대비 신청인원 | 재적인원 대비 신청누계 | 재적인원 대비 수료인원 | 재적인원 대비 수료누계 | 재적인원 대비 IMO신청인원 | 재적인원 대비 IMO신청률'
         df_summary = self.make_set_trend(df,'소속부문', *['월','소속부문'])
+        df_summary_apply = df_summary.groupby(['월'])[['신청누계','재적인원']].sum()
+        df_summary_apply['구분'] = '재적인원 대비 신청누계'
+        df_summary_apply['값'] = (df_summary_apply['신청누계']/df_summary_apply['재적인원']*100).round(1)
+        df_summary_attend = df_summary.groupby(['월'])[['신청누계','재적인원']].sum()
+        df_summary_attend['구분'] = '재적인원 대비 수료누계'
+        df_summary_apply['값'] = (df_summary_apply['수료누계']/df_summary_apply['재적인원']*100).round(1)
+        df_summary = pd.merge(df_summary_apply, df_summary_attend, on=['월','구분','값'])
+
+        '''
         monthly_sums = df_summary.groupby(['월'])[['신청누계', '수료누계','재적인원']].sum()
         monthly_sums['재적인원 대비 신청누계'] = (monthly_sums['신청누계']/monthly_sums['재적인원']*100).round(1)
         monthly_sums['재적인원 대비 수료누계'] = (monthly_sums['수료누계']/monthly_sums['재적인원']*100).round(1)
-        
+        '''
         # 월 데이터 오름차순 정렬
-        '''
-        month_names = monthly_sums.index
-        # Custom sorting key function to sort month names in the desired order
-        def custom_sort_key(month_name):
-            # Extract the numeric part of the month name and convert it to an integer
-            # For '10월', this will extract '10' and convert it to 10
-            return int(month_name[:-1])
-        '''
-        # sorted_month = {'월' : sorted(month_names, key=custom_sort_key)}
-        monthly_sums = pd.merge(pd.DataFrame({'월' : sorted(monthly_sums.index, key=self.sort_month)}), monthly_sums, on=['월'])
-        
-        return monthly_sums
+        df_summary = pd.merge(pd.DataFrame({'월' : sorted(df_summary.index, key=self.sort_month)}), df_summary, on=['월'])
+        return df_summary
         '''
         return pd.DataFrame({
             '월': monthly_sums.index,
