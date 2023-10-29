@@ -40,14 +40,11 @@ if authentication_status:
     # ------------------------------------------          인스턴스 생성          ---------------------------------------------
     instance = EduPages()
     df_all = instance.call_data()
+    df_summary = instance.make_set_summary(df_all)
     
     # ------------------------------------------          페이지 타이틀          ---------------------------------------------
     # 메인페이지 타이틀
     st.header("교육운영 현황요약")
-
-    df_sums = instance.make_set_summary(df_all)
-    st.dataframe(instance.make_set_sums(instance.make_set_status(df_all,*['소속부문'])))
-
 
     pie_line, pie_fee, pie_attend_rate, pie_imo_rate = st.columns(4)
     # 집합/온라인 과정현황
@@ -57,17 +54,22 @@ if authentication_status:
         use_container_width=True)
     # 유료/무료 과정현황
     df_all['유무료'] = df_all['수강료'].apply(lambda x: '무료' if x == 0 else '유료')
-    # df_fee = df_all.groupby(['유무료'])['과정코드'].nunique().reset_index(name='횟수')
     pie_fee.plotly_chart(instance.make_piechart(
         label=df_all.groupby(['유무료'])['과정코드'].nunique().reset_index(name='횟수')['유무료'],
         value=df_all.groupby(['유무료'])['과정코드'].nunique().reset_index(name='횟수')['횟수']),
         use_container_width=True)
     # 수료율
-    df_attend_rate = pd.DataFrame({'구분':['수료','미수료'],'수료율':[(df_sums.iloc[0,3]/df_sums.iloc[1,3]*100).round(1), (100-df_sums.iloc[0,3]/df_sums.iloc[1,3]*100).round(1)]})
-    pie_attend_rate.plotly_chart(instance.make_piechart(label=df_attend_rate['구분'],value=df_attend_rate['수료율']), use_container_width=True)
+    df_attend_rate = pd.DataFrame({'구분':['수료','미수료'],'수료율':[(df_summary.iloc[0,3]/df_summary.iloc[1,3]*100).round(1), (100-df_summary.iloc[0,3]/df_summary.iloc[1,3]*100).round(1)]})
+    pie_attend_rate.plotly_chart(instance.make_piechart(
+        label=df_attend_rate['구분'],
+        value=df_attend_rate['수료율']),
+        use_container_width=True)
     # IMO신청률
     df_imo_rate = pd.DataFrame({'구분':['IMO','IIMS'],'신청률':[(df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1), (100-df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1)]})
-    pie_imo_rate.plotly_chart(instance.make_piechart(label=df_imo_rate['구분'],value=df_imo_rate['신청률']), use_container_width=True)
+    pie_imo_rate.plotly_chart(instance.make_piechart(
+        label=df_imo_rate['구분'],
+        value=df_imo_rate['신청률']),
+        use_container_width=True)
 
 
 
