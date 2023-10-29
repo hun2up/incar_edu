@@ -256,9 +256,11 @@ class EduMain(Charts):
         df_main.insert(0, column='과정코드', value=None) # 첫번째 컬럼에 [과정코드] 컬럼 추가
         df_main['과정코드'] = [df_main.iloc[change,1].split(")")[0].replace('(','') for change in range(df_main.shape[0])] # [과정명]에서 '과정코드'만 추출하여 [과정코드] 컬럼에 추가
         df_main = df_main.drop(columns=['과정명']) # 기존 과정명 컬럼 삭제
+        # 신청인원 컬럼 추가
+        df_main = df_main.groupby(['날짜','과정코드','소속부문','파트너','사원번호','성명'])['사원번호'].count().reset_index(name='신청인원')
         return df_main
     
-    '''
+    
     # --------------------         신청현황 테이블 정리 & 테이블 병합 (신청현황+과정현황)          -------------------------
     def call_data_apply(self, select):
         df_apply, df_course = call_data(select)
@@ -281,7 +283,7 @@ class EduMain(Charts):
         df_result = df_result.sort_values(by='날짜', ascending=True)
         ##### df_apl = ['날짜','과정코드','소속부문','신청인원','목표인원','과정명']
         return df_result
-    '''
+    
 
 class EduPages(Charts):
     def __init__(self):
