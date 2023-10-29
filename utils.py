@@ -352,9 +352,10 @@ class EduPages(Charts):
         for c in range(len(units_index)):
             df_apply[units_index[c]] = (df_apply[units_index[c].split(" ")[2]] / df_apply['재적인원'] * 100).round(1) # 각 요소별 재적인원 대비 인원비율 구하기
         # ---------------------------------------------------------------------------------------------------------------
-        st.dataframe(df_apply)
+        
         df_apply = pd.merge(pd.DataFrame({'월' : sorted(df_apply['월'], key=self.sort_month)}), df_apply, on=['월'])
         # df_apply : | 월 | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률 | 재적인원 대비 신청인원 | 재적인원 대비 신청누계 | 재적인원 대비 수료인원 | 재적인원 대비 수료누계 | 재적인원 대비 IMO신청인원 | 재적인원 대비 IMO신청률'
+        st.dataframe(df_apply)
         return df_apply
 
     # ------------------------------          현황요약 (수료율 & IMO신청률)          ------------------------------------
@@ -395,7 +396,7 @@ class EduPages(Charts):
         # 재적인원 대비 신청누계 및 재적인원 대비 수료누계 병합
         df_summary = pd.merge(pd.DataFrame({'월': sorted(df_trend_attend.index, key=self.sort_month)}), pd.concat([df_trend_apply, df_trend_attend], axis=0), on=['월'])
         return df_summary   
-
+    
     # ------------------------------          현황요약 (재적인원 대비 신청인원 및 수료인원)          ------------------------------------
     def make_summary_trend(self, df):
         # df_summary : | 월 | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률 | 재적인원 대비 신청인원 | 재적인원 대비 신청누계 | 재적인원 대비 수료인원 | 재적인원 대비 수료누계 | 재적인원 대비 IMO신청인원 | 재적인원 대비 IMO신청률'
