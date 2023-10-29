@@ -64,7 +64,7 @@ if authentication_status:
         xaxis='날짜',
         yaxis='신청인원',
         title=f'{month_today}월 신청인원 추이'), use_container_width=True)
-    st.dataframe(df_main.drop(df_main[df_main.iloc[:,'날짜'] != df_main.iloc[-1,'날짜']].index)[['교육일자','과정명','소속부문','파트너','사원번호','성명']]) # 마지막 날짜 제외한 나머지 신청내역 삭제
+    st.dataframe(df_main.drop(df_main[df_main.loc[:,'날짜'] != df_main.loc[-1,'날짜']].index)[['교육일자','과정명','소속부문','파트너','사원번호','성명']]) # 마지막 날짜 제외한 나머지 신청내역 삭제
 
 
 
