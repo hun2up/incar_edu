@@ -9,7 +9,7 @@ import yaml
 from yaml.loader import SafeLoader
 with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
-from utils import call_sheets
+from utils import hide_st_style, call_sheets
 from utils import month_dict
 from utils import ServiceData, Register
 
@@ -41,6 +41,9 @@ if authentication_status:
     ########################################################################################################################
     ##################################################     자료 제작     #####################################################
     ########################################################################################################################
+    hide_st_style()
+    st.header("보장분석 사용현황 요약")
+    st.markdown("##### 제작중")
     # ----------------------------------------    Google Sheet 데이터베이스 호출    --------------------------------------------- 
     
     instance_register = Register()
