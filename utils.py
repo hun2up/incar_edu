@@ -384,11 +384,14 @@ class EduPages(Charts):
         monthly_sums = df_summary.groupby(['월'])[['신청누계', '수료누계','재적인원']].sum()
         monthly_sums['재적인원 대비 신청누계'] = (monthly_sums['신청누계']/monthly_sums['재적인원']*100).round(1)
         monthly_sums['재적인원 대비 수료누계'] = (monthly_sums['수료누계']/monthly_sums['재적인원']*100).round(1)
+        return monthly_sums
+        '''
         return pd.DataFrame({
             '월': monthly_sums.index,
             '신청누계': monthly_sums['재적인원 대비 신청누계'].values,
             '수료누계': monthly_sums['재적인원 대비 수료누계'].values
         })
+        '''
    
 
 #########################################################################################################################
