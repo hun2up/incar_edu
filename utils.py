@@ -342,12 +342,22 @@ class EduPages(Charts):
         # df_sum : | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률
         df_summary = self.make_set_status(df, *['소속부문']).sum(axis=0) # 현황 데이터 불러오고, 항목들 전부 더하기
         # (주의!) 위 자료는 넘파이 배열로 변환되었음! 아래 구문에서 다시 데이터프레임 자료로 변환해야 함!
-        df_summary = pd.DataFrame({'합계':df_summary}).transpose().drop(columns='소속부문') # 데이터프레임 자료로 변환하고, 열과 행 반전 및 '소속부문' 컬럼 삭제
-        df_summary_apply = df_summary[['신청인원','신청누계']].rename(columns={'신청인원':'고유인원','신청누계':'누계인원'})
-        df_summary_apply.index = ['신청']
-        df_summary_apply = df_summary_apply.reset_index().rename(columns={'index':'비고'})
-        st.dataframe(df_summary_apply)
+        df_summary = pd.DataFrame({'합계':df_summary}).transpose().drop(columns='소속부문') # 데이터프레임 자료로 변환하고, 로우과 컬럼 반전 및 '소속부문' 컬럼 삭제
+        # ---------------------------------------------------------------------------------------------------------------
+        # 신청인원 및 수료누계
+        df_summary_apply = df_summary[['신청인원','신청누계']].rename(columns={'신청인원':'고유인원','신청누계':'누계인원'}) # 기존 데이터프레임에서 [신청인원, 신청누계] 컬럼만 추출
+        df_summary_apply.index = ['신청'] # 새로 만든 데이터프레임의 인덱스(로우) 값을 '신청'으로 설정
+        df_summary_apply = df_summary_apply.reset_index().rename(columns={'index':'비고'}) # 인덱스 초기화 하고 기존에 인덱스로 설정되어 있던 '신청' 항목을 컬럼으로 변경
+        # ---------------------------------------------------------------------------------------------------------------
+        # 수료인원 및 수료누계
+        df_summary_attend = df_summary[['수료인원','수료누계']].rename(columns={'수료인원':'고유인원','수료누계':'누계인원'}) # 기존 데이터프레임에서 [수료인원, 수료누계] 컬럼만 추출
+        df_summary_attend.index = ['수료'] # 새로 만든 데이터프레임의 인덱스(로우) 값을 '수료'로 설정
+        df_summary_attend = df_summary_attend.reset_index().rename(columns={'index':'비고'}) # 인덱스 초기화 하고 기존에 인덱스로 설정되어 있던 '수료' 항목을 컬럼으로 변경
+        # ---------------------------------------------------------------------------------------------------------------
+        # 신청 데이터프레임과 수료 데이터프레임 병합
+        df_summary = pd.concat([df_summary_apply, df_summary_attend], axis=0)
         # df_sums : | 비고 | 고유인원 | 누계인원
+        st.dataframe(df_summary)
         return df_summary
     
     # ------------------------------------------          현황요약          -----------------------------------------------
