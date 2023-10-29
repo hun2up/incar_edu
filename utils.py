@@ -261,8 +261,10 @@ class EduMain(Charts):
         # df_result : | 신청일자 | 과정코드 | 소속부문 | 파트너 | 사원번호 | 성명 | 신청인원 | 과정명 | 교육일자 | 목표인원
         return df_result  
 
-    def make_set_main(self, df):
-        df_main = df.drop(df[df.iloc[:,0] != df.iloc[-1,0]].index)
+    def make_set_main(self, df, select):
+        # df : | 신청일자 | 과정코드 | 소속부문 | 파트너 | 사원번호 | 성명 | 신청인원 | 과정명 | 교육일자 | 목표인원
+        df_main = df.drop(df[df.iloc[:,0] != df.iloc[-1,0]].index) # 신청일자 가장 최근 데이터만 남기기
+        df_main = df_main.groupby([select,'신청인원'])['신청인원'].sum()
         st.dataframe(df_main)
         return df_main
 
