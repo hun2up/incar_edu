@@ -135,4 +135,18 @@ if authentication_status:
         yaxis='IMO신청률',
         title='소속부문별 IMO신청률 추이'), use_container_width=True)
     
-    
+        
+    # 다섯번째 행 (수료율 & IMO신청률 추이그래프)
+    line_attend_rate, line_imo_rate = st.columns(2)
+    line_attend_rate.plotly_chart(instance.make_linechart(
+        df=instance.make_set_trend(df_channel,'소속부문',*['소속부문']),
+        category='소속부문',
+        xaxis='월',
+        yaxis='수료율',
+        title='소속부문별 수료율 추이'), use_container_width=True)
+    line_imo_rate.plotly_chart(instance.make_linechart(
+        df=instance.make_set_trend(df_channel,'소속부문',*['소속부문']),
+        category='소속부문',
+        xaxis='월',
+        yaxis='IMO신청률',
+        title='소속부문별 IMO신청률 추이'), use_container_width=True)
