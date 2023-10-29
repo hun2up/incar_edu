@@ -44,6 +44,7 @@ if authentication_status:
     # ------------------------------------------          페이지 타이틀          ---------------------------------------------
     # 메인페이지 타이틀
     st.header("교육운영 현황요약")
+    st.dataframe(instance.make_summary_trend(df_all))
 
     # ------------------------------------------          차트 제작          ---------------------------------------------
     # 첫번째 행
@@ -76,11 +77,12 @@ if authentication_status:
     # 두번 째 행
     hbar_sums, hbar_sums_people = st.columns(2)
     hbar_sums.plotly_chart(instance.make_hbarchart_group(
-        df=instance.make_summary(df_all),
+        df=instance.make_summary_status(df_all),
         category='구분',
         axis_a='고유인원',
         axis_b='누계인원',
         title='신청/수료 현황'), use_container_width=True)
+    
     '''
     hbar_sums_people.plotly_chart(instance.make_hbarchart_group(
         df=df_sums,

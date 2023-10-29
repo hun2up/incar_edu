@@ -247,6 +247,30 @@ class EduMain(Charts):
     def __init__(self):
         super().__init__()
 
+    '''
+    # --------------------         신청현황 테이블 정리 & 테이블 병합 (신청현황+과정현황)          -------------------------
+    def call_data_apply(self, select):
+        df_apply, df_course = call_data(select)
+        # df_apply: 컬럼 생성 (과정코드)
+        df_apply.insert(loc=1, column='과정코드', value=None)
+        # df_apply: 데이터 정리 (과정코드)
+        for modify_apply in range(df_apply.shape[0]):
+            df_apply.iloc[modify_apply,1] = df_apply.iloc[modify_apply,0].split(")")[0].replace('(','')
+        # df_apply: 컬럼 추가 (신청인원)
+        df_apply = df_apply.groupby(['날짜','과정코드','소속부문','파트너','사원번호','성명'])['사원번호'].count().reset_index(name='신청인원')
+        # df_course2: 데이터 변경 ([지역]+과정명)
+        df_course['과정명'] = '['+df_course['지역']+'] '+df_course['과정명']
+        # df_apply의 '과정코드' 열을 문자열로 변환
+        df_apply['과정코드'] = df_apply['과정코드'].astype(str)
+        # df_course의 '과정코드' 열을 문자열로 변환
+        df_course['과정코드'] = df_course['과정코드'].astype(str)
+        # 테이블 병합 (신청현황 + 과정현황)
+        df_result = pd.merge(df_apply, df_course[['과정코드','과정명','교육일자','목표인원']], on=['과정코드'])
+        # df_apl: 날짜 오름차순으로 정렬
+        df_result = df_result.sort_values(by='날짜', ascending=True)
+        ##### df_apl = ['날짜','과정코드','소속부문','신청인원','목표인원','과정명']
+        return df_result
+    '''
 
 class EduPages(Charts):
     def __init__(self):
@@ -323,7 +347,6 @@ class EduPages(Charts):
         units_index = ['재적인원 대비 신청인원', '재적인원 대비 신청누계', '재적인원 대비 수료인원', '재적인원 대비 수료누계', '재적인원 대비 수료율', '재적인원 대비 IMO신청인원', '재적인원 대비 IMO신청누계', '재적인원 대비 IMO신청률']
         for c in range(len(units_index)):
             df_apply[units_index[c]] = (df_apply[units_index[c].split(" ")[2]] / df_apply['재적인원'] * 100).round(1) # 각 요소별 재적인원 대비 인원비율 구하기
-                # Sample list of month names
         # ---------------------------------------------------------------------------------------------------------------
         # 월 데이터 오름차순 정렬
         month_names = df_apply['월']
@@ -337,14 +360,16 @@ class EduPages(Charts):
         # df_apply : | 월 | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률 | 재적인원 대비 신청인원 | 재적인원 대비 신청누계 | 재적인원 대비 수료인원 | 재적인원 대비 수료누계 | 재적인원 대비 IMO신청인원 | 재적인원 대비 IMO신청률'
         return df_apply
 
+    # ------------------------------          현황요약 (수료율 & IMO신청률)          ------------------------------------
     def make_rates(self, df, item_a, item_b, reference, column):
         return pd.DataFrame({
             '구분':[item_a,item_b],
             column:[(df[reference].sum()/df.shape[0]*100).round(1), (100-df[reference].sum()/df.shape[0]*100).round(1)]
         })
 
-    def make_summary(self, df):
-        # df_sum : | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률
+    # ------------------------------          현황요약 (신청 & 수료)          ------------------------------------
+    def make_summary_status(self, df):
+        # df_summary : | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률
         df_summary = self.make_set_status(df, *['소속부문']) # 전체 현황 데이터 호출
         return pd.DataFrame({
             '구분':['신청','수료'],
@@ -352,351 +377,14 @@ class EduPages(Charts):
             '누계인원':[df_summary['신청누계'].sum(), df_summary['수료누계'].sum()]
         })
     
-    # ------------------------------------------          현황요약          -----------------------------------------------
-    def make_set_summary(self, df):
-        # df_sum : | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률
-        df_summary = self.make_set_status(df, *['소속부문']).sum(axis=0) # 현황 데이터 불러오고, 항목들 전부 더하기
-        # (주의!) 위 자료는 넘파이 배열로 변환되었음! 아래 구문에서 다시 데이터프레임 자료로 변환해야 함!
-        df_summary = pd.DataFrame({'합계':df_summary}).transpose().drop(columns='소속부문') # 데이터프레임 자료로 변환하고, 로우과 컬럼 반전 및 '소속부문' 컬럼 삭제
-        # ---------------------------------------------------------------------------------------------------------------
-        # 신청인원 및 수료누계
-        df_summary_apply = df_summary[['신청인원','신청누계']].rename(columns={'신청인원':'고유인원','신청누계':'누계인원'}) # 기존 데이터프레임에서 [신청인원, 신청누계] 컬럼만 추출
-        df_summary_apply.index = ['신청'] # 새로 만든 데이터프레임의 인덱스(로우) 값을 '신청'으로 설정
-        # df_summary_apply = df_summary_apply.reset_index().rename(columns={'index':'비고'}) # 인덱스 초기화 하고 기존에 인덱스로 설정되어 있던 '신청' 항목을 컬럼으로 변경
-        # ---------------------------------------------------------------------------------------------------------------
-        # 수료인원 및 수료누계
-        df_summary_attend = df_summary[['수료인원','수료누계']].rename(columns={'수료인원':'고유인원','수료누계':'누계인원'}) # 기존 데이터프레임에서 [수료인원, 수료누계] 컬럼만 추출
-        df_summary_attend.index = ['수료'] # 새로 만든 데이터프레임의 인덱스(로우) 값을 '수료'로 설정
-        # df_summary_attend = df_summary_attend.reset_index().rename(columns={'index':'비고'}) # 인덱스 초기화 하고 기존에 인덱스로 설정되어 있던 '수료' 항목을 컬럼으로 변경
-        # ---------------------------------------------------------------------------------------------------------------        
-        # 신청 데이터프레임과 수료 데이터프레임 병합
-        df_summary = pd.concat([df_summary_apply, df_summary_attend], axis=0)
-        # df_sums : | 비고 | 고유인원 | 누계인원
-        return df_summary
-
-
-'''
-
-
-#########################################################################################################################
-################                        교육관리 클래스 정의 (데이터 정규화 - 호출)                       ##################
-#########################################################################################################################
-class CallData:
-    def __init__(self):
-        pass
-
-    # -----------------------------------         재적인원 데이터 호출          ------------------------------------------
-    def call_registered(self, theme):
-        # [매월]재적인원 시트 호출 (https://docs.google.com/spreadsheets/d/1AG89W1nwRzZxYreM6i1qmwS6APf-8GM2K_HDyX7REG4/edit#gid=1608447947)
-        # df_regist : | 월 | 구분 | 항목 | 재적인원
-        df_regist = pd.read_csv(st.secrets["regist_url"].replace("/edit#gid=", "/export?format=csv&gid=")) # 시트호출
-        df_regist = df_regist[df_regist['구분'] == theme] # [구분] 컬럼을 '소속부문' 또는 '입사연차'에 따라 분류
-        df_regist.rename(columns={'항목':theme}, inplace=True) # [항목] 컬럼을 '소속부문' 또는 '입사연차'로 변경
-        df_regist = df_regist.drop(columns='구분') # [구분] 컬럼 삭제
-        # df_regist : | 월 | 소속부문/입사연차 | 재적인원
-        return df_regist
-    
-    # --------------------         수료현황 테이블 정리 & 테이블 병합 (신청현황+과정현황)          -------------------------
-    def call_data_attend(self, select):
-        # [매월]교육과정수료현황 시트 호출 ()
-        # df_attend : | 과정명 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 성명 | IMO신청여부 | 수료현황 | 비고
-        df_attend = call_sheets(select=select).drop(columns=['번호','비고']).rename(columns={'성함':'성명'}) # 시트 호출 & 컬럼 삭제 (번호) & 컬럼명 변경 (성함 ▶ 성명)
-        df_attend = df_attend.drop(df_attend[df_attend['파트너'] == '인카본사'].index) # [파트너]에서 '인카본사' 삭제
-        # 과정코드 정리
-        df_attend.insert(0, column='과정코드', value=None) # 첫번째 컬럼에 [과정코드] 컬럼 추가
-        df_attend['과정코드'] = [df_attend.iloc[change,1].split(")")[0].replace('(','') for change in range(df_attend.shape[0])] # [과정명]에서 '과정코드'만 추출하여 [과정코드] 컬럼에 추가
-        df_attend = df_attend.drop(columns=['과정명']) # 기존 과정명 컬럼 삭제
-        # 데이터형식 정리
-        df_attend['IMO신청여부'] = df_attend['IMO신청여부'].replace({'Y':1, 'N':0}) # IMO신청여부: Y ▶ 1
-        df_attend['수료현황'] = pd.to_numeric(df_attend['수료현황'], errors='coerce') # 수료현황 : 텍스트 ▶ 숫자
-        df_attend['입사연차'] = (datetime.now().year%100 + 1 - df_attend['사원번호'].astype(str).str[:2].astype(int, errors='ignore')).apply(lambda x: f'{x}년차') # [입사연차] 컬럼 추가 및 데이터(입사연차) 삽입
-        # df_attend : | 과정코드 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 입사연차 | 성명 | IMO신청여부 | 수료현황
-        # ---------------------------------------------------------------------------------------------------------------
-        # [매월]과정현황 시트 호출 및 [교육일자] 데이터 변경
-        # df_course = | 과정코드 | 과정분류 | 과정명 | 보험사 | 교육일자 | 과정형태 | 수강료 | 지역 | 교육장소 | 정원 | 목표인원
-        df_course = call_sheets("course").drop(columns=['번호']) # 시트 호출
-        df_course.insert(4, column='월', value=None) # 네번째 컬럼에 [월] 컬럼 추가
-        df_course['월'] = [f"{pd.to_datetime(df_course.at[short, '교육일자'], format='%Y. %m. %d').month}월" for short in range(df_course.shape[0])] # [교육일자]에서 '월' 데이터만 추출하여 [월] 컬럼에 추가
-        df_course = df_course.drop(columns=['교육일자']) # 기존 교육일자 컬럼 삭제
-        # df_course : | 과정코드 | 과정분류 | 과정명 | 보험사 | 월 | 과정형태 | 수강료 | 지역| 교육장소 | 정원 | 목표인원
-        # ---------------------------------------------------------------------------------------------------------------
-        # 테이블 병합 : df_attend(수료현황) + df_course(과정현황)
-        df_attend['과정코드'] = df_attend['과정코드'].astype(str)
-        df_course['과정코드'] = df_course['과정코드'].astype(str)
-        df_merge = pd.merge(df_course, df_attend, on=['과정코드']) # [과정코드] 컬럼을 기준으로 두 데이터프레임 병합
-        # df_merge : | 과정코드 | 과정분류 | 과정명 | 보험사 | 월 | 과정형태 | 수강료 | 지역 | 교육장소 | 정원 | 목표인원 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 성명 | IMO신청여부 | 수료현황 | 입사연차
-        return df_merge
-
-    # --------------------         신청현황 테이블 정리 & 테이블 병합 (신청현황+과정현황)          -------------------------
-    def call_data_apply(self, select):
-        df_apply, df_course = call_data(select)
-        # df_apply: 컬럼 생성 (과정코드)
-        df_apply.insert(loc=1, column='과정코드', value=None)
-        # df_apply: 데이터 정리 (과정코드)
-        for modify_apply in range(df_apply.shape[0]):
-            df_apply.iloc[modify_apply,1] = df_apply.iloc[modify_apply,0].split(")")[0].replace('(','')
-        # df_apply: 컬럼 추가 (신청인원)
-        df_apply = df_apply.groupby(['날짜','과정코드','소속부문','파트너','사원번호','성명'])['사원번호'].count().reset_index(name='신청인원')
-        # df_course2: 데이터 변경 ([지역]+과정명)
-        df_course['과정명'] = '['+df_course['지역']+'] '+df_course['과정명']
-        # df_apply의 '과정코드' 열을 문자열로 변환
-        df_apply['과정코드'] = df_apply['과정코드'].astype(str)
-        # df_course의 '과정코드' 열을 문자열로 변환
-        df_course['과정코드'] = df_course['과정코드'].astype(str)
-        # 테이블 병합 (신청현황 + 과정현황)
-        df_result = pd.merge(df_apply, df_course[['과정코드','과정명','교육일자','목표인원']], on=['과정코드'])
-        # df_apl: 날짜 오름차순으로 정렬
-        df_result = df_result.sort_values(by='날짜', ascending=True)
-        ##### df_apl = ['날짜','과정코드','소속부문','신청인원','목표인원','과정명']
-        return df_result
-
-'''  
-'''
-#########################################################################################################################
-#############                  교육관리 클래스 정의 (데이터 정규화 - 사각화) : CallData 상속                  ###############
-#########################################################################################################################
-class MakeSet(CallData):
-    def __init__(self):
-        super().__init__()
-        self.index = [['수료현황', '수료인원', '수료누계', '수료율'], ['IMO신청여부', 'IMO신청인원', 'IMO신청누계', 'IMO신청률']]
-
-    # ----------------------------          소속부문별 고유값 및 누계값 (상태값)          ---------------------------------
-    def make_set_status(self, df, *columns): # *columns : '소속부문' 또는 '입사연차'
-        # df : | 과정코드 | 과정분류 | 과정명 | 보험사 | 월 | 과정형태 | 수강료 | 지역 | 교육장소 | 정원 | 목표인원 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 성명 | IMO신청여부 | 수료현황 | 입사연차
-        # 신청인원 및 신청누계 구하기
-        df_apply_total = df.groupby([*columns,'사원번호']).size().reset_index(name='신청누계') # 신청누계 : df를 *columns로 묶고, 사원번호의 누적개수 구하기
-        df_apply_unique = df_apply_total.groupby([*columns])['사원번호'].nunique().reset_index(name='신청인원') # 신청인원 : df를 *columns로 묶고, 사원번호의 고유개수 구하기
-        df_apply = pd.merge(df_apply_unique, df_apply_total.groupby([*columns])['신청누계'].sum().reset_index(name='신청누계'), on=[*columns]) # 신청인원과 신청누계 병합
-        # ---------------------------------------------------------------------------------------------------------------
-        # 수료인원, 수료누계, 수료율 및 IMO신청인원, IMO신청누계, IMO신청률
-        for i in range(len(self.index)):
-            df_two_total = df.groupby([*columns])[self.index[i][0]].sum().reset_index(name=self.index[i][2]) # 수료현황 또는 IMO신청여부 : 전체 더하기 (수료누계 및 IMO신청누계)
-            df_two_unique = pd.DataFrame(df[df[self.index[i][0]] != 0]).groupby([*columns])['사원번호'].nunique().reset_index(name=self.index[i][1]) # 수료현황 또는 IMO신청여부 : 값이 1인 사원번호의 개수 (수료인원 및 IMO신청인원)
-            df_two = pd.merge(df_two_unique, df_two_total, on=[*columns]) # 수료인원+수료누계 & IMO신청인원+IMO신청누계
-            df_two[self.index[i][3]] = (df_two[self.index[i][2]]/df_apply['신청누계']*100).round(1) # 수료율 및 IMO신청률 구하기
-            df_apply = pd.merge(df_apply, df_two, on=[*columns]) # 신청+수료+IMO
-        # df_apply : | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률
-        return df_apply
-
-    # ------------------------------          소속부문별 고유값 및 누계값 (월별추이)          ------------------------------------
-    def make_set_trend(self, df, theme, *columns):
-        # df_apply : | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률
-        df_apply = self.make_set_status(df, *columns)
-        # ---------------------------------------------------------------------------------------------------------------
-        # 재적인원
-        df_apply = pd.merge(df_apply, self.call_registered(theme), on=['월',theme]) # 기존 데이터프레임과 재적인원 데이터프레임 병합
-        units_index = ['재적인원 대비 신청인원', '재적인원 대비 신청누계', '재적인원 대비 수료인원', '재적인원 대비 수료누계', '재적인원 대비 수료율', '재적인원 대비 IMO신청인원', '재적인원 대비 IMO신청누계', '재적인원 대비 IMO신청률']
-        for c in range(len(units_index)):
-            df_apply[units_index[c]] = (df_apply[units_index[c].split(" ")[2]] / df_apply['재적인원'] * 100).round(1) # 각 요소별 재적인원 대비 인원비율 구하기
-                # Sample list of month names
-        # ---------------------------------------------------------------------------------------------------------------
-        # 월 데이터 오름차순 정렬
-        month_names = df_apply['월']
-        # Custom sorting key function to sort month names in the desired order
-        def custom_sort_key(month_name):
-            # Extract the numeric part of the month name and convert it to an integer
-            # For '10월', this will extract '10' and convert it to 10
-            return int(month_name[:-1])
-        sorted_month = {'월' : sorted(month_names, key=custom_sort_key)}
-        df_apply = pd.merge(pd.DataFrame(sorted_month), df_apply, on=['월'])
-        # df_apply : | 월 | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률 | 재적인원 대비 신청인원 | 재적인원 대비 신청누계 | 재적인원 대비 수료인원 | 재적인원 대비 수료누계 | 재적인원 대비 IMO신청인원 | 재적인원 대비 IMO신청률'
-        return df_apply
-
-    # ------------------------------------------          현황요약          -----------------------------------------------
-    def make_set_sums(self, df):
-        df_sums = df.sum(axis=0)
-        df_sums = pd.DataFrame({'합계':df_sums}).transpose().drop(columns='소속부문')
-        df_sums_apl = df_sums.drop(columns=['수료인원','수료누계','수료율','IMO신청인원','IMO신청누계','IMO신청률','재적인원 대비 신청인원','재적인원 대비 신청누계','재적인원 대비 수료인원','재적인원 대비 수료누계']).rename(columns={'신청인원':'고유인원','신청누계':'누계인원'})
-        df_sums_apl.index = ['신청']
-        df_sums_apl = df_sums_apl.reset_index()
-        df_sums_apl = df_sums_apl.rename(columns={'index':'비고'})
-        df_sums_atd = df_sums.drop(columns=['신청인원','신청누계','수료율','IMO신청인원','IMO신청누계','IMO신청률','재적인원 대비 신청인원','재적인원 대비 신청누계','재적인원 대비 수료인원','재적인원 대비 수료누계']).rename(columns={'수료인원':'고유인원','수료누계':'누계인원'})
-        df_sums_atd.index = ['수료']
-        df_sums_atd = df_sums_atd.reset_index()
-        df_sums_atd = df_sums_atd.rename(columns={'index':'비고'})
-        df_sums = pd.concat([df_sums_atd, df_sums_apl], axis=0)
-        df_sums['고유인원'] = pd.to_numeric(df_sums['고유인원'], errors='coerce')
-        df_sums['재적인원'] = pd.to_numeric(df_sums['재적인원'], errors='coerce')
-        df_sums['누계인원'] = pd.to_numeric(df_sums['누계인원'], errors='coerce')
-        df_sums['재적인원 대비 고유인원'] = (df_sums['고유인원']/df_sums['재적인원']*100).round(1)
-        df_sums['재적인원 대비 누계인원'] = (df_sums['누계인원']/df_sums['재적인원']*100).round(1)
-        return df_sums
-
-        
-'''
-
-
-
-'''
-#########################################################################################################################
-##############                        교육관리 클래스 정의 (차트제작) : MakeSet 상속                        ################
-#########################################################################################################################
-class Chart(MakeSet):
-    def __init__(self):
-        super().__init__()
-        # self.index_card = [['신청누계','수료율'], ['수료누계','수료율'], ['수료율','수료누계'], ['수료율','수료누계']]
-
-    # ---------------------------          차트 제작을 위한 차트색상 생성 (Plotly 컬러)          ---------------------------------
-    def generate_chart_colors(self, df):    # 참고 : https://plotly.com/python/discrete-color/
-        presets = ['#636efa', '#ef553b', '#00cc96', '#ab63fa', '#ffa15a', '#19d3f3', '#ff6692', '#b6e880', '#ff97ff', '#fecb52']
-        colors = [presets[i % len(presets)] for i in range(df.shape[0])]
-        return colors
-    
-    # -------------------------------          차트 제작을 위한 라벨위치 생성 (외부)          ------------------------------------
-    def generate_chart_outsides(delf, df):
-        outsides = ['outside' for i in range(df.shape[0])]
-        return outsides
-    
-    # -----------------------------          차트 제작을 위한 항목순서 지정 (막대그래프)         -----------------------------------
-    def generate_barchart_orders(self, df, form):
-        if form == '소속부문': orders = ['개인부문', '전략부문', 'CA부문', 'MA부문', 'PA부문', '다이렉트부문'][::-1]
-        elif form == '입사연차': orders = [f'{i}년차' for i in df.index]
-        elif form == '비고': orders = ['신청', '수료'][::-1]
-        else: orders = [df.iat[i,1] for i in range(df.shape[0])]
-        return orders
-    
-    # ----------------------------          차트 제작을 위한 항목순서 지정 (꺾은선그래프)         ----------------------------------
-    def generate_linechart_orders(self, df, form):
-        if form == '소속부문':
-            orders = ['개인부문', '전략부문', 'CA부문', 'MA부문', 'PA부문', '다이렉트부문']
-        elif form == '입사연차':
-            orders = [f'{i}년차' for i in df.index]
-        return orders
-    
-    # -----------------------------------          수평막대그래프 제작 (Single)          -------------------------------------
-    def make_hbarchart_single(self, df, category, axis_a, title):
-        # axis_a : 신청인원, 수료인원, 수료율, IMO신청률
-        fig = pl.graph_objs.Bar(
-            x=df[axis_a],
-            y=df[category],
-            width=0.3,
-            name=axis_a,
-            text=df[axis_a],
-            marker={'color':self.generate_chart_colors(df)},
-            orientation='h'
-        )
-        layout_chart = pl.graph_objs.Layout(title=title,yaxis={'categoryorder':'array', 'categoryarray':self.generate_barchart_orders(df,category)}) # 여기수정
-        return_chart = pl.graph_objs.Figure(data=[fig],layout=layout_chart)
-        return_chart.update_traces(textposition=self.generate_chart_outsides(df))
-        return_chart.update_layout(showlegend=False) 
-        return return_chart
-
-    # -----------------------------------          수평막대그래프 제작 (Grouped)          ------------------------------------
-    def make_hbarchart_group(self, df, category, axis_a, axis_b, title):
-        # axis_a: 고유값 (신청인원, 수료인원) / axis_b: 누계값 (신청누계, 수료누계)
-        fig_a = pl.graph_objs.Bar(
-            x=df[axis_a],
-            y=df[category],
-            name=axis_a,
-            text=df[axis_a],
-            marker={'color':'grey'},
-            orientation='h'
-        )
-        fig_b = pl.graph_objs.Bar(
-            x=df[axis_b],
-            y=df[category],
-            name=axis_b,
-            text=df[axis_b],
-            marker={'color':self.generate_chart_colors(df)},
-            orientation='h'
-        )
-        layout_chart = pl.graph_objs.Layout(title=title,yaxis={'categoryorder':'array', 'categoryarray':self.generate_barchart_orders(df,category)}, annotations=[dict(text='색상 차트는 누적인원(중복포함), 회색 차트는 고유인원(중복제거)',showarrow=False,xref='paper',yref='paper',x=0,y=1.1)])
-        return_chart = pl.graph_objs.Figure(data=[fig_a, fig_b],layout=layout_chart)
-        return_chart.update_traces(textposition=self.generate_chart_outsides(df))
-        return_chart.update_layout(showlegend=False)
-        return return_chart
-
-    # -----------------------------------          수직막대그래프 제작 (Grouped)          ------------------------------------
-    def make_vbarchart(self, df, title):
-        # axis_a: 고유값 (신청인원, 수료인원) / axis_b: 누계값 (신청누계, 수료누계)
-        fig_a = pl.graph_objs.Bar(
-            x=df['과정명'],
-            y=df['목표인원'],
-            name='목표인원',
-            text=df['목표인원'],
-            marker={'color':'grey'},
-            orientation='v'
-        )
-        fig_b = pl.graph_objs.Bar(
-            x=df['과정명'],
-            y=df['신청인원'],
-            name='신청인원',
-            text=df['신청인원'],
-            marker={'color':self.generate_chart_colors(df)},
-            orientation='v'
-        )
-        layout_chart = pl.graph_objs.Layout(title=title,yaxis={'categoryorder':'array', 'categoryarray':self.generate_barchart_orders(df, None)})
-        return_chart = pl.graph_objs.Figure(data=[fig_a,fig_b],layout=layout_chart)
-        return_chart.update_traces(textposition=self.generate_chart_outsides(df))
-        return_chart.update_layout(showlegend=False)
-        return return_chart
-
-    # ----------------------------------------          꺾은선그래프 제작          ------------------------------------------
-    def make_linechart(self, df, category, xaxis, yaxis, title):
-        # xaxis : '월'(df_apply), '날짜'(df_attend) / yaxis : 데이터 (신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청률 등)
-        fig = pl.graph_objs.Figure()
-        # Iterate over unique channels and add a trace for each
-        for reference in df[category].unique():
-            line_data = df[df[category] == reference]
-            fig.add_trace(pl.graph_objs.Scatter(
-                x=line_data[xaxis],
-                y=line_data[yaxis],
-                mode='lines+markers',
-                name=reference,
-            ))
-        # Update the layout
-        fig.update_layout(
-            title=title,
-            xaxis_title=xaxis,
-            yaxis_title=yaxis,
-            legend_title=category,
-            hovermode='x',
-            template='plotly_white'  # You can choose different templates if you prefer
-        )
-        return fig
-
-    # -----------------------------------------          원형그래프 제작          -------------------------------------------
-    def make_piechart(self, label, value):
-        fig_pchart = pl.graph_objs.Figure(data=[pl.graph_objs.Pie(labels=label, values=value, hole=.3)])
-        fig_pchart.update_traces(hoverinfo='label+percent', textinfo='label+value', textfont_size=20)
-        return fig_pchart
-
-    # ------------------------------------          A형 스타일카드 제작 (랭킹)          ---------------------------------------
-    def make_cards_a(self, df, select, title):
-        # 스타일카드 : FA, 파트너
-        st.markdown('---')
-        st.markdown(title)
-        index_card = [['신청누계','수료율'], ['수료누계','수료율'], ['수료율','수료누계'], ['수료율','수료누계']]
-        index_ascending = [False, False, False, True]
-        index_columns = [3,6,7,7]
-        index_units = ['회','회','%','%']
-        # 랭킹 항목 4개씩 만들기
-        for loop in range(4):
-            st.write(select[loop])
-            df = df.sort_values(by=[*index_card[loop]], ascending=[index_ascending[loop], False])
-            # 카드 5개 씩 만들기
-            sector = st.columns(5)
-            for i in range(5):
-                sector[i].metric(f"{df.iat[i,1]} ({df.iat[i, 0]})", f"{df.iat[i, index_columns[loop]]} ({index_units[loop]})")
-
-    # ------------------------------------          B형 스타일카드 제작 (랭킹)          ---------------------------------------
-    def make_cards_b(self, df, select, title):
-        # 스타일카드 : 소속부문, 입사연차
-        st.markdown('---')
-        st.markdown(title)
-        index_card = [['신청누계','수료율'], ['수료누계','수료율'], ['수료율','수료누계'], ['수료율','수료누계']]
-        index_ascending = [False, False, False, True]
-        index_column = [2,5,6,6]
-        index_units = ['회','회','%','%']
-        # 랭킹 항목 4개씩 만들기
-        for loop in range(4):
-            st.write(select[loop])
-            df = df.sort_values(by=[*index_card[loop]], ascending=[index_ascending[loop], False])
-            # 카드 5개 씩 만들기
-            sector = st.columns(6)
-            for i in range(6):
-                sector[i].metric(df.iat[i, 0], f"{df.iat[i, index_column[loop]]} ({index_units[loop]})")
-'''
+    def make_summary_trend(self, df):
+        # df_summary : | 월 | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률 | 재적인원 대비 신청인원 | 재적인원 대비 신청누계 | 재적인원 대비 수료인원 | 재적인원 대비 수료누계 | 재적인원 대비 IMO신청인원 | 재적인원 대비 IMO신청률'
+        df_summary = self.make_set_trend(df, *['월','소속부문'])
+        return pd.DataFrame({
+            '월':[df_summary['월'].unique()],
+            '신청누계':[df_summary.groupby(['월'])['신청누계'].sum()],
+            '수료누계':[df_summary.groupby(['월'])['수료누계'].sum()]
+        })
 
 #########################################################################################################################
 ################                        보장분석 클래스 정의 (데이터 정규화 - 호출)                        #################
