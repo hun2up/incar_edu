@@ -58,17 +58,22 @@ if authentication_status:
         label=df_all.groupby(['유무료'])['과정코드'].nunique().reset_index(name='횟수')['유무료'],
         value=df_all.groupby(['유무료'])['과정코드'].nunique().reset_index(name='횟수')['횟수']),
         use_container_width=True)
+    
+    def make_rates(item_a, item_b, reference, column):
+        return pd.DataFrame({
+            '구분':[item_a,item_b],
+            column:[(df_all[reference].sum()/df_all.shape[0]*100).round(1), (100-df_all[reference].sum()/df_all.shape[0]*100).rounds(1)]})
     # 수료율
-    # df_attend_rate = pd.DataFrame({'구분':['수료','미수료'],'수료율':[(df_summary.iloc[0,3]/df_summary.iloc[1,3]*100).round(1), (100-df_summary.iloc[0,3]/df_summary.iloc[1,3]*100).round(1)]})
+    # df_attend_rate = pd.DataFrame({'구분':['수료','미수료'],'수료율':[(df_all['수료현황'].sum()/df_all.shape[0]*100).round(1), (100-df_all['수료현황'].sum()/df_all.shape[0]*100).round(1)]})
     pie_attend_rate.plotly_chart(instance.make_piechart(
-        label=df_attend_rate['구분'],
-        value=df_attend_rate['수료율']),
+        label=make_rates(item_a='수료',item_b='미수료',reference='수료현황',column='수료율')['구분'],
+        value=make_rates(item_a='수료',item_b='미수료',reference='수료현황',column='수료율')['수료율']),
         use_container_width=True)
     # IMO신청률
-    df_imo_rate = pd.DataFrame({'구분':['IMO','IIMS'],'신청률':[(df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1), (100-df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1)]})
+    # df_imo_rate = pd.DataFrame({'구분':['IMO','IIMS'],'신청률':[(df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1), (100-df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1)]})
     pie_imo_rate.plotly_chart(instance.make_piechart(
-        label=df_imo_rate['구분'],
-        value=df_imo_rate['신청률']),
+        label=make_rates(item_a='IMO',item_b='IIMS',reference='IMO신청현황',column='IMO신청률')['구분'],
+        value=make_rates(item_a='IMO',item_b='IIMS',reference='IMO신청현황',column='IMO신청률')['신청률']),
         use_container_width=True)
 
 
