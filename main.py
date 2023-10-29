@@ -76,5 +76,10 @@ if authentication_status:
         category='소속부문',
         axis_a='신청인원',
         title='소속부문별 신청인원 현황'), use_container_width=True)
+    hbar_career.plotly_chart(instance.make_hbarchart_single(
+        df=instance.make_set_main(df_main,'입사연차'),
+        category='입사연차',
+        axis_a='신청인원',
+        title='입사연차별 신청인원 현황'), use_container_width=True)
 
     st.dataframe(df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['교육일자','과정명','소속부문','파트너','사원번호','성명']], use_container_width=True) # 마지막 신청일자 제외한 나머지 신청내역 삭제
