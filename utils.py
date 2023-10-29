@@ -347,15 +347,25 @@ class EduPages(Charts):
         # 신청인원 및 수료누계
         df_summary_apply = df_summary[['신청인원','신청누계']].rename(columns={'신청인원':'고유인원','신청누계':'누계인원'}) # 기존 데이터프레임에서 [신청인원, 신청누계] 컬럼만 추출
         df_summary_apply.index = ['신청'] # 새로 만든 데이터프레임의 인덱스(로우) 값을 '신청'으로 설정
-        df_summary_apply = df_summary_apply.reset_index().rename(columns={'index':'비고'}) # 인덱스 초기화 하고 기존에 인덱스로 설정되어 있던 '신청' 항목을 컬럼으로 변경
+        # df_summary_apply = df_summary_apply.reset_index().rename(columns={'index':'비고'}) # 인덱스 초기화 하고 기존에 인덱스로 설정되어 있던 '신청' 항목을 컬럼으로 변경
+        df_summary_apply.rename(index='비고')
         # ---------------------------------------------------------------------------------------------------------------
         # 수료인원 및 수료누계
         df_summary_attend = df_summary[['수료인원','수료누계']].rename(columns={'수료인원':'고유인원','수료누계':'누계인원'}) # 기존 데이터프레임에서 [수료인원, 수료누계] 컬럼만 추출
         df_summary_attend.index = ['수료'] # 새로 만든 데이터프레임의 인덱스(로우) 값을 '수료'로 설정
-        df_summary_attend = df_summary_attend.reset_index().rename(columns={'index':'비고'}) # 인덱스 초기화 하고 기존에 인덱스로 설정되어 있던 '수료' 항목을 컬럼으로 변경
-        # ---------------------------------------------------------------------------------------------------------------
+        # df_summary_attend = df_summary_attend.reset_index().rename(columns={'index':'비고'}) # 인덱스 초기화 하고 기존에 인덱스로 설정되어 있던 '수료' 항목을 컬럼으로 변경
+        df_summary_attend.rename(index='비고')
+        # ---------------------------------------------------------------------------------------------------------------        
+        # IMO
+        df_summary_imo = df_summary[['IMO신청인원','IMO신청누계']].rename(columns={'IMO신청인원':'고유인원','IMO신청누계':'누계인원'})
+        df_summary_imo.index = ['IMO']
+        # df_summary_imo = df_summary_imo.reset_index().rename(columns={'index':'비고'})
+        # ---------------------------------------------------------------------------------------------------------------        
         # 신청 데이터프레임과 수료 데이터프레임 병합
         df_summary = pd.concat([df_summary_attend, df_summary_apply], axis=0)
+        # df_summary = pd.concat([df_summary, df_summary_imo], axis=0)
+        # df_summary.rename()
+        # df_summary = df_summary.append({'고유인원':().rounds(1)})
         # df_sums : | 비고 | 고유인원 | 누계인원
         st.dataframe(df_summary)
         return df_summary
