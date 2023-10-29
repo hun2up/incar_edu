@@ -76,7 +76,7 @@ if authentication_status:
         axis_b='누계인원',
         title='신청/수료 현황'), use_container_width=True)
     
-    line_total, line_people = st.column(2)
+    line_total, line_people = st.columns(2)
     line_people.plotly_chart(instance.make_linechart(
         df=instance.make_summary_trend(df_all),
         category='구분',
