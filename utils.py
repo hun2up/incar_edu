@@ -381,12 +381,13 @@ class EduPages(Charts):
     def make_summary_trend(self, df):
         # df_summary : | 월 | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률 | 재적인원 대비 신청인원 | 재적인원 대비 신청누계 | 재적인원 대비 수료인원 | 재적인원 대비 수료누계 | 재적인원 대비 IMO신청인원 | 재적인원 대비 IMO신청률'
         df_summary = self.make_set_trend(df,'소속부문', *['월','소속부문'])
-        monthly_sums = df_summary.groupby(['월'])[['신청누계', '수료누계']].sum()  # Compute sums for each month
-
+        monthly_sums = df_summary.groupby(['월'])[['신청누계', '수료누계','재적인원']].sum()
+        monthly_sums['재적인원 대비 신청누계'] = (monthly_sums['신청누계']/monthly_sums['재적인원']*100).round(1)
+        monthly_sums['재적인원 대비 수료누계'] = (monthly_sums['수료누계']/monthly_sums['재적인원']*100).round(1)
         return pd.DataFrame({
             '월': monthly_sums.index,
-            '신청누계': monthly_sums['신청누계'].values,
-            '수료누계': monthly_sums['수료누계'].values
+            '신청누계': monthly_sums['재적인원 대비 신청누계'].values,
+            '수료누계': monthly_sums['재적인원 대비 수료누계'].values
         })
    
 
