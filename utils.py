@@ -340,8 +340,10 @@ class EduPages(Charts):
     # ------------------------------------------          현황요약          -----------------------------------------------
     def make_set_change(self, df):
         # df_sum : | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률
-        df_sums = self.make_set_status(df, *['소속부문']).sum(axis=0)
+        df_sums = self.make_set_status(df, *['소속부문']).sum(axis=0) # 현황 데이터 불러오고, 항목들 전부 더하기
+        df_sums = pd.DataFrame({'합계':df_sums}).transpose().drop(columns='소속부문')
         st.dataframe(df_sums)
+        # df_sums : | 비고 | 고유인원 | 누계인원
         return df_sums
     
     # ------------------------------------------          현황요약          -----------------------------------------------
