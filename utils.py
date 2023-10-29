@@ -75,6 +75,180 @@ def call_data(select):
     df_course = pd.read_csv(st.secrets["course_url"].replace("/edit#gid=", "/export?format=csv&gid=")).drop(columns=['번호'])
     return df_select, df_course
 
+
+#########################################################################################################################
+##############                        교육관리 클래스 정의 (차트제작) : MakeSet 상속                        ################
+#########################################################################################################################
+class Chart():
+    def __init__(self):
+        pass
+    
+    # ---------------------------          차트 제작을 위한 차트색상 생성 (Plotly 컬러)          ---------------------------------
+    def generate_chart_colors(self, df):    # 참고 : https://plotly.com/python/discrete-color/
+        presets = ['#636efa', '#ef553b', '#00cc96', '#ab63fa', '#ffa15a', '#19d3f3', '#ff6692', '#b6e880', '#ff97ff', '#fecb52']
+        colors = [presets[i % len(presets)] for i in range(df.shape[0])]
+        return colors
+    
+    # -------------------------------          차트 제작을 위한 라벨위치 생성 (외부)          ------------------------------------
+    def generate_chart_outsides(delf, df):
+        outsides = ['outside' for i in range(df.shape[0])]
+        return outsides
+    
+    # -----------------------------          차트 제작을 위한 항목순서 지정 (막대그래프)         -----------------------------------
+    def generate_barchart_orders(self, df, form):
+        if form == '소속부문': orders = ['개인부문', '전략부문', 'CA부문', 'MA부문', 'PA부문', '다이렉트부문'][::-1]
+        elif form == '입사연차': orders = [f'{i}년차' for i in df.index]
+        elif form == '비고': orders = ['신청', '수료'][::-1]
+        else: orders = [df.iat[i,1] for i in range(df.shape[0])]
+        return orders
+    
+    # ----------------------------          차트 제작을 위한 항목순서 지정 (꺾은선그래프)         ----------------------------------
+    def generate_linechart_orders(self, df, form):
+        if form == '소속부문':
+            orders = ['개인부문', '전략부문', 'CA부문', 'MA부문', 'PA부문', '다이렉트부문']
+        elif form == '입사연차':
+            orders = [f'{i}년차' for i in df.index]
+        return orders
+    
+    # -----------------------------------          수평막대그래프 제작 (Single)          -------------------------------------
+    def make_hbarchart_single(self, df, category, axis_a, title):
+        # axis_a : 신청인원, 수료인원, 수료율, IMO신청률
+        fig = pl.graph_objs.Bar(
+            x=df[axis_a],
+            y=df[category],
+            width=0.3,
+            name=axis_a,
+            text=df[axis_a],
+            marker={'color':self.generate_chart_colors(df)},
+            orientation='h'
+        )
+        layout_chart = pl.graph_objs.Layout(title=title,yaxis={'categoryorder':'array', 'categoryarray':self.generate_barchart_orders(df,category)}) # 여기수정
+        return_chart = pl.graph_objs.Figure(data=[fig],layout=layout_chart)
+        return_chart.update_traces(textposition=self.generate_chart_outsides(df))
+        return_chart.update_layout(showlegend=False) 
+        return return_chart
+
+    # -----------------------------------          수평막대그래프 제작 (Grouped)          ------------------------------------
+    def make_hbarchart_group(self, df, category, axis_a, axis_b, title):
+        # axis_a: 고유값 (신청인원, 수료인원) / axis_b: 누계값 (신청누계, 수료누계)
+        fig_a = pl.graph_objs.Bar(
+            x=df[axis_a],
+            y=df[category],
+            name=axis_a,
+            text=df[axis_a],
+            marker={'color':'grey'},
+            orientation='h'
+        )
+        fig_b = pl.graph_objs.Bar(
+            x=df[axis_b],
+            y=df[category],
+            name=axis_b,
+            text=df[axis_b],
+            marker={'color':self.generate_chart_colors(df)},
+            orientation='h'
+        )
+        layout_chart = pl.graph_objs.Layout(title=title,yaxis={'categoryorder':'array', 'categoryarray':self.generate_barchart_orders(df,category)}, annotations=[dict(text='색상 차트는 누적인원(중복포함), 회색 차트는 고유인원(중복제거)',showarrow=False,xref='paper',yref='paper',x=0,y=1.1)])
+        return_chart = pl.graph_objs.Figure(data=[fig_a, fig_b],layout=layout_chart)
+        return_chart.update_traces(textposition=self.generate_chart_outsides(df))
+        return_chart.update_layout(showlegend=False)
+        return return_chart
+
+    # -----------------------------------          수직막대그래프 제작 (Grouped)          ------------------------------------
+    def make_vbarchart(self, df, title):
+        # axis_a: 고유값 (신청인원, 수료인원) / axis_b: 누계값 (신청누계, 수료누계)
+        fig_a = pl.graph_objs.Bar(
+            x=df['과정명'],
+            y=df['목표인원'],
+            name='목표인원',
+            text=df['목표인원'],
+            marker={'color':'grey'},
+            orientation='v'
+        )
+        fig_b = pl.graph_objs.Bar(
+            x=df['과정명'],
+            y=df['신청인원'],
+            name='신청인원',
+            text=df['신청인원'],
+            marker={'color':self.generate_chart_colors(df)},
+            orientation='v'
+        )
+        layout_chart = pl.graph_objs.Layout(title=title,yaxis={'categoryorder':'array', 'categoryarray':self.generate_barchart_orders(df, None)})
+        return_chart = pl.graph_objs.Figure(data=[fig_a,fig_b],layout=layout_chart)
+        return_chart.update_traces(textposition=self.generate_chart_outsides(df))
+        return_chart.update_layout(showlegend=False)
+        return return_chart
+
+    # ----------------------------------------          꺾은선그래프 제작          ------------------------------------------
+    def make_linechart(self, df, category, xaxis, yaxis, title):
+        # xaxis : '월'(df_apply), '날짜'(df_attend) / yaxis : 데이터 (신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청률 등)
+        fig = pl.graph_objs.Figure()
+        # Iterate over unique channels and add a trace for each
+        for reference in df[category].unique():
+            line_data = df[df[category] == reference]
+            fig.add_trace(pl.graph_objs.Scatter(
+                x=line_data[xaxis],
+                y=line_data[yaxis],
+                mode='lines+markers',
+                name=reference,
+            ))
+        # Update the layout
+        fig.update_layout(
+            title=title,
+            xaxis_title=xaxis,
+            yaxis_title=yaxis,
+            legend_title=category,
+            hovermode='x',
+            template='plotly_white'  # You can choose different templates if you prefer
+        )
+        return fig
+
+    # -----------------------------------------          원형그래프 제작          -------------------------------------------
+    def make_piechart(self, label, value):
+        fig_pchart = pl.graph_objs.Figure(data=[pl.graph_objs.Pie(labels=label, values=value, hole=.3)])
+        fig_pchart.update_traces(hoverinfo='label+percent', textinfo='label+value', textfont_size=20)
+        return fig_pchart
+
+    # ------------------------------------          A형 스타일카드 제작 (랭킹)          ---------------------------------------
+    def make_cards_a(self, df, select, title):
+        # 스타일카드 : FA, 파트너
+        st.markdown('---')
+        st.markdown(title)
+        index_card = [['신청누계','수료율'], ['수료누계','수료율'], ['수료율','수료누계'], ['수료율','수료누계']]
+        index_ascending = [False, False, False, True]
+        index_columns = [3,6,7,7]
+        index_units = ['회','회','%','%']
+        # 랭킹 항목 4개씩 만들기
+        for loop in range(4):
+            st.write(select[loop])
+            df = df.sort_values(by=[*index_card[loop]], ascending=[index_ascending[loop], False])
+            # 카드 5개 씩 만들기
+            sector = st.columns(5)
+            for i in range(5):
+                sector[i].metric(f"{df.iat[i,1]} ({df.iat[i, 0]})", f"{df.iat[i, index_columns[loop]]} ({index_units[loop]})")
+
+    # ------------------------------------          B형 스타일카드 제작 (랭킹)          ---------------------------------------
+    def make_cards_b(self, df, select, title):
+        # 스타일카드 : 소속부문, 입사연차
+        st.markdown('---')
+        st.markdown(title)
+        index_card = [['신청누계','수료율'], ['수료누계','수료율'], ['수료율','수료누계'], ['수료율','수료누계']]
+        index_ascending = [False, False, False, True]
+        index_column = [2,5,6,6]
+        index_units = ['회','회','%','%']
+        # 랭킹 항목 4개씩 만들기
+        for loop in range(4):
+            st.write(select[loop])
+            df = df.sort_values(by=[*index_card[loop]], ascending=[index_ascending[loop], False])
+            # 카드 5개 씩 만들기
+            sector = st.columns(6)
+            for i in range(6):
+                sector[i].metric(df.iat[i, 0], f"{df.iat[i, index_column[loop]]} ({index_units[loop]})")
+
+
+
+
+
+
 #########################################################################################################################
 ################                        교육관리 클래스 정의 (데이터 정규화 - 호출)                       ##################
 #########################################################################################################################
@@ -216,7 +390,7 @@ class MakeSet(CallData):
         df_sums['재적인원 대비 고유인원'] = (df_sums['고유인원']/df_sums['재적인원']*100).round(1)
         df_sums['재적인원 대비 누계인원'] = (df_sums['누계인원']/df_sums['재적인원']*100).round(1)
         return df_sums
-
+'''
 #########################################################################################################################
 ##############                        교육관리 클래스 정의 (차트제작) : MakeSet 상속                        ################
 #########################################################################################################################
@@ -385,7 +559,7 @@ class Chart(MakeSet):
             sector = st.columns(6)
             for i in range(6):
                 sector[i].metric(df.iat[i, 0], f"{df.iat[i, index_column[loop]]} ({index_units[loop]})")
-
+'''
 
 #########################################################################################################################
 ################                        보장분석 클래스 정의 (데이터 정규화 - 호출)                        #################
