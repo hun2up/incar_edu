@@ -44,7 +44,7 @@ if authentication_status:
     # ------------------------------------------          페이지 타이틀          ---------------------------------------------
     # 메인페이지 타이틀
     st.header("교육운영 현황요약")
-    st.dataframe(instance.make_set_trend(df_all, *['월','소속부문']))
+    st.dataframe(instance.make_set_trend(df_all, '소속부문', *['월','소속부문']))
     # st.dataframe(instance.make_summary_trend(df_all))
 
     # ------------------------------------------          차트 제작          ---------------------------------------------
