@@ -68,16 +68,14 @@ if authentication_status:
         use_container_width=True)
 
     # 두번째 행
-    hbar_sums = st.columns((1,3))
-    hbar_sums[0].plotly_chart(instance.make_hbarchart_group(
+    edu_total = st.columns((1,3))
+    edu_total[0].plotly_chart(instance.make_hbarchart_group(
         df=instance.make_summary_status(df_all),
         category='구분',
         axis_a='고유인원',
         axis_b='누계인원',
         title='신청/수료 현황'), use_container_width=True)
-    
-    line_total, line_people = st.columns(2)
-    line_people.plotly_chart(instance.make_linechart(
+    edu_total[1].plotly_chart(instance.make_linechart(
         df=instance.make_summary_trend(df_all),
         category='구분',
         xaxis='월',
