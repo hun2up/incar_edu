@@ -41,6 +41,7 @@ if authentication_status:
     instance = EduMain()
     df_main = instance.call_data_main()
     st.dataframe(df_main)
+    st.dataframe(instance.call_data_apply("month"))
     
     '''
     instance = Chart()

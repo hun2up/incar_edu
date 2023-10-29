@@ -258,8 +258,16 @@ class EduMain(Charts):
         df_main = df_main.drop(columns=['과정명']) # 기존 과정명 컬럼 삭제
         # 신청인원 컬럼 추가
         df_main = df_main.groupby(['날짜','과정코드','소속부문','파트너','사원번호','성명'])['사원번호'].count().reset_index(name='신청인원')
-        return df_main
-    
+        df_main['과정코드'] = df_main['과정코드'].astype(str) # df_main의 '과정코드' 열을 문자열로 변환
+        # ---------------------------------------------------------------------------------------------------------------
+        df_course = call_sheets("course")
+        df_course['과정명'] = '['+df_course['지역']+'] '+df_course['과정명']
+        df_course['과정코드'] = df_course['과정코드'].astype(str) # df_course의 '과정코드' 열을 문자열로 변환
+        # 테이블 병합 (신청현황 + 과정현황)
+        df_result = pd.merge(df_main, df_course[['과정코드','과정명','교육일자','목표인원']], on=['과정코드'])
+        # df_apl: 날짜 오름차순으로 정렬
+        df_result = df_result.sort_values(by='날짜', ascending=True)
+        return df_result
     
     # --------------------         신청현황 테이블 정리 & 테이블 병합 (신청현황+과정현황)          -------------------------
     def call_data_apply(self, select):
