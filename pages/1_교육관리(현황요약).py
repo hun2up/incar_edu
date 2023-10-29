@@ -103,7 +103,7 @@ if authentication_status:
         yaxis='값',
         title='신청인원 및 수료인원 추이'), use_container_width=True)
     line_people.plotly_chart(instance.make_linechart(
-        df=instance.make_summary_trend(df_all),
+        df=instance.make_trend_people(df_all),
         category='구분',
         xaxis='월',
         yaxis='값',
