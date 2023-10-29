@@ -55,7 +55,7 @@ if authentication_status:
     # career = make_sidebar(df_main,'입사연차') # 입사연차 선택 사이드바
     # 데이터와 사이드바 연결
     df_main = df_main.query(
-        "날짜 == @date_apply & 교육일자 == @date_course & 소속부문 == @channel"
+        "신청일자 == @date_apply & 교육일자 == @date_course & 소속부문 == @channel"
     )
 
     # -----------------------------------------------  당일 교육신청 현황  ---------------------------------------------------
