@@ -344,14 +344,14 @@ class EduPages(Charts):
 
 
 
-    def make_set_change(self, df, title, columns):
+    def make_set_change(self, df):
         # df_sum : | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률
-        df_summary = self.make_set_status(df, *['소속부문']).sum(axis=0) # 현황 데이터 불러오고, 항목들 전부 더하기
-        # (주의!) 위 자료는 넘파이 배열로 변환되었음! 아래 구문에서 다시 데이터프레임 자료로 변환해야 함!
-        df_summary = pd.DataFrame({'합계':df_summary}).transpose().drop(columns='소속부문') # 데이터프레임 자료로 변환하고, 로우과 컬럼 반전 및 '소속부문' 컬럼 삭제
-        df_summary_sub = df_summary[columns].rename(columns={columns[0]:'고유인원',columns[1]:'누계인원'})
-        df_summary_sub.index = [title]
-        return df_summary_sub
+        df_summary = self.make_set_status(df, *['소속부문'])
+        return pd.DataFrame({
+            '구분':['신청','수료'],
+            '고유인원':[df_summary['신청인원'].sum(), df_summary['수료인원'].sum()],
+            '누계인원':[df_summary['신청누계'].sum(), df_summary['수료누계'].sum()]
+        })
     
     # ------------------------------------------          현황요약          -----------------------------------------------
     def make_set_summary(self, df):
