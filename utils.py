@@ -339,22 +339,9 @@ class EduPages(Charts):
 
     # ------------------------------------------          현황요약          -----------------------------------------------
     def make_set_sums(self, df):
-        df_sums = df.sum(axis=0)
-        df_sums = pd.DataFrame({'합계':df_sums}).transpose().drop(columns='소속부문')
-        df_sums_apl = df_sums.drop(columns=['수료인원','수료누계','수료율','IMO신청인원','IMO신청누계','IMO신청률','재적인원 대비 신청인원','재적인원 대비 신청누계','재적인원 대비 수료인원','재적인원 대비 수료누계']).rename(columns={'신청인원':'고유인원','신청누계':'누계인원'})
-        df_sums_apl.index = ['신청']
-        df_sums_apl = df_sums_apl.reset_index()
-        df_sums_apl = df_sums_apl.rename(columns={'index':'비고'})
-        df_sums_atd = df_sums.drop(columns=['신청인원','신청누계','수료율','IMO신청인원','IMO신청누계','IMO신청률','재적인원 대비 신청인원','재적인원 대비 신청누계','재적인원 대비 수료인원','재적인원 대비 수료누계']).rename(columns={'수료인원':'고유인원','수료누계':'누계인원'})
-        df_sums_atd.index = ['수료']
-        df_sums_atd = df_sums_atd.reset_index()
-        df_sums_atd = df_sums_atd.rename(columns={'index':'비고'})
-        df_sums = pd.concat([df_sums_atd, df_sums_apl], axis=0)
-        df_sums['고유인원'] = pd.to_numeric(df_sums['고유인원'], errors='coerce')
-        df_sums['재적인원'] = pd.to_numeric(df_sums['재적인원'], errors='coerce')
-        df_sums['누계인원'] = pd.to_numeric(df_sums['누계인원'], errors='coerce')
-        df_sums['재적인원 대비 고유인원'] = (df_sums['고유인원']/df_sums['재적인원']*100).round(1)
-        df_sums['재적인원 대비 누계인원'] = (df_sums['누계인원']/df_sums['재적인원']*100).round(1)
+        # df_sum : | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률
+        df_sums = self.make_set_status(df, *['소속부문']).sum(axis=0)
+        st.dataframe(df_sums)
         return df_sums
 
 

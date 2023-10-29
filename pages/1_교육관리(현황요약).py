@@ -45,10 +45,7 @@ if authentication_status:
     # 메인페이지 타이틀
     st.header("교육운영 현황요약")
 
-
-    st.dataframe(instance.make_set_status(df_all,*['소속부문']))
-    df_sums = instance.make_set_sums(instance.make_set_status(df_all,*['소속부문']))
-    st.dataframe(df_sums)
+    df_sums = instance.make_set_sums(df_all)
 
 
     pie_line, pie_fee, pie_attend_rate, pie_imo_rate = st.columns(4)
