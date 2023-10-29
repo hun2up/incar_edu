@@ -56,7 +56,7 @@ if authentication_status:
         df=df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index).groupby(['날짜','과정명','목표인원'])['신청인원'].sum().reset_index(name='신청인원'),
         title='과정별 신청현황'), use_container_width=True)
     line_today.plotly_chart(instance.make_linechart(
-        df=df_main.groupby(['날짜','과정명'])['신청인원'].sum(),
+        df=df_main.groupby(['날짜','과정명'])['신청인원'].sum().reset_index(name='신청인원'),
         category='과정명',
         xaxis='날짜',
         yaxis='신청인원',
