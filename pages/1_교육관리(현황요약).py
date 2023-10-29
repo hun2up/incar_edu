@@ -68,7 +68,7 @@ if authentication_status:
         use_container_width=True)
 
     # 두번째 행
-    hbar_sums = st.column_config((1,3))
+    hbar_sums = st.columns((1,3))
     hbar_sums[0].plotly_chart(instance.make_hbarchart_group(
         df=instance.make_summary_status(df_all),
         category='구분',
