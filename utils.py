@@ -66,15 +66,6 @@ def call_sheets(select):
     df_call = pd.read_csv(st.secrets[f"{select}_url"].replace("/edit#gid=", "/export?format=csv&gid="))
     return df_call
 
-##################          여기수정! (아래 클래스 내 함수로 이동)
-def call_data(select):
-    # 데이터베이스 호출 & 컬럼 삭제 (번호)
-    df_select = call_sheets(select).drop(columns=['번호'])
-    df_select.rename(columns={'성함':'성명'}, inplace=True)
-    # 과정현황 데이터베이스 호출 (과정현황) & 컬럼 삭제 (번호)
-    df_course = pd.read_csv(st.secrets["course_url"].replace("/edit#gid=", "/export?format=csv&gid=")).drop(columns=['번호'])
-    return df_select, df_course
-
 #########################################################################################################################
 ##############                        교육관리 클래스 정의 (차트제작) : MakeSet 상속                        ################
 #########################################################################################################################
@@ -269,6 +260,11 @@ class EduMain(Charts):
         df_result['사원번호'] = df_result['사원번호'].astype(str)
         # df_result : | 신청일자 | 과정코드 | 소속부문 | 파트너 | 사원번호 | 성명 | 신청인원 | 과정명 | 교육일자 | 목표인원
         return df_result  
+
+    def make_set_main(self, df):
+        df_main = df.drop(df[df.iloc[:,0] != df.iloc[-1,0]].index)
+        st.dataframe(df_main)
+        return df_main
 
 class EduPages(Charts):
     def __init__(self):
