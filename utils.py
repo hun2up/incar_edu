@@ -246,12 +246,12 @@ class Chart():
 
 class EduMain():
     def __init__(self):
-        super.__init__()
+        super().__init__()
 
 
 class EduPages(Chart):
     def __init__(self):
-        super.__init__()
+        super().__init__()
 
     # -----------------------------------         재적인원 데이터 호출          ------------------------------------------
     def call_registered(self, theme):
