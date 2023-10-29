@@ -45,7 +45,8 @@ if authentication_status:
     # ------------------------------------------          페이지 타이틀          ---------------------------------------------
     # 메인페이지 타이틀
     st.header("교육운영 현황요약")
-    st.dataframe(instance.make_set_status(df_all,*['월','소속부문']))
+    st.dataframe(pd.merge(instance.make_set_status(df_all,*['월','소속부문']), instance.call_registered('소속부문'), on=['월','소속부문']))
+    # st.dataframe(instance.make_set_status(df_all,*['월','소속부문']))
 
     # --------------------------------------------          사이드바          ------------------------------------------------
     # 사이드바 헤더
