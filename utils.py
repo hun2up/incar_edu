@@ -276,6 +276,10 @@ class EduPages(Charts):
     def __init__(self):
         super().__init__()
 
+    #
+    def sort_month(self, column):
+        return int(column[:-1])
+
     # -----------------------------------         재적인원 데이터 호출          ------------------------------------------
     def call_registered(self, theme):
         # [매월]재적인원 시트 호출 (https://docs.google.com/spreadsheets/d/1AG89W1nwRzZxYreM6i1qmwS6APf-8GM2K_HDyX7REG4/edit#gid=1608447947)
@@ -386,14 +390,16 @@ class EduPages(Charts):
         monthly_sums['재적인원 대비 수료누계'] = (monthly_sums['수료누계']/monthly_sums['재적인원']*100).round(1)
         
         # 월 데이터 오름차순 정렬
+        '''
         month_names = monthly_sums.index
         # Custom sorting key function to sort month names in the desired order
         def custom_sort_key(month_name):
             # Extract the numeric part of the month name and convert it to an integer
             # For '10월', this will extract '10' and convert it to 10
             return int(month_name[:-1])
-        sorted_month = {'월' : sorted(month_names, key=custom_sort_key)}
-        monthly_sums = pd.merge(pd.DataFrame(sorted_month), monthly_sums, on=['월'])
+        '''
+        # sorted_month = {'월' : sorted(month_names, key=custom_sort_key)}
+        monthly_sums = pd.merge(pd.DataFrame({'월' : sorted(monthly_sums.index, key=self.sort_month)}), monthly_sums, on=['월'])
         
         return monthly_sums
         '''
