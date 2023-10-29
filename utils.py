@@ -381,7 +381,23 @@ class EduPages(Charts):
             '누계인원':[df_summary['신청누계'].sum(), df_summary['수료누계'].sum()]
         })
     
-    
+    def make_summary_change(self, df):
+        # df_summary : | 월 | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률 | 재적인원 대비 신청인원 | 재적인원 대비 신청누계 | 재적인원 대비 수료인원 | 재적인원 대비 수료누계 | 재적인원 대비 IMO신청인원 | 재적인원 대비 IMO신청률'
+        df_all = self.make_set_trend(df,'소속부문', *['월','소속부문'])
+        def calculate_summary_data(df, column_name):
+            summary_data = df.groupby(['월'])[column_name,'재적인원'].sum()
+            summary_data['값'] = (summary_data[column_name] / summary_data['재적인원'] * 100).round(1)
+            summary_data['구분'] = f'재적인원 대비 {column_name}'
+            summary_data.drop(columns=[column_name, '재적인원'], inplace=True)
+            return summary_data
+        df_summary_apply = calculate_summary_data(df_all, '신청누계')
+        df_summary_attend = calculate_summary_data(df_all, '수료누계')
+        # ---------------------------------------------------------------------------------------------------------------
+        # 신청누계 및 수료누계 병한
+        df_summary = pd.merge(pd.DataFrame({'월': sorted(df_summary_attend.index, key=self.sort_month)}), 
+                          pd.concat([df_summary_apply, df_summary_attend], axis=0), on=['월'])
+        return df_summary   
+
     def make_summary_trend(self, df):
         # df_summary : | 월 | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률 | 재적인원 대비 신청인원 | 재적인원 대비 신청누계 | 재적인원 대비 수료인원 | 재적인원 대비 수료누계 | 재적인원 대비 IMO신청인원 | 재적인원 대비 IMO신청률'
         df_all = self.make_set_trend(df,'소속부문', *['월','소속부문'])
