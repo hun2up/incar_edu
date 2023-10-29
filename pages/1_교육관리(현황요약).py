@@ -68,14 +68,16 @@ if authentication_status:
         use_container_width=True)
 
     # 두번째 행
-    hbar_sums, hbar_people = st.columns(2)
-    hbar_sums.plotly_chart(instance.make_hbarchart_group(
+    hbar_sums = st.column_config((1,3))
+    hbar_sums[0].plotly_chart(instance.make_hbarchart_group(
         df=instance.make_summary_status(df_all),
         category='구분',
         axis_a='고유인원',
         axis_b='누계인원',
         title='신청/수료 현황'), use_container_width=True)
-    hbar_people.plotly_chart(instance.make_linechart(
+    
+    line_total, line_people = st.column(2)
+    line_people.plotly_chart(instance.make_linechart(
         df=instance.make_summary_trend(df_all),
         category='구분',
         xaxis='월',
@@ -88,28 +90,24 @@ if authentication_status:
     style_metric_cards()
 
     # [소속부문, 파트너, 성명, 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률]
-    # titles_fa = ['교육신청 TOP5 (FA)','교육수료 TOP5 (FA)','수료율 TOP5 (FA) (수료율 동률일 경우 수료누계 기준 순위정렬)','수료율 하위 TOP5 (FA) (수료율 동률일 경우 신청누계 기준 순위정렬)'] # 각 항목별 제목
     instance.make_cards_a(
         df=instance.make_set_status(df_all,*['파트너','성명']),
         select=['교육신청 TOP5 (FA)','교육수료 TOP5 (FA)','수료율 TOP5 (FA) (수료율 동률일 경우 수료누계 기준 순위정렬)','수료율 하위 TOP5 (FA) (수료율 동률일 경우 신청누계 기준 순위정렬)'],
         title="##### 주요랭킹 (FA)")
 
     # [소속부문, 파트너, 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률]
-    # titles_partner = ['교육신청 TOP5 (파트너)','교육수료 TOP5 (파트너)','수료율 TOP5 (파트너) (수료율 동률일 경우 수료누계 기준 순위정렬)','수료율 하위 TOP5 (파트너) (수료율 동률일 경우 신청누계 기준 순위정렬)']
     instance.make_cards_a(
         df=instance.make_set_status(df_all,*['소속부문','파트너']),
         select=['교육신청 TOP5 (파트너)','교육수료 TOP5 (파트너)','수료율 TOP5 (파트너) (수료율 동률일 경우 수료누계 기준 순위정렬)','수료율 하위 TOP5 (파트너) (수료율 동률일 경우 신청누계 기준 순위정렬)'],
         title="##### 주요랭킹 (파트너)")
 
     # [소속부문, 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률]
-    # titles_channel = ['교육신청 순위 (소속부문)','교육수료 순위 (소속부문)','수료율 순위 (소속부문) (수료율 동률일 경우 수료누계 기준 순위정렬)','수료율 하위 (소속부문) (수료율 동률일 경우 신청누계 기준 순위정렬)']
     instance.make_cards_b(
         df=instance.make_set_status(df_all,*['소속부문']),
         select=['교육신청 순위 (소속부문)','교육수료 순위 (소속부문)','수료율 순위 (소속부문) (수료율 동률일 경우 수료누계 기준 순위정렬)','수료율 하위 (소속부문) (수료율 동률일 경우 신청누계 기준 순위정렬)'],
         title="##### 주요랭킹 (소속부문)")
 
     # [입사연차, 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률]
-    # titles_career = ['교육신청 순위 (입사연차)','교육수료 순위 (입사연차)','수료율 순위 (입사연차) (수료율 동률일 경우 수료누계 기준 순위정렬)','수료율 순위 (입사연차) (수료율 동률일 경우 신청누계 기준 순위정렬)']
     instance.make_cards_b(
         df=instance.make_set_status(df_all,*['입사연차']),
         select=['교육신청 순위 (입사연차)','교육수료 순위 (입사연차)','수료율 순위 (입사연차) (수료율 동률일 경우 수료누계 기준 순위정렬)','수료율 순위 (입사연차) (수료율 동률일 경우 신청누계 기준 순위정렬)'],
