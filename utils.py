@@ -266,6 +266,7 @@ class EduMain(Charts):
         # ---------------------------------------------------------------------------------------------------------------
         df_result = pd.merge(df_main, df_course[['과정코드','과정명','교육일자','목표인원']], on=['과정코드']) # 테이블 병합 (신청현황 + 과정현황)
         df_result = df_result.sort_values(by='날짜', ascending=True) # df_apl: 날짜 오름차순으로 정렬
+        df_result['사원번호'] = df_result['사원번호'].astype(str)
         # df_result : | 날짜 | 과정코드 | 소속부문 | 파트너 | 사원번호 | 성명 | 신청인원 | 과정명 | 교육일자 | 목표인원
         return df_result  
 
