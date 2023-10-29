@@ -247,6 +247,10 @@ class EduMain(Charts):
     def __init__(self):
         super().__init__()
 
+    def call_data_main(self):
+        df_main = call_sheets("apply").drop(columns=['번호']).rename(columns={'성함':'성명'}, inplace=True) # 시트 호출 & 컬럼 삭제 (번호) & 컬럼명 변경 (성함 ▶ 성명)
+        return df_main
+    
     '''
     # --------------------         신청현황 테이블 정리 & 테이블 병합 (신청현황+과정현황)          -------------------------
     def call_data_apply(self, select):
