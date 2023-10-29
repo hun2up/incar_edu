@@ -40,13 +40,31 @@ if authentication_status:
     # ------------------------------------------          인스턴스 생성          ---------------------------------------------
     instance = EduPages()
     df_all = instance.call_data()
+    hide_st_style()
     
     # ------------------------------------------          페이지 타이틀          ---------------------------------------------
     # 메인페이지 타이틀
     st.header("교육운영 현황요약")
 
+    # --------------------------------------------          사이드바          ------------------------------------------------
+    # 사이드바 헤더
+    st.sidebar.header("원하는 옵션을 선택하세요")
+    #사이드바 제작
+    month = make_sidebar(df_all,'월') # 월도 선택 사이드바
+    region = make_sidebar(df_all,'지역') # 지역 선택 사이드바
+    partner = make_sidebar(df_all,'보험사') # 보험사 선택 사이드바
+    line = make_sidebar(df_all,'과정형태') # 과정 온오프라인 선택 사이드바
+    theme = make_sidebar(df_all,'과정분류') # 과정 테마 선택 사이드바
+    name = make_sidebar(df_all,'과정명') # 세부과정 선택 사이드바
+    channel = make_sidebar(df_all,'소속부문') # 소속부문 선택 사이드바
+    career = make_sidebar(df_all,'입사연차') # 입사연차 선택 사이드바
+    # 데이터와 사이드바 연결
+    df_all = df_all.query(
+        "월 == @month & 지역 == @region & 보험사 == @partner & 과정형태 == @line & 과정분류 == @theme & 과정명 == @name & 소속부문 == @channel & 입사연차 == @career"
+    )
+
     # ------------------------------------------          차트 제작          ---------------------------------------------
-    # 첫번째 행 (집합&온라인 / 유료&무료 / 수료율 / IMO신청률)
+    # 첫번째 행 (집합 & 온라인 / 유료 & 무료 / 수료율 / IMO신청률)
     pie_line, pie_fee, pie_attend_rate, pie_imo_rate = st.columns(4)
     pie_line.plotly_chart(instance.make_piechart(
         label=df_all.groupby(['과정형태'])['과정코드'].nunique().reset_index(name='횟수')['과정형태'],
@@ -66,7 +84,7 @@ if authentication_status:
         value=instance.make_rates(df=df_all,item_a='IMO',item_b='IIMS',reference='IMO신청여부',column='IMO신청률')['IMO신청률']),
         use_container_width=True)
 
-    # 두번째 행
+    # 두번째 행 (신청인원 & 수료인원 / 월별 신청인원 & 수료인원 현황)
     edu_total = st.columns((1,3))
     edu_total[0].plotly_chart(instance.make_hbarchart_group(
         df=instance.make_summary_status(df_all),
@@ -75,7 +93,7 @@ if authentication_status:
         axis_b='누계인원',
         title='신청/수료 현황'), use_container_width=True)
     
-    
+    # 세번째 행 (신청인원 & 수료인원 추이 / 재적인원 대비 신청인원 & 재적인원 대비 수료인원 추이)
     line_total, line_people = st.columns(2)
     line_total.plotly_chart(instance.make_linechart(
         df=instance.make_trend_all(df_all),
