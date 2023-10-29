@@ -338,7 +338,7 @@ class EduPages(Charts):
         return df_apply
 
     # ------------------------------------------          현황요약          -----------------------------------------------
-    def make_set_change(self, df):
+    def make_set_summary(self, df):
         # df_sum : | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률
         df_summary = self.make_set_status(df, *['소속부문']).sum(axis=0) # 현황 데이터 불러오고, 항목들 전부 더하기
         # (주의!) 위 자료는 넘파이 배열로 변환되었음! 아래 구문에서 다시 데이터프레임 자료로 변환해야 함!
@@ -355,7 +355,7 @@ class EduPages(Charts):
         df_summary_attend = df_summary_attend.reset_index().rename(columns={'index':'비고'}) # 인덱스 초기화 하고 기존에 인덱스로 설정되어 있던 '수료' 항목을 컬럼으로 변경
         # ---------------------------------------------------------------------------------------------------------------
         # 신청 데이터프레임과 수료 데이터프레임 병합
-        df_summary = pd.concat([df_summary_apply, df_summary_attend], axis=0)
+        df_summary = pd.concat([df_summary_attend, df_summary_apply], axis=0)
         # df_sums : | 비고 | 고유인원 | 누계인원
         st.dataframe(df_summary)
         return df_summary

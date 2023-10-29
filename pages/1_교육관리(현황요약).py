@@ -45,7 +45,7 @@ if authentication_status:
     # 메인페이지 타이틀
     st.header("교육운영 현황요약")
 
-    df_sums = instance.make_set_change(df_all)
+    df_sums = instance.make_set_summary(df_all)
     st.dataframe(instance.make_set_sums(instance.make_set_status(df_all,*['소속부문'])))
 
 
