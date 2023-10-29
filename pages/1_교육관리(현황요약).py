@@ -45,9 +45,6 @@ if authentication_status:
     # 메인페이지 타이틀
     st.header("교육운영 현황요약")
 
-    st.dataframe(instance.make_set_change(df_all))
-    st.dataframe(instance.make_set_summary(df_all))
-
     # ------------------------------------------          차트 제작          ---------------------------------------------
     # 첫번째 행
     pie_line, pie_fee, pie_attend_rate, pie_imo_rate = st.columns(4)
