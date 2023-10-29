@@ -336,6 +336,7 @@ class EduPages(Charts):
             df_two_total = df.groupby([*columns])[index[i][0]].sum().reset_index(name=index[i][2]) # 수료현황 또는 IMO신청여부 : 전체 더하기 (수료누계 및 IMO신청누계)
             df_two_unique = pd.DataFrame(df[df[index[i][0]] != 0]).groupby([*columns])['사원번호'].nunique().reset_index(name=index[i][1]) # 수료현황 또는 IMO신청여부 : 값이 1인 사원번호의 개수 (수료인원 및 IMO신청인원)
             df_two = pd.merge(df_two_unique, df_two_total, on=[*columns]) # 수료인원+수료누계 & IMO신청인원+IMO신청누계
+            st.dataframe(df_two)
             df_two[index[i][3]] = (df_two[index[i][2]]/df_apply['신청누계']*100).round(1) # 수료율 및 IMO신청률 구하기
             df_apply = pd.merge(df_apply, df_two, on=[*columns]) # 신청+수료+IMO
         # df_apply : | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률
