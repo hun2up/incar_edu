@@ -341,8 +341,8 @@ class EduPages(Charts):
     def make_set_change(self, df):
         # df_sum : | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률
         df_sums = self.make_set_status(df, *['소속부문']).sum(axis=0) # 현황 데이터 불러오고, 항목들 전부 더하기
-        df_sums = df_sums.rename(columns={df_sums.index:'합계'})
-        # df_sums = pd.DataFrame({'합계':df_sums}).transpose().drop(columns='소속부문')
+        # (주의!) 위 자료는 넘파이 배열로 변환되었음! 아래 구문에서 다시 데이터프레임 자료로 변환해야 함!
+        df_sums = pd.DataFrame({'합계':df_sums}).transpose().drop(columns='소속부문') # 데이터프레임 자료로 변환하고, 열과 행 반전 및 '소속부문' 컬럼 삭제
         st.dataframe(df_sums)
         # df_sums : | 비고 | 고유인원 | 누계인원
         return df_sums
