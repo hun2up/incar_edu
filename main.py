@@ -43,14 +43,29 @@ if authentication_status:
     instance = EduMain()
     df_main = instance.call_data_main()
     st.header("당월 교육과정 신청현황")
+    st.dataframe(df_main)
+
+    '''
+
+    # --------------------------------------------          사이드바          ------------------------------------------------
+    # 사이드바 헤더
+    st.sidebar.header("원하는 옵션을 선택하세요")
+    #사이드바 제작
+    month = make_sidebar(df_main,'월') # 월도 선택 사이드바
+    region = make_sidebar(df_main,'지역') # 지역 선택 사이드바
+    partner = make_sidebar(df_main,'보험사') # 보험사 선택 사이드바
+    line = make_sidebar(df_main,'과정형태') # 과정 온오프라인 선택 사이드바
+    theme = make_sidebar(df_main,'과정분류') # 과정 테마 선택 사이드바
+    name = make_sidebar(df_main,'과정명') # 세부과정 선택 사이드바
+    channel = make_sidebar(df_main,'소속부문') # 소속부문 선택 사이드바
+    career = make_sidebar(df_main,'입사연차') # 입사연차 선택 사이드바
+    # 데이터와 사이드바 연결
+    df_main = df_main.query(
+        "월 == @month & 지역 == @region & 보험사 == @partner & 과정형태 == @line & 과정분류 == @theme & 과정명 == @name & 소속부문 == @channel & 입사연차 == @career"
+    )
+    '''
 
     # -----------------------------------------------  당일 교육신청 현황  ---------------------------------------------------
-    # df_main_line = ['날짜','과정명','신청인원']
-    df_main_line = df_main.groupby(['날짜','과정명'])['신청인원'].sum().reset_index(name='신청인원')
-    # df_main_bar = ['날짜','과정명','목표인원','신청인원']
-    df_main_result = df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)
-    month_today = pd.to_datetime(df_main_result.iloc[-1]['날짜'], format="%Y. %m. %d").month
-
     bar_today, line_today = st.columns(2)
     bar_today.plotly_chart(instance.make_vbarchart(
         df=df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index).groupby(['날짜','과정명','목표인원'])['신청인원'].sum().reset_index(name='신청인원'),
