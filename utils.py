@@ -361,9 +361,7 @@ class EduPages(Charts):
         # ---------------------------------------------------------------------------------------------------------------        
         # 신청 데이터프레임과 수료 데이터프레임 병합
         df_summary = pd.concat([df_summary_attend, df_summary_apply, df_summary_imo], axis=0)
-        # df_summary = pd.concat([df_summary, df_summary_imo], axis=0)
-        # df_summary.rename()
-        # df_summary = df_summary.append({'고유인원':().rounds(1)})
+        df_summary.loc['수료율'] = {'고유인원':(df_summary.loc['수료','고유인원']/df_summary.loc['신청','고유인원']*100).round(1),'누계인원':(df_summary.loc['수료','누계인원']/df_summary.loc['신청','누계인원']*100).round(1)}
         # df_sums : | 비고 | 고유인원 | 누계인원
         st.dataframe(df_summary)
         return df_summary
