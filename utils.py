@@ -390,8 +390,8 @@ class EduPages(Charts):
             summary_data = df.groupby(['월'])[[column_name,'재적인원']].sum() # df_all 데이터프레임으로 부터 신청인원 및 수료인원 관련 컬럼 추출
             summary_data['값'] = (summary_data[column_name] / summary_data['재적인원'] * 100).round(1) # 새로 만든 데이터프레임의 [값] 컬럼에 '재적인원 대비 신청인원' 또는 '재적인원 대비 수료인원' 데이터를 계산하여 삽입
             summary_data['구분'] = f'재적인원 대비 {column_name}' # 새로 만든 데이터프레임의 [구분] 컬럼에 '재적인원 대비 신청인원' 또는 '재적인원 대비 수료인원'을 텍스트로 삽입
-            return summary_data.drop(columns=[column_name, '재적인원'], inplace=True) # '신청인원' 또는 '수료인원' 컬럼과 '재적인원' 컬럼 삭제
-            # return summary_data
+            summary_data.drop(columns=[column_name, '재적인원'], inplace=True) # '신청인원' 또는 '수료인원' 컬럼과 '재적인원' 컬럼 삭제
+            return summary_data
         df_summary_apply = calculate_summary_data(df_all, '신청누계')
         df_summary_attend = calculate_summary_data(df_all, '수료누계')
         # ---------------------------------------------------------------------------------------------------------------
