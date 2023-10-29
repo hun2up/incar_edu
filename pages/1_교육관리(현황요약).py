@@ -41,6 +41,11 @@ if authentication_status:
     instance = EduPages()
     df_all = instance.call_data()
     df_summary = instance.make_set_summary(df_all)
+    df_apply = instance.make_set_change(df_all, '신청', ['신청인원','신청누계'])
+    df_attend = instance.make_set_change(df_all, '수료', ['수료인원','수료누계'])
+    st.dataframe(pd.concat([df_attend, df_apply], axis=0))
+    st.dataframe(instance.make_set_change(df_all, 'imo', ['IMO신청인원','IMO신청누계']))
+    
     
     # ------------------------------------------          페이지 타이틀          ---------------------------------------------
     # 메인페이지 타이틀
@@ -59,7 +64,7 @@ if authentication_status:
         value=df_all.groupby(['유무료'])['과정코드'].nunique().reset_index(name='횟수')['횟수']),
         use_container_width=True)
     # 수료율
-    df_attend_rate = pd.DataFrame({'구분':['수료','미수료'],'수료율':[(df_summary.iloc[0,3]/df_summary.iloc[1,3]*100).round(1), (100-df_summary.iloc[0,3]/df_summary.iloc[1,3]*100).round(1)]})
+    # df_attend_rate = pd.DataFrame({'구분':['수료','미수료'],'수료율':[(df_summary.iloc[0,3]/df_summary.iloc[1,3]*100).round(1), (100-df_summary.iloc[0,3]/df_summary.iloc[1,3]*100).round(1)]})
     pie_attend_rate.plotly_chart(instance.make_piechart(
         label=df_attend_rate['구분'],
         value=df_attend_rate['수료율']),
