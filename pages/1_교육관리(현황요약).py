@@ -1,3 +1,68 @@
+#########################################################################################################################
+################                                    라이브러리 호출                                     ##################
+#########################################################################################################################
+import pandas as pd
+import streamlit as st
+import streamlit_authenticator as stauth
+hashed_passwords = stauth.Hasher(['XXX']).generate()
+import yaml
+from yaml.loader import SafeLoader
+with open('config.yaml') as file:
+    config = yaml.load(file, Loader=SafeLoader)
+from utils import make_sidebar, hide_st_style, style_metric_cards
+from utils import EduPages
+
+#########################################################################################################################
+#################                                    인증페이지 설정                                     #################
+#########################################################################################################################
+# ------------------------------------------         인증페이지 삽입          --------------------------------------------
+# 인증모듈 기본설정
+authenticator = stauth.Authenticate(
+    config['credentials'],
+    config['cookie']['name'],
+    config['cookie']['key'],
+    config['cookie']['expiry_days'],
+    config['preauthorized']
+)
+# 로그인창 노출
+name, authentication_status, username = authenticator.login('Login', 'main')
+# 사이드바에 로그아웃 버튼 추가
+authenticator.logout('Logout', 'sidebar')
+# 인증상태 검증
+if authentication_status == None:
+    st.warning('아이디와 패스워드를 입력해주세요')
+if authentication_status == False:
+    st.error('아이디와 패스워드를 확인해주세요')
+if authentication_status:
+    #########################################################################################################################
+    ###################                                    페이지 제작                                     ###################
+    #########################################################################################################################
+    # ------------------------------------------          인스턴스 생성          ---------------------------------------------
+    instance = EduPages()
+    df_all = instance.call_data()
+    
+    # ------------------------------------------          페이지 타이틀          ---------------------------------------------
+    # 메인페이지 타이틀
+    st.header("교육운영 현황요약")
+
+    pie_line, pie_fee, pie_attend_rate, pie_imo_rate = st.columns(4)
+    # 집합/온라인 과정현황
+    df_line = df_all.groupby(['과정형태'])['과정코드'].count().reset_index(name='횟수')
+    pie_line.plotly_chart(instance.make_piechart(label=df_line['과정형태'], value=df_line['횟수']), use_container_width=True)
+    # 유료/무료 과정현황
+    df_all['유무료'] = df_all['수강료'].apply(lambda x: '무료' if x == 0 else '유료')
+    df_fee = df_all.groupby(['유무료'])['과정코드'].count().reset_index(name='횟수')
+    pie_fee.plotly_chart(instance.make_piechart(label=df_fee['유무료'], value=df_fee['횟수']), use_container_width=True)
+    # 수료율
+    df_attend_rate = pd.DataFrame({'구분':['수료','미수료'],'수료율':[(df_sums.iloc[0,3]/df_sums.iloc[1,3]*100).round(1), (100-df_sums.iloc[0,3]/df_sums.iloc[1,3]*100).round(1)]})
+    pie_attend_rate.plotly_chart(instance.make_piechart(label=df_attend_rate['구분'],value=df_attend_rate['수료율']), use_container_width=True)
+    # IMO신청률
+    df_imo_rate = pd.DataFrame({'구분':['IMO','IIMS'],'신청률':[(df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1), (100-df_all['IMO신청여부'].sum()/df_all.shape[0]*100).round(1)]})
+    pie_imo_rate.plotly_chart(instance.make_piechart(label=df_imo_rate['구분'],value=df_imo_rate['신청률']), use_container_width=True)
+
+
+
+'''
 ########################################################################################################################
 ##############################################     라이브러리 호출하기     ##################################################
 ########################################################################################################################
@@ -111,3 +176,4 @@ if authentication_status:
     # [입사연차, 신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청인원, IMO신청누계, IMO신청률]
     titles_career = ['교육신청 순위 (입사연차)','교육수료 순위 (입사연차)','수료율 순위 (입사연차) (수료율 동률일 경우 수료누계 기준 순위정렬)','수료율 순위 (입사연차) (수료율 동률일 경우 신청누계 기준 순위정렬)']
     instance.make_cards_b(df=instance.make_set_status(df_all,*['입사연차']), select=titles_career, title="##### 주요랭킹 (입사연차)")
+'''
