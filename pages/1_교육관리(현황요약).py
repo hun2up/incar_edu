@@ -62,7 +62,7 @@ if authentication_status:
     def make_rates(item_a, item_b, reference, column):
         return pd.DataFrame({
             '구분':[item_a,item_b],
-            column:[(df_all[reference].sum()/df_all.shape[0]*100).round(1), (100-df_all[reference].sum()/df_all.shape[0]*100).rounds(1)]})
+            column:[(df_all[reference].sum()/df_all.shape[0]*100).round(1), (100-df_all[reference].sum()/df_all.shape[0]*100).round(1)]})
     # 수료율
     # df_attend_rate = pd.DataFrame({'구분':['수료','미수료'],'수료율':[(df_all['수료현황'].sum()/df_all.shape[0]*100).round(1), (100-df_all['수료현황'].sum()/df_all.shape[0]*100).round(1)]})
     pie_attend_rate.plotly_chart(instance.make_piechart(
