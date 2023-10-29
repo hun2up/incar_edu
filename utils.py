@@ -388,9 +388,11 @@ class EduPages(Charts):
         df_summary_apply = df_summary.groupby(['월'])[['신청누계','재적인원']].sum()
         df_summary_apply['구분'] = '재적인원 대비 신청누계'
         df_summary_apply['값'] = (df_summary_apply['신청누계']/df_summary_apply['재적인원']*100).round(1)
+        df_summary_apply = df_summary_apply.drop(columns=['신청누계','재적인원'])
         df_summary_attend = df_summary.groupby(['월'])[['수료누계','재적인원']].sum()
         df_summary_attend['구분'] = '재적인원 대비 수료누계'
         df_summary_attend['값'] = (df_summary_attend['수료누계']/df_summary_attend['재적인원']*100).round(1)
+        df_summary_attend = df_summary_attend.drop(columns=['수료누계','재적인원'])
         df_summary = pd.concat([df_summary_apply, df_summary_attend], axis=0)
 
         '''
