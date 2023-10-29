@@ -371,7 +371,7 @@ class EduPages(Charts):
         # df_summary_attend = df_summary_attend.reset_index().rename(columns={'index':'비고'}) # 인덱스 초기화 하고 기존에 인덱스로 설정되어 있던 '수료' 항목을 컬럼으로 변경
         # ---------------------------------------------------------------------------------------------------------------        
         # 신청 데이터프레임과 수료 데이터프레임 병합
-        df_summary = pd.concat([df_summary_apply, df_summary_apply], axis=0)
+        df_summary = pd.concat([df_summary_apply, df_summary_attend], axis=0)
         # df_sums : | 비고 | 고유인원 | 누계인원
         return df_summary
 
