@@ -79,7 +79,7 @@ def call_data(select):
 #########################################################################################################################
 ##############                        교육관리 클래스 정의 (차트제작) : MakeSet 상속                        ################
 #########################################################################################################################
-class Chart():
+class Charts():
     def __init__(self):
         pass
 
@@ -244,12 +244,12 @@ class Chart():
             for i in range(6):
                 sector[i].metric(df.iat[i, 0], f"{df.iat[i, index_column[loop]]} ({index_units[loop]})")
 
-class EduMain():
+class EduMain(Charts):
     def __init__(self):
         super().__init__()
 
 
-class EduPages(Chart):
+class EduPages(Charts):
     def __init__(self):
         super().__init__()
 
