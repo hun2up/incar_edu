@@ -40,12 +40,7 @@ if authentication_status:
     # ------------------------------------------          인스턴스 생성          ---------------------------------------------
     instance = EduPages()
     df_all = instance.call_data()
-    df_summary = instance.make_set_summary(df_all)
-    df_apply = instance.make_set_change(df_all, '신청', ['신청인원','신청누계'])
-    df_attend = instance.make_set_change(df_all, '수료', ['수료인원','수료누계'])
-    st.dataframe(pd.concat([df_attend, df_apply], axis=0))
-    st.dataframe(instance.make_set_change(df_all, 'imo', ['IMO신청인원','IMO신청누계']))
-    
+    st.dataframe(df_all)
     
     # ------------------------------------------          페이지 타이틀          ---------------------------------------------
     # 메인페이지 타이틀
