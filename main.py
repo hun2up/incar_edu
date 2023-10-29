@@ -56,7 +56,7 @@ if authentication_status:
 
     bar_today, line_today = st.columns(2)
     bar_today.plotly_chart(instance.make_vbarchart(
-        df=df_main_bar,
+        df=df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index).groupby(['날짜','과정명','목표인원'])['신청인원'].sum().reset_index(name='신청인원'),
         title='과정별 신청현황'), use_container_width=True)
     line_today.plotly_chart(instance.make_linechart(
         df=df_main_line,
@@ -64,8 +64,7 @@ if authentication_status:
         xaxis='날짜',
         yaxis='신청인원',
         title=f'{month_today}월 신청인원 추이'), use_container_width=True)
-    st.dataframe(df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['교육일자','과정명','소속부문','파트너','사원번호','성명']])
-    st.dataframe(df_main_list, use_container_width=True)
+    st.dataframe(df_main.drop(df_main[df_main.iloc[:,'날짜'] != df_main.iloc[-1,'날짜']].index)[['교육일자','과정명','소속부문','파트너','사원번호','성명']]) # 마지막 날짜 제외한 나머지 신청내역 삭제
 
 
 
