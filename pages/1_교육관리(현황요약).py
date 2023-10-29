@@ -47,11 +47,11 @@ if authentication_status:
 
     pie_line, pie_fee, pie_attend_rate, pie_imo_rate = st.columns(4)
     # 집합/온라인 과정현황
-    df_line = df_all.groupby(['과정형태'])['과정코드'].count().reset_index(name='횟수')
+    df_line = df_all.groupby(['과정형태'])['과정코드'].nunique().reset_index(name='횟수')
     pie_line.plotly_chart(instance.make_piechart(label=df_line['과정형태'], value=df_line['횟수']), use_container_width=True)
     # 유료/무료 과정현황
     df_all['유무료'] = df_all['수강료'].apply(lambda x: '무료' if x == 0 else '유료')
-    df_fee = df_all.groupby(['유무료'])['과정코드'].count().reset_index(name='횟수')
+    df_fee = df_all.groupby(['유무료'])['과정코드'].nunique().reset_index(name='횟수')
     pie_fee.plotly_chart(instance.make_piechart(label=df_fee['유무료'], value=df_fee['횟수']), use_container_width=True)
     # 수료율
     df_attend_rate = pd.DataFrame({'구분':['수료','미수료'],'수료율':[(df_sums.iloc[0,3]/df_sums.iloc[1,3]*100).round(1), (100-df_sums.iloc[0,3]/df_sums.iloc[1,3]*100).round(1)]})
