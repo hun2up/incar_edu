@@ -337,6 +337,12 @@ class EduPages(Charts):
         # df_apply : | 월 | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률 | 재적인원 대비 신청인원 | 재적인원 대비 신청누계 | 재적인원 대비 수료인원 | 재적인원 대비 수료누계 | 재적인원 대비 IMO신청인원 | 재적인원 대비 IMO신청률'
         return df_apply
 
+    def make_rates(self, df, item_a, item_b, reference, column):
+        return pd.DataFrame({
+            '구분':[item_a,item_b],
+            column:[(df[reference].sum()/df.shape[0]*100).round(1), (100-df[reference].sum()/df.shape[0]*100).round(1)]})
+
+
 
     def make_set_change(self, df, title, columns):
         # df_sum : | 소속부문/입사연차 | 신청인원 | 신청누계 | 수료인원 | 수료누계 | 수료율 | IMO신청인원 | IMO신청누계 | IMO신청률
@@ -364,17 +370,8 @@ class EduPages(Charts):
         df_summary_attend.index = ['수료'] # 새로 만든 데이터프레임의 인덱스(로우) 값을 '수료'로 설정
         # df_summary_attend = df_summary_attend.reset_index().rename(columns={'index':'비고'}) # 인덱스 초기화 하고 기존에 인덱스로 설정되어 있던 '수료' 항목을 컬럼으로 변경
         # ---------------------------------------------------------------------------------------------------------------        
-        # IMO
-        df_summary_imo = df_summary[['IMO신청인원','IMO신청누계']].rename(columns={'IMO신청인원':'고유인원','IMO신청누계':'누계인원'})
-        df_summary_imo.index = ['IMO']
-        # df_summary_imo = df_summary_imo.reset_index().rename(columns={'index':'비고'})
-        # ---------------------------------------------------------------------------------------------------------------        
         # 신청 데이터프레임과 수료 데이터프레임 병합
-        df_summary = pd.concat([df_summary_attend, df_summary_apply, df_summary_imo], axis=0)
-        df_summary.loc['수료율'] = {'고유인원':(df_summary.loc['수료','고유인원']/df_summary.loc['신청','고유인원']*100).round(1),'누계인원':(df_summary.loc['수료','누계인원']/df_summary.loc['신청','누계인원']*100).round(1)} # 수료율 로우 추가
-        df_summary.loc['IMO신청률'] = {'고유인원':(df_summary.loc['IMO','고유인원']/df_summary.loc['신청','고유인원']*100).round(1),'누계인원':(df_summary.loc['IMO','누계인원']/df_summary.loc['신청','누계인원']*100).round(1)} # IMO신청률 로우 추가
         # df_sums : | 비고 | 고유인원 | 누계인원
-        st.dataframe(df_summary)
         return df_summary
 
 
