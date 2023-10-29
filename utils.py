@@ -174,7 +174,7 @@ class MakeSet(CallData):
         return df_apply
     
     def make_set_change(self, df, theme, *columns):
-        self.make_set_status(df, *columns)
+        df_apply = self.make_set_status(df, *columns)
         # ---------------------------------------------------------------------------------------------------------------
         # 재적인원
         df_apply = pd.merge(df_apply, self.call_regist(theme), on=['월',theme]) # 기존 데이터프레임과 재적인원 데이터프레임 병합
