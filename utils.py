@@ -263,35 +263,11 @@ class EduMain(Charts):
         df_course = call_sheets("course")
         df_course['과정명'] = '['+df_course['지역']+'] '+df_course['과정명']
         df_course['과정코드'] = df_course['과정코드'].astype(str) # df_course의 '과정코드' 열을 문자열로 변환
-        # 테이블 병합 (신청현황 + 과정현황)
-        df_result = pd.merge(df_main, df_course[['과정코드','과정명','교육일자','목표인원']], on=['과정코드'])
-        # df_apl: 날짜 오름차순으로 정렬
-        df_result = df_result.sort_values(by='날짜', ascending=True)
-        return df_result
-    
-    # --------------------         신청현황 테이블 정리 & 테이블 병합 (신청현황+과정현황)          -------------------------
-    def call_data_apply(self, select):
-        df_apply, df_course = call_data(select)
-        # df_apply: 컬럼 생성 (과정코드)
-        df_apply.insert(loc=1, column='과정코드', value=None)
-        # df_apply: 데이터 정리 (과정코드)
-        for modify_apply in range(df_apply.shape[0]):
-            df_apply.iloc[modify_apply,1] = df_apply.iloc[modify_apply,0].split(")")[0].replace('(','')
-        # df_apply: 컬럼 추가 (신청인원)
-        df_apply = df_apply.groupby(['날짜','과정코드','소속부문','파트너','사원번호','성명'])['사원번호'].count().reset_index(name='신청인원')
-        # df_course2: 데이터 변경 ([지역]+과정명)
-        df_course['과정명'] = '['+df_course['지역']+'] '+df_course['과정명']
-        # df_apply의 '과정코드' 열을 문자열로 변환
-        df_apply['과정코드'] = df_apply['과정코드'].astype(str)
-        # df_course의 '과정코드' 열을 문자열로 변환
-        df_course['과정코드'] = df_course['과정코드'].astype(str)
-        # 테이블 병합 (신청현황 + 과정현황)
-        df_result = pd.merge(df_apply, df_course[['과정코드','과정명','교육일자','목표인원']], on=['과정코드'])
-        # df_apl: 날짜 오름차순으로 정렬
-        df_result = df_result.sort_values(by='날짜', ascending=True)
-        ##### df_apl = ['날짜','과정코드','소속부문','신청인원','목표인원','과정명']
-        return df_result
-    
+        # ---------------------------------------------------------------------------------------------------------------
+        df_result = pd.merge(df_main, df_course[['과정코드','과정명','교육일자','목표인원']], on=['과정코드']) # 테이블 병합 (신청현황 + 과정현황)
+        df_result = df_result.sort_values(by='날짜', ascending=True) # df_apl: 날짜 오름차순으로 정렬
+        # df_result : | 날짜 | 과정코드 | 소속부문 | 파트너 | 사원번호 | 성명 | 신청인원 | 과정명 | 교육일자 | 목표인원
+        return df_result  
 
 class EduPages(Charts):
     def __init__(self):
