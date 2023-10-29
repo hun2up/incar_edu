@@ -403,7 +403,7 @@ class EduPages(Charts):
         monthly_sums['재적인원 대비 수료누계'] = (monthly_sums['수료누계']/monthly_sums['재적인원']*100).round(1)
         '''
         # 월 데이터 오름차순 정렬
-        df_summary = pd.merge(pd.DataFrame({'월' : sorted(df_all['월'], key=self.sort_month)}), df_summary, on=['월'])
+        df_summary = pd.merge(pd.DataFrame({'월' : sorted(df_summary_attend.index, key=self.sort_month)}), df_summary, on=['월'])
         return df_summary
         '''
         return pd.DataFrame({
