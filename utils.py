@@ -248,7 +248,7 @@ class EduMain(Charts):
         super().__init__()
 
     def call_data_main(self):
-        df_main = call_sheets("apply").drop(columns=['번호']).rename(columns={'성함':'성명'}, inplace=True) # 시트 호출 & 컬럼 삭제 (번호) & 컬럼명 변경 (성함 ▶ 성명)
+        df_main = call_sheets("month").drop(columns=['번호']).rename(columns={'성함':'성명'}, inplace=True) # 시트 호출 & 컬럼 삭제 (번호) & 컬럼명 변경 (성함 ▶ 성명)
         return df_main
     
     '''
