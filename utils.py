@@ -345,8 +345,7 @@ class EduPages(Charts):
         df_summary = pd.DataFrame({'합계':df_summary}).transpose().drop(columns='소속부문') # 데이터프레임 자료로 변환하고, 열과 행 반전 및 '소속부문' 컬럼 삭제
         df_summary_apply = df_summary[['신청인원','신청누계']].rename(columns={'신청인원':'고유인원','신청누계':'누계인원'})
         df_summary_apply.index = ['신청']
-        df_summary_apply = df_summary_apply.reset_index()
-        df_summary_apply = df_summary_apply.rename(columns={'index':'비고'})
+        df_summary_apply = df_summary_apply.reset_index().rename(columns={'index':'비고'})
         st.dataframe(df_summary_apply)
         # df_sums : | 비고 | 고유인원 | 누계인원
         return df_summary
