@@ -64,8 +64,12 @@ if authentication_status:
         xaxis='날짜',
         yaxis='신청인원',
         title=f'{month_today}월 신청인원 추이'), use_container_width=True)
+    st.dataframe(df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['교육일자','과정명','소속부문','파트너','사원번호','성명']])
     st.dataframe(df_main_list, use_container_width=True)
 
+
+
+#df_attend.insert(0, column='과정코드', value=None) # 첫번째 컬럼에 [과정코드] 컬럼 추가
     # -------------------------------------------  차트 노출 (당일 교육신청 현황)  ----------------------------------------------
     
     '''
