@@ -77,7 +77,7 @@ if authentication_status:
     hbar_sums, hbar_sums_people = st.columns(2)
     hbar_sums.plotly_chart(instance.make_hbarchart_group(
         df=instance.make_summary(df_all),
-        category='비고',
+        category='구분',
         axis_a='고유인원',
         axis_b='누계인원',
         title='신청/수료 현황'), use_container_width=True)
