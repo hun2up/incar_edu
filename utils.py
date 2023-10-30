@@ -427,11 +427,6 @@ class ServiceData:
             if len(df_service.iat[i,5]) < 6: df_service.iat[i,5] = f"16{df_service.iat[i,5]}"
             else: pass
         return df_service
-
-    # 각 사원별 접속횟수 : [사원번호, 접속수]
-    def make_service_branch(self, df):
-        df_result = self.make_service_data(df).groupby(['사원번호'])['사원번호'].count().reset_index(name='접속수')
-        return df_result
     
     def make_service_summary(self):
         month_dict = {'jan':'1월','feb':'2월','mar':'3월','apr':'4월','may':'5월','jun':'6월','jul':'7월','aug':'8월','sep':'9월','oct':'10월','nov':'11월','dec':'12월'} # 반복문 실행을 위한 딕셔너리 선언
@@ -459,6 +454,7 @@ class ServiceData:
             '(NEW)영업자료출력건수',
             '라이프사이클접속건수',
             '라이프사이클출력건수']
+        # ---------------------------------------------------------------------------------------------------------------
         # 1월부터 12월까지 데이터 정리
         for month_key, month_name in month_dict.items():
             with st.spinner(f"{month_name} 데이터를 불러오는 중입니다."): # 로딩 화면 구현
@@ -472,11 +468,9 @@ class ServiceData:
                 # df_summary.insert(2, '전월 대비 증감', df_summary.iloc[1,-1] - df_service.iloc[1,-1])
                 # except: pass
                 df_service = pd.concat([df_service, df_summary], axis=0) # 전월 데이터와 병합
-        df_service.insert(2, '전월 대비 증감', '')
+        # ---------------------------------------------------------------------------------------------------------------
         df_service['사용자수'] = df_service['사용자수'].astype(int)
-        st.write(f"iloc[1,1] : {df_service.iloc[1,1]}")
-        st.write(f"iloc[1,2] : {df_service.iloc[1,2]}")
-        st.write(f"iloc[2,1] : {df_service.iloc[2,1]}")
+        df_service.insert(2, '전월 대비 증감', '')
         for i in range(df_service.shape[0]):
             try: df_service.iloc[i+1,2] = df_service.iloc[i+1,1] - df_service.iloc[i,1]
             except: pass
