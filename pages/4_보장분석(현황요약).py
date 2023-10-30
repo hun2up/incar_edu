@@ -48,6 +48,6 @@ if authentication_status:
 
     # ----------------------------------------    Google Sheet 데이터베이스 호출    --------------------------------------------- 
     df_month = instance.test()
-    instance.test(df_month)
+    pd.dataframe(instance.summary(df_month))
 
     # 요약보고서 제작
