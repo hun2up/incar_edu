@@ -482,6 +482,6 @@ class ServiceData:
         df_branch = pd.DataFrame(columns=['소속부문','소속총괄','소속부서'])
         for month in df['월'].unique():
             df_month = df[df['월'].isin([month])]
-            df_month = df_month.groupby(['소속부문','소속총괄','소속부서'])['사원번호'].count().reset_index(name=month).fillna(0)
-            df_branch = pd.merge(df_branch, df_month, on=['소속부문','소속총괄','소속부서'], how='outer')
+            df_month = df_month.groupby(['소속부문','소속총괄','소속부서'])['사원번호'].count().reset_index(name=month)
+            df_branch = pd.merge(df_branch, df_month, on=['소속부문','소속총괄','소속부서'], how='outer').fillna(0)
         return df_branch
