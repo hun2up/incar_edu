@@ -470,7 +470,11 @@ class ServiceData:
                 df_summary.insert(1, '사용자수', df_month['사원번호'].count()) # 사원번호 개수 구해서 사용자수 삽입
                 df_summary.insert(2, '전월 대비 증감', df_summary.iloc[1,-1] - df_service.iloc[1,-1])
                 # except: pass
-                df_service = pd.concat([df_service, df_summary], axis=0) # 전월 데이터와 병합                
+                df_service = pd.concat([df_service, df_summary], axis=0) # 전월 데이터와 병합
+                df_service.df_summary.insert(2, '전월 대비 증감', '')
+                for i in range(df_service.shape[0]):
+                    try: df_service.iloc[0,i+1] = df_service.iloc[0,i+1] - df_service.iloc[0,i]
+                    except: pass
         return df_service
 
     def make_service_branch(self):
