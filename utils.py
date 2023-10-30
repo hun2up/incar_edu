@@ -437,7 +437,6 @@ class ServiceData:
         month_dict = {'jan':'1월','feb':'2월','mar':'3월','apr':'4월','may':'5월','jun':'6월','jul':'7월','aug':'8월','sep':'9월','oct':'10월','nov':'11월','dec':'12월'}
         df_service = pd.DataFrame(columns=[
             '월',
-            '사용자수',
             '로그인수',
             '보장분석접속건수',
             '보장분석고객등록수',
