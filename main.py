@@ -75,11 +75,11 @@ if authentication_status:
         title=f'{pd.to_datetime(df_main.iloc[-1,0], format="%Y. %m. %d").month}월 신청인원 추이'), use_container_width=True)
     
     # 두번째 행
-    df_log = pd.read_csv(st.secrets['log_csv'].replace("/edit#gid=", "/export?format=csv&gid="))
+    df_log = pd.read_csv(st.secrets['log_url'].replace("/edit#gid=", "/export?format=csv&gid="))
     prompt = st.chat_input("내용을 입력하세요")
     if prompt:
         df_log = pd.concat([df_log, pd.DataFrame({'일시':[pd.Timestamp.now()],'로그':[prompt]})], axis=0)
-        df_log.to_csv(st.secrets['log_csv'].replace("/edit#gid=", "/import?format=csv&gid="))
+        df_log.to_csv(st.secrets["log_url"].replace("/edit#gid=", "/import?format=csv&gid="))
     st.dataframe(df_log)
  
 
