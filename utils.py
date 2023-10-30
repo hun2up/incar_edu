@@ -436,7 +436,7 @@ class ServiceData:
         return df_service
     
     def make_set_summary(self, df):
-        month_list = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
+        # month_list = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
         df_service = pd.DataFrame() # 데이터 정리를 위한 데이터프레임 생성
         columns_service = [
             '로그인수',
@@ -462,13 +462,13 @@ class ServiceData:
             '라이프사이클접속건수',
             '라이프사이클출력건수']
         # ---------------------------------------------------------------------------------------------------------------
-        for month in range(len(month_list)):
-            try: df_month = df[df['월'].isin([month_list[month]])].drop(columns=['기준일자','소속부문','소속총괄','소속부서','파트너','성명'])
+        for month in df['월'].unique():
+            try: df_month = df[df['월'].isin([month])].drop(columns=['기준일자','소속부문','소속총괄','소속부서','파트너','성명'])
             except: pass
             df_summary = pd.DataFrame()
             for columns in range(len(columns_service)):
                 df_summary[columns_service[columns]] = [df_month[columns_service[columns]].sum()] # 각 항목 합계 계산
-            df_summary.insert(0, '월', month_list[month]) # 기준일자 대신 월 항목 추가
+            df_summary.insert(0, '월', month) # 기준일자 대신 월 항목 추가
             df_summary.insert(1, '사용자수', df_month['사원번호'].count()) # 사원번호 개수 구해서 사용자수 삽입
             df_service = pd.concat([df_service, df_summary], axis=0) # 전월 데이터와 병합
         # ---------------------------------------------------------------------------------------------------------------
