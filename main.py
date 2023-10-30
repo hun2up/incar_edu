@@ -72,7 +72,7 @@ if authentication_status:
         title=f'{pd.to_datetime(df_main.iloc[-1,0], format="%Y. %m. %d").month}월 신청인원 추이'), use_container_width=True)
     
     # 두번째 행
-    prompt = st.chat_input
+    prompt = st.chat_input("Say Something")
     if prompt:
         st.write(f"User has sent the following prompt: {prompt}")
 
