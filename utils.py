@@ -464,9 +464,9 @@ class ServiceData:
                 df_summary = pd.DataFrame()
                 try: df_month = self.make_service_data(month_key) # 각 월별 데이터 호출
                 except: break
-                df_month.rename(columns={'기준일자':'월'}, inplace=True)
+                # df_month.rename(columns={'기준일자':'월'}, inplace=True)
                 for column_name in df_service.columns:
-                    df_summary[df_service[column_name]] = [df_month[df_service[column_name]].sum()]
+                    df_summary[column_name] = [df_month[column_name].sum()]
                 df_summary.insert(0, '월', month_name)
                 # df_summary['월'] = month_name
                 # df_result = df_result.insert(1, '사용자수', df_month.groupby(['사원번호'])['사원번호'].sum())
