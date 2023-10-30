@@ -437,6 +437,7 @@ class ServiceData:
         month_dict = {'jan':'1월','feb':'2월','mar':'3월','apr':'4월','may':'5월','jun':'6월','jul':'7월','aug':'8월','sep':'9월','oct':'10월','nov':'11월','dec':'12월'}
         df_service = pd.DataFrame(columns=[
             '월',
+            '사용자수',
             '로그인수',
             '보장분석접속건수',
             '보장분석고객등록수',
@@ -467,7 +468,7 @@ class ServiceData:
                 # drop(columns=['소속부문','소속총괄','소속부서','파트너','사원번호','성명']) # 각 월별 데이터 호출
                 except: break
                 df_month.rename(columns={'기준일자':'월'}, inplace=True)
-                for column_name in df_service.columns:
+                for column_name in range(lend(df_service.columns)-1):
                     df_summary[column_name] = [df_month[column_name].sum()]
                 df_result = pd.DataFrame(df_summary)
                 df_result['월'] = month_name
