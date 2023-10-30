@@ -459,47 +459,18 @@ class ServiceData:
             '(NEW)영업자료출력건수',
             '라이프사이클접속건수',
             '라이프사이클출력건수']
-        '''
-        df_service = pd.DataFrame(columns=[
-            '로그인수',
-            '보장분석접속건수',
-            '보장분석고객등록수',
-            '보장분석컨설팅고객수',
-            '보장분석출력건수',
-            '간편보장_접속건수',
-            '간편보장_출력건수',
-            'APP 보험다보여전송건수',
-            'APP 주요보장합계조회건수',
-            'APP 명함_접속건수',
-            'APP 의료비/보험금조회건수',
-            '보험료비교접속건수',
-            '보험료비교출력건수',
-            '한장보험료비교_접속건수',
-            '약관조회',
-            '상품비교설명확인서_접속건수',
-            '영업자료접속건수',
-            '영업자료출력건수',
-            '(NEW)영업자료접속건수',
-            '(NEW)영업자료출력건수',
-            '라이프사이클접속건수',
-            '라이프사이클출력건수'
-        ])
-        '''
         for month_key, month_name in month_dict.items():
             with st.spinner(f"{month_name} 데이터를 불러오는 중입니다."):
                 df_summary = pd.DataFrame()
                 try: df_month = self.make_service_data(month_key) # 각 월별 데이터 호출
-                except: break
-                # df_month.rename(columns={'기준일자':'월'}, inplace=True)
-                for column_name in range(len(service_columns)):
-                # for column_name in df_service.columns:
-                    df_summary[service_columns[column_name]] = [df_month[service_columns[column_name]].sum()]
-                    # df_summary[column_name] = [df_month[column_name].sum()]
-                df_summary.insert(0, '월', month_name)
-                df_summary.insert(1, '사용자수', df_month['사원번호'].count())
-                # df_summary['월'] = month_name
-                # df_result = df_result.insert(1, '사용자수', df_month.groupby(['사원번호'])['사원번호'].sum())
-                df_service = pd.concat([df_service, df_summary], axis=0)
+                except: break # 아직 월별 데이터 생성 안 됐으면 반복문 탈출
+                for i in range(len(service_columns)):
+                    df_summary[service_columns[i]] = [df_month[service_columns[i]].sum()] # 각 항목 합계 계산
+                df_summary.insert(0, '월', month_name) # 기준일자 대신 월 항목 추가
+                df_summary.insert(1, '사용자수', df_month['사원번호'].count()) # 사원번호 개수 구해서 사용자수 삽입
+                df_service = pd.concat([df_service, df_summary], axis=0) # 전월 데이터와 병합
+                try: df_summary.insert(2, '전월 대비 증감', df_summary.iloc[1,-1] - df_summary.iloc[1,-2])
+                except: pass
         return df_service
 
     def make_service_branch(self):
