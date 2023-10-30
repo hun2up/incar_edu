@@ -420,18 +420,13 @@ class ServiceData:
 
     # ----------------------------------          데이터프레임 제작 (보고서용)          ---------------------------------------
     def make_service_data(self, month):
-        df = call_sheets(month)
-        # 컬럼명 변경
-        df_result = df.rename(columns={'컨설턴트ID':'사원번호','컨설턴트성명':'성명'})
-        # 약관조회 컬럼 추가
-        df_result['약관조회'] = 0
-        # 사번정리
-        df_result['사원번호'] = df_result['사원번호'].astype(str)
-        for i in range(df_result.shape[0]):
-            if len(df_result.iat[i,5]) < 6: df_result.iat[i,5] = f"16{df_result.iat[i,5]}"
+        df_service = call_sheets(month).rename(columns={'컨설턴트ID':'사원번호','컨설턴트성명':'성명'})
+        df_service['약관조회'] = 0 # 약관조회 컬럼 추가
+        df_service['사원번호'] = df_service['사원번호'].astype(str) # 사번정리
+        for i in range(df_service.shape[0]):
+            if len(df_service.iat[i,5]) < 6: df_service.iat[i,5] = f"16{df_service.iat[i,5]}"
             else: pass
-        # 소속찾기
-        return df_result
+        return df_service
 
     # 각 사원별 접속횟수 : [사원번호, 접속수]
     def make_service_branch(self, df):
