@@ -475,8 +475,7 @@ class ServiceData:
         df_service.insert(2, '전월 대비 증감', '')
         df_service['사용자수'] = df_service['사용자수'].astype(int)
         for i in range(df_service.shape[0]):
-            try: df_service.loc[i+1,2] = df_service.loc[i+1,1] - df_service.loc[i,1]
-            except: pass
+            df_service.loc[i+1,2] = df_service.loc[i+1,1] - df_service.loc[i,1]
         return df_service
 
     def make_service_branch(self):
