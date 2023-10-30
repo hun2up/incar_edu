@@ -448,12 +448,48 @@ class ServiceData:
         return df_service
     
     def summary(self, df):
-        month = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
-        for i in range(len(month)):
-            try: df_month = df[df['월'].isin([month[i]])].drop(columns=['기준일자','소속부문','소속총괄','소속부서','파트너','성명'])
+        month_list = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
+        df_service = pd.DataFrame() # 데이터 정리를 위한 데이터프레임 생성
+        columns_service = [
+            '로그인수',
+            '보장분석접속건수',
+            '보장분석고객등록수',
+            '보장분석컨설팅고객수',
+            '보장분석출력건수',
+            '간편보장_접속건수',
+            '간편보장_출력건수',
+            'APP 보험다보여전송건수',
+            'APP 주요보장합계조회건수',
+            'APP 명함_접속건수',
+            'APP 의료비/보험금조회건수',
+            '보험료비교접속건수',
+            '보험료비교출력건수',
+            '한장보험료비교_접속건수',
+            '약관조회',
+            '상품비교설명확인서_접속건수',
+            '영업자료접속건수',
+            '영업자료출력건수',
+            '(NEW)영업자료접속건수',
+            '(NEW)영업자료출력건수',
+            '라이프사이클접속건수',
+            '라이프사이클출력건수']
+        for month in range(len(month_list)):
+            try: df_month = df[df['월'].isin([month[month]])].drop(columns=['기준일자','소속부문','소속총괄','소속부서','파트너','성명'])
             except: pass
-            for i in df_month.columns:
-                df_month[i+2]
+            df_summary = pd.DataFrame()
+            for columns in range(len(columns_service)):
+                df_summary[columns_service[columns]] = [df_month[columns_service[columns]].sum()] # 각 항목 합계 계산
+            df_summary.insert(0, '월', month_list[month]) # 기준일자 대신 월 항목 추가
+            df_summary.insert(1, '사용자수', df_month['사원번호'].count()) # 사원번호 개수 구해서 사용자수 삽입
+            df_service = pd.concat([df_service, df_summary], axis=0) # 전월 데이터와 병합
+        # ---------------------------------------------------------------------------------------------------------------
+        df_service['사용자수'] = df_service['사용자수'].astype(int)
+        df_service.insert(2, '전월 대비 증감', '')
+        for i in range(df_service.shape[0]):
+            try: df_service.iloc[i+1,2] = df_service.iloc[i+1,1] - df_service.iloc[i,1]
+            except: pass
+        return df_service
+            
 
 
     # ----------------------------------          데이터프레임 제작 (보고서용)          ---------------------------------------

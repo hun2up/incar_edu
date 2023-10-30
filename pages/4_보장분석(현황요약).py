@@ -48,9 +48,6 @@ if authentication_status:
 
     # ----------------------------------------    Google Sheet 데이터베이스 호출    --------------------------------------------- 
     df_month = instance.test()
-    st.dataframe(df_month)
-    st.dataframe(df_month[df_month['월'].isin(['10월'])])
-    # st.dataframe(instance.make_service_summary())
-    # instance_register.make_service_branch()
+    instance.test(df_month)
 
     # 요약보고서 제작
