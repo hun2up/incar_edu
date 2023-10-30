@@ -475,7 +475,7 @@ class ServiceData:
             '라이프사이클접속건수',
             '라이프사이클출력건수']
         for month in range(len(month_list)):
-            try: df_month = df[df['월'].isin([month[month]])].drop(columns=['기준일자','소속부문','소속총괄','소속부서','파트너','성명'])
+            try: df_month = df[df['월'].isin([month_list[month]])].drop(columns=['기준일자','소속부문','소속총괄','소속부서','파트너','성명'])
             except: pass
             df_summary = pd.DataFrame()
             for columns in range(len(columns_service)):
