@@ -440,9 +440,9 @@ class ServiceData:
                 except: break # 아직 월별 데이터 생성 안 됐으면 반복문 탈출
                 df_month.insert(23, '약관조회', 0)
                 df_month.insert(0, '월', month_name) # 기준일자 대신 월 항목 추가
-                df_service['사원번호'] = df_service['사원번호'].astype(str) # 사번정리
-                for i in range(df_service.shape[0]):
-                    if len(df_service.iat[i,5]) < 6: df_service.iat[i,5] = f"16{df_service.iat[i,5]}"
+                df_month['사원번호'] = df_month['사원번호'].astype(str) # 사번정리
+                for i in range(df_month.shape[0]):
+                    if len(df_month.iat[i,5]) < 6: df_month.iat[i,5] = f"16{df_month.iat[i,5]}"
                     else: pass
                 df_service = pd.concat([df_service, df_month], axis=0) # 전월 데이터와 병합
         return df_service
