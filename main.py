@@ -75,7 +75,7 @@ if authentication_status:
     
     
     df_log = pd.read_csv(st.secrets["log_url"].replace("/edit#gid=", "/export?format=csv&gid="))
-    st.dataframe(df_call)
+    st.dataframe(df_log)
     # 두번째 행
     prompt = st.chat_input("Say Something")
     if prompt:
