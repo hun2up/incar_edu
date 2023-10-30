@@ -24,6 +24,7 @@ branch_url = "https://docs.google.com/spreadsheets/d/1d9zbGo7SmAhGtPedX-yhui4WNK
 open_url = "https://docs.google.com/spreadsheets/d/1d9zbGo7SmAhGtPedX-yhui4WNKJ7blvbBzvXYwzzv9U/edit#gid=1183292674"
 close_url = "https://docs.google.com/spreadsheets/d/1d9zbGo7SmAhGtPedX-yhui4WNKJ7blvbBzvXYwzzv9U/edit#gid=378770349"
 
+[connection.gsheets]
 spreadsheets = "https://docs.google.com/spreadsheets/d/1AG89W1nwRzZxYreM6i1qmwS6APf-8GM2K_HDyX7REG4/edit#gid=818416531"
 
 "type": "service_account",
