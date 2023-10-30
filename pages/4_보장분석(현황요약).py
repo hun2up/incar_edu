@@ -48,6 +48,7 @@ if authentication_status:
 
     # ----------------------------------------    Google Sheet 데이터베이스 호출    --------------------------------------------- 
     df_month = instance.call_data_service()
+    st.dataframe(df_month['월'].values())
     st.dataframe(instance.make_set_summary(df_month))
     st.dataframe(instance.make_set_branch(df_month))
 
