@@ -86,7 +86,7 @@ if authentication_status:
         index.commit('log.csv')
         origin = repo.remote(name='origin')
         origin.push()
-    df_log = pd.read_csv('log.csv', index=False, encoding='utf-8')
+    df_log = pd.read_csv('log.csv', encoding='utf-8')
     st.dataframe(df_log)
 
 
