@@ -434,8 +434,8 @@ class ServiceData:
         return df_result
     
     def make_service_summary(self):
-        month_dict = {'jan':'1월','feb':'2월','mar':'3월','apr':'4월','may':'5월','jun':'6월','jul':'7월','aug':'8월','sep':'9월','oct':'10월','nov':'11월','dec':'12월'}
-        df_service = pd.DataFrame()
+        month_dict = {'jan':'1월','feb':'2월','mar':'3월','apr':'4월','may':'5월','jun':'6월','jul':'7월','aug':'8월','sep':'9월','oct':'10월','nov':'11월','dec':'12월'} # 반복문 실행을 위한 딕셔너리 선언
+        df_service = pd.DataFrame() # 데이터 정리를 위한 데이터프레임 생성
         service_columns = [
             '로그인수',
             '보장분석접속건수',
@@ -459,9 +459,10 @@ class ServiceData:
             '(NEW)영업자료출력건수',
             '라이프사이클접속건수',
             '라이프사이클출력건수']
+        # 1월부터 12월까지 데이터 정리
         for month_key, month_name in month_dict.items():
-            with st.spinner(f"{month_name} 데이터를 불러오는 중입니다."):
-                df_summary = pd.DataFrame()
+            with st.spinner(f"{month_name} 데이터를 불러오는 중입니다."): # 로딩 화면 구현
+                df_summary = pd.DataFrame() # 각 월 데이터를 저장할 데이터프레임 생성
                 try: df_month = self.make_service_data(month_key) # 각 월별 데이터 호출
                 except: break # 아직 월별 데이터 생성 안 됐으면 반복문 탈출
                 for i in range(len(service_columns)):
@@ -472,9 +473,10 @@ class ServiceData:
                 # except: pass
                 df_service = pd.concat([df_service, df_summary], axis=0) # 전월 데이터와 병합
         df_service.insert(2, '전월 대비 증감', '')
+        # df_service['']
         st.write(type(df_service.iloc[2,2]))
         for i in range(df_service.shape[0]):
-            try: df_service.loc[i+1,2] = df_service.loc[i+1,2] - df_service.loc[i,2]
+            try: df_service.loc[i+1,2] = df_service.loc[i+1,1] - df_service.loc[i,1]
             except: pass
         return df_service
 
