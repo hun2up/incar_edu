@@ -59,7 +59,7 @@ if authentication_status:
     )
 
     # -----------------------------------------------  당일 교육신청 현황  ---------------------------------------------------
-    df_log = pd.read_csv('log.csv', encoding='utf-8')
+    
 
     # 첫번째 행 (과정별 신청현황, 과정별 신청추이)
     bar_today, line_today = st.columns(2)
@@ -73,12 +73,11 @@ if authentication_status:
         yaxis='신청인원',
         title=f'{pd.to_datetime(df_main.iloc[-1,0], format="%Y. %m. %d").month}월 신청인원 추이'), use_container_width=True)
     
-    
-    st.dataframe(df_log)
     # 두번째 행
-    prompt = st.chat_input("Say Something")
+    df_log = pd.read_csv('log.csv', encoding='utf-8')
+    prompt = st.chat_input("내용을 입력하세요")
     if prompt:
-        df_log = pd.concat([df_log, pd.DataFrame({'일시':[pd.Timestamp.now()],'로그':[prompt]})], ignore_index=True)
+        df_log = pd.concat([df_log, pd.DataFrame({'일시':[pd.Timestamp.now()],'로그':[prompt]})], axis=0)
         df_log.to_csv('log.csv')
     df_log = pd.read_csv('log.csv', encoding='utf-8')
     st.dataframe(df_log)
