@@ -449,7 +449,7 @@ class ServiceData:
     
     def summary(self, df):
         month_list = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
-        df_month = pd.DataFrame()
+        # df_month = pd.DataFrame()
         df_service = pd.DataFrame() # 데이터 정리를 위한 데이터프레임 생성
         columns_service = [
             '로그인수',
@@ -475,7 +475,9 @@ class ServiceData:
             '라이프사이클접속건수',
             '라이프사이클출력건수']
         for month in range(len(month_list)):
-            try: df_month = df[df['월'].isin([month[month]])].drop(columns=['기준일자','소속부문','소속총괄','소속부서','파트너','성명'])
+            try: 
+                df_month = df[df['월'].isin([month[month]])].drop(columns=['기준일자','소속부문','소속총괄','소속부서','파트너','성명'])
+                return df_month
             except: pass
             df_summary = pd.DataFrame()
             for columns in range(len(columns_service)):
