@@ -48,7 +48,7 @@ if authentication_status:
 
     # ----------------------------------------    Google Sheet 데이터베이스 호출    --------------------------------------------- 
     df_month = instance.call_data_service()
-    st.dataframe(instance.make_set_summary(df_month))
-    st.dataframe(instance.make_set_branch(df_month))
+    st.dataframe(instance.make_set_summary(df_month), use_container_width=True)
+    st.dataframe(instance.make_set_branch(df_month), use_container_width=True)
 
     # 요약보고서 제작
