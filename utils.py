@@ -468,8 +468,8 @@ class ServiceData:
                     df_summary[service_columns[i]] = [df_month[service_columns[i]].sum()] # 각 항목 합계 계산
                 df_summary.insert(0, '월', month_name) # 기준일자 대신 월 항목 추가
                 df_summary.insert(1, '사용자수', df_month['사원번호'].count()) # 사원번호 개수 구해서 사용자수 삽입
-                try: df_summary.insert(2, '전월 대비 증감', df_summary.iloc[1,-1] - df_service.iloc[1,-1])
-                except: pass
+                df_summary.insert(2, '전월 대비 증감', df_summary.iloc[1,-1] - df_service.iloc[1,-1])
+                # except: pass
                 df_service = pd.concat([df_service, df_summary], axis=0) # 전월 데이터와 병합                
         return df_service
 
