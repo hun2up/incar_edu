@@ -471,7 +471,7 @@ class ServiceData:
                 df_summary.insert(2, '전월 대비 증감', df_summary.iloc[1,-1] - df_service.iloc[1,-1])
                 # except: pass
                 df_service = pd.concat([df_service, df_summary], axis=0) # 전월 데이터와 병합
-                df_service.df_summary.insert(2, '전월 대비 증감', '')
+                df_service.insert(2, '전월 대비 증감', '')
                 for i in range(df_service.shape[0]):
                     try: df_service.iloc[0,i+1] = df_service.iloc[0,i+1] - df_service.iloc[0,i]
                     except: pass
