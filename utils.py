@@ -449,6 +449,7 @@ class ServiceData:
     
     def summary(self, df):
         month_list = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
+        month_dict = {'jan':'1월','feb':'2월','mar':'3월','apr':'4월','may':'5월','jun':'6월','jul':'7월','aug':'8월','sep':'9월','oct':'10월','nov':'11월','dec':'12월'} # 반복문 실행을 위한 딕셔너리 선언
         # df_month = pd.DataFrame()
         df_service = pd.DataFrame() # 데이터 정리를 위한 데이터프레임 생성
         columns_service = [
@@ -474,8 +475,10 @@ class ServiceData:
             '(NEW)영업자료출력건수',
             '라이프사이클접속건수',
             '라이프사이클출력건수']
-        for month in range(len(month_list)):
-            try: df_month = df[df['월'].isin([month_list[month]])].drop(columns=['기준일자','소속부문','소속총괄','소속부서','파트너','성명'])
+        for month in month_dict.values():
+        # for month in range(len(month_list)):
+            # try: df_month = df[df['월'].isin([month_list[month]])].drop(columns=['기준일자','소속부문','소속총괄','소속부서','파트너','성명'])
+            try: df_month = df[df['월'].isin(month)].drop(columns=['기준일자','소속부문','소속총괄','소속부서','파트너','성명'])
             except: pass
             df_summary = pd.DataFrame()
             for columns in range(len(columns_service)):
