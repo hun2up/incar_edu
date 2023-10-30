@@ -75,20 +75,13 @@ if authentication_status:
         title=f'{pd.to_datetime(df_main.iloc[-1,0], format="%Y. %m. %d").month}월 신청인원 추이'), use_container_width=True)
     
     # 두번째 행
-    repo = git.Repo('.')
-    index = repo.index
-    df_log = pd.read_csv('log.csv', encoding='utf-8')
+    df_log = pd.read_csv(st.secrets['log_csv'].replace("/edit#gid=", "/export?format=csv&gid="))
     prompt = st.chat_input("내용을 입력하세요")
     if prompt:
         df_log = pd.concat([df_log, pd.DataFrame({'일시':[pd.Timestamp.now()],'로그':[prompt]})], axis=0)
-        df_log.to_csv('log.csv')
-        index.add(['log.csv'])
-        index.commit('log.csv')
-        origin = repo.remote(name='origin')
-        origin.push()
-    df_log = pd.read_csv('log.csv', encoding='utf-8')
+        df_log.to_csv(st.secrets['log_csv'].replace("/edit#gid=", "/import?format=csv&gid="))
     st.dataframe(df_log)
-
+ 
 
     # 세번째 행 (신청현황 리스트)
     st.dataframe(df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['교육일자','과정명','소속부문','파트너','사원번호','성명']], use_container_width=True) # 마지막 신청일자 제외한 나머지 신청내역 삭제
