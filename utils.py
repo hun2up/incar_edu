@@ -449,6 +449,7 @@ class ServiceData:
     
     def summary(self, df):
         month_list = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
+        df_month = pd.DataFrame()
         df_service = pd.DataFrame() # 데이터 정리를 위한 데이터프레임 생성
         columns_service = [
             '로그인수',
