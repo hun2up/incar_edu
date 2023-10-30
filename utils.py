@@ -436,7 +436,6 @@ class ServiceData:
     def make_service_summary(self):
         month_dict = {'jan':'1월','feb':'2월','mar':'3월','apr':'4월','may':'5월','jun':'6월','jul':'7월','aug':'8월','sep':'9월','oct':'10월','nov':'11월','dec':'12월'}
         df_service = pd.DataFrame(columns=[
-            '월',
             '로그인수',
             '보장분석접속건수',
             '보장분석고객등록수',
@@ -463,19 +462,15 @@ class ServiceData:
         for month_key, month_name in month_dict.items():
             with st.spinner(f"{month_name} 데이터를 불러오는 중입니다."):
                 df_summary = pd.DataFrame()
-                # df_summary = {}
-                try: df_month = self.make_service_data(month_key)
-                # drop(columns=['소속부문','소속총괄','소속부서','파트너','사원번호','성명']) # 각 월별 데이터 호출
+                try: df_month = self.make_service_data(month_key) # 각 월별 데이터 호출
                 except: break
                 df_month.rename(columns={'기준일자':'월'}, inplace=True)
                 for column_name in df_service.columns:
                     df_summary[column_name] = [df_month[column_name].sum()]
-                # df_result = pd.DataFrame(df_summary)
+                df_summary.insert(0, '월', month_name)
                 df_summary['월'] = month_name
-                # df_result['월'] = month_name
                 # df_result = df_result.insert(1, '사용자수', df_month.groupby(['사원번호'])['사원번호'].sum())
                 df_service = pd.concat([df_service, df_summary], axis=0)
-                # df_service = pd.concat([df_service, df_result], axis=0)
         return df_service
 
     def make_service_branch(self):
