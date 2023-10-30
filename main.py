@@ -73,23 +73,11 @@ if authentication_status:
         xaxis='신청일자',
         yaxis='신청인원',
         title=f'{pd.to_datetime(df_main.iloc[-1,0], format="%Y. %m. %d").month}월 신청인원 추이'), use_container_width=True)
-    
-    # 두번째 행
-    conn = st.connection("gsheets", type=GSheetsConnection)
-    df_log = conn.read()
-    '''
-    prompt = st.chat_input("내용을 입력하세요")
-    if prompt:
-        df_log = pd.concat([df_log, pd.DataFrame({'일시':[pd.Timestamp.now()],'로그':[prompt]})], axis=0)
-        df_log.to_csv(st.secrets["log_url"].replace("/edit#gid=", "/import?format=csv&gid="))
-    '''
-    st.dataframe(df_log)
- 
 
-    # 세번째 행 (신청현황 리스트)
+    # 두번째 행 (신청현황 리스트)
     st.dataframe(df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['교육일자','과정명','소속부문','파트너','사원번호','성명']], use_container_width=True) # 마지막 신청일자 제외한 나머지 신청내역 삭제
 
-    # 네번째 행 (소속부문별 신청현황, 입사연차별 신청현황)
+    # 세번째 행 (소속부문별 신청현황, 입사연차별 신청현황)
     hbar_channel, hbar_career = st.columns(2)
     hbar_channel.plotly_chart(instance.make_hbarchart_single(
         df=instance.make_set_main(df_main,'소속부문'),
