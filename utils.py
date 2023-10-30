@@ -420,7 +420,7 @@ class ServiceData:
 
     # ----------------------------------          데이터프레임 제작 (보고서용)          ---------------------------------------
     def make_service_data(self, month):
-        df_service = call_sheets(month).rename(columns={'컨설턴트ID':'사원번호','컨설턴트성명':'성명'})
+        df_service = call_sheets(month).rename(columns={'컨설턴트ID':'사원번호','컨설턴트성명':'성명'}) # 월별 데이터 호출하고 컬럼명 변경
         df_service['약관조회'] = 0 # 약관조회 컬럼 추가
         df_service['사원번호'] = df_service['사원번호'].astype(str) # 사번정리
         for i in range(df_service.shape[0]):
@@ -435,7 +435,7 @@ class ServiceData:
     
     def make_service_summary(self):
         month_dict = {'jan':'1월','feb':'2월','mar':'3월','apr':'4월','may':'5월','jun':'6월','jul':'7월','aug':'8월','sep':'9월','oct':'10월','nov':'11월','dec':'12월'}
-        df_summary = pd.DataFrame(columns=[
+        df_service = pd.DataFrame(columns=[
             '월',
             '로그인수',
             '보장분석접속건수',
@@ -462,16 +462,17 @@ class ServiceData:
         ])
         for month_key, month_name in month_dict.items():
             with st.spinner(f"{month_name} 데이터를 불러오는 중입니다."):
-                columns_sum = {}
-                try: df_month = self.make_service_data(month_key).drop(columns=['소속부문','소속총괄','소속부서','파트너','사원번호','성명'])
+                df_summary = {}
+                try: df_month = self.make_service_data(month_key).drop(columns=['소속부문','소속총괄','소속부서','파트너','사원번호','성명']) # 각 월별 데이터 호출
                 except: break
                 df_month.rename(columns={'기준일자':'월'}, inplace=True)
-                for column_name in df_summary.columns:
-                    columns_sum[column_name] = [df_month[column_name].sum()]
-                df_result = pd.DataFrame(columns_sum)
+                for column_name in df_service.columns:
+                    df_summary[column_name] = [df_month[column_name].sum()]
+                df_result = pd.DataFrame(df_summary)
                 df_result['월'] = month_name
-                df_summary = pd.concat([df_summary, df_result], axis=0)
-        return df_summary
+                df_result.insert(1, '사용자수', df_month.groupby(['사원번호'])['사원번호'].sum())
+                df_service = pd.concat([df_service, df_result], axis=0)
+        return df_service
 
     def make_service_branch(self):
         month_dict = {'jan':'1월','feb':'2월','mar':'3월','apr':'4월','may':'5월','jun':'6월','jul':'7월','aug':'8월','sep':'9월','oct':'10월','nov':'11월','dec':'12월'}
