@@ -42,14 +42,13 @@ if authentication_status:
     ##################################################     자료 제작     #####################################################
     ########################################################################################################################
     hide_st_style()
+    instance = ServiceData() # 인스턴스 생성
     st.header("보장분석 사용현황 요약")
     st.markdown("##### 제작중")
-    
-    
+
     # ----------------------------------------    Google Sheet 데이터베이스 호출    --------------------------------------------- 
-    
-    instance_register = ServiceData()
-    st.dataframe(instance_register.make_service_summary())
-    instance_register.make_service_branch()
+    st.dataframe(instance.make_service_data('sep'))
+    # st.dataframe(instance_register.make_service_summary())
+    # instance_register.make_service_branch()
 
     # 요약보고서 제작
