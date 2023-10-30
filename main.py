@@ -76,7 +76,7 @@ if authentication_status:
     # 두번째 행
     prompt = st.chat_input("Say Something")
     if prompt:
-        df_log = pd.concat([df_log, pd.DataFrame({'일시':pd.Timestamp.now(),'로그':prompt})])
+        df_log = pd.concat([df_log, pd.DataFrame({'일시':[pd.Timestamp.now()],'로그':[prompt]})], ignore_index=True)
     st.dataframe(df_log, use_container_width=True)
 
     # 세번째 행 (신청현황 리스트)
