@@ -59,7 +59,7 @@ if authentication_status:
     )
 
     # -----------------------------------------------  당일 교육신청 현황  ---------------------------------------------------
-    df_log = pd.DataFrame(columns=['일시','로그'])
+    # df_log = pd.DataFrame(columns=['일시','로그'])
 
     # 첫번째 행 (과정별 신청현황, 과정별 신청추이)
     bar_today, line_today = st.columns(2)
@@ -74,13 +74,14 @@ if authentication_status:
         title=f'{pd.to_datetime(df_main.iloc[-1,0], format="%Y. %m. %d").month}월 신청인원 추이'), use_container_width=True)
     
     
-    df_call = pd.read_csv(st.secrets["log_url"].replace("/edit#gid=", "/export?format=csv&gid="))
+    df_log = pd.read_csv(st.secrets["log_url"].replace("/edit#gid=", "/export?format=csv&gid="))
     st.dataframe(df_call)
     # 두번째 행
     prompt = st.chat_input("Say Something")
     if prompt:
         df_log = pd.concat([df_log, pd.DataFrame({'일시':[pd.Timestamp.now()],'로그':[prompt]})], ignore_index=True)
         df_log.to_csv(st.secrets["log_url"].replace("/edit#gid=", "/export?format=csv&gid="))
+
 
     # 세번째 행 (신청현황 리스트)
     st.dataframe(df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['교육일자','과정명','소속부문','파트너','사원번호','성명']], use_container_width=True) # 마지막 신청일자 제외한 나머지 신청내역 삭제
