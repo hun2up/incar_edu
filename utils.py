@@ -488,7 +488,7 @@ class ServiceData:
         for part in df_branch['소속총괄'].unique():
             df_part = df_branch[df_branch['소속총괄'].isin([part])]
             df_sum = pd.DataFrame()
-            for i in range(len(df_part.columns)):
+            for i in df_part.columns:
                 df_sum[i] = [[df_part[i].sum()]]
             df_result = pd.concat([df_part, df_sum], axis=0)
         
