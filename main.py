@@ -1,6 +1,7 @@
 ########################################################################################################################
 ##############################################     라이브러리 호출하기     ##################################################
 ########################################################################################################################
+import git
 import pandas as pd
 import streamlit as st
 import streamlit_authenticator as stauth
@@ -74,12 +75,18 @@ if authentication_status:
         title=f'{pd.to_datetime(df_main.iloc[-1,0], format="%Y. %m. %d").month}월 신청인원 추이'), use_container_width=True)
     
     # 두번째 행
+    repo = git.Repo('.')
+    index = repo.index
     df_log = pd.read_csv('log.csv', encoding='utf-8')
     prompt = st.chat_input("내용을 입력하세요")
     if prompt:
         df_log = pd.concat([df_log, pd.DataFrame({'일시':[pd.Timestamp.now()],'로그':[prompt]})], axis=0)
         df_log.to_csv('log.csv')
-    df_log = pd.read_csv('log.csv', encoding='utf-8')
+        index.add(['log.csv'])
+        index.commit('log.csv')
+        origin = repo.remote(name='origin')
+        origin.push()
+    df_log = pd.read_csv('log.csv', index=False, encoding='utf-8')
     st.dataframe(df_log)
 
 
