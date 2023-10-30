@@ -486,10 +486,10 @@ class ServiceData:
             df_month = df_month.groupby(['소속부문','소속총괄','소속부서'])['사원번호'].nunique().reset_index(name=month) # 사원번호 개수 카운트 (사용자수)
             df_branch = pd.merge(df_branch, df_month, on=['소속부문','소속총괄','소속부서'], how='outer').fillna(0) # 기존 데이터와 병합하고 빈 셀은 0으로 채워넣기       
         for part in df_branch['소속총괄'].unique():
-            df_part = df_branch[df_branch['소속총괄'].isin([part])]
+            df_part = df_branch[df_branch['소속총괄'].isin([part])] # 해당 총괄에 해당하는 데이터만 추출
+            df_sum = pd.DataFrame()
             for i in df_part.columns:
-                df_sum = pd.DataFrame()
-                df_sum[i] = [[df_part[i].sum()]]
-            df_result = pd.concat([df_part, df_sum], axis=0)
-        
-        return df_result
+                df_sum[i] = [[df_part[i].sum()]] # 컬럼별 합계
+                df_part_sum = pd.concat([df_part, df_sum], axis=0)
+            df_branch_sum = pd.concat([df_branch, df_part_sum], axis=0)
+        return df_branch_sum
