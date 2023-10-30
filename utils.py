@@ -481,5 +481,5 @@ class ServiceData:
     
     def make_set_branch(self, df):
         df_branch = pd.DataFrame()
-        df_branch['1월'] = df.groupby(['소속총괄','소속부서'])['사원번호'].count().reset_index(name='사용자수')
+        df_branch = df.groupby(['소속총괄','소속부서'])['사원번호'].count().reset_index(name='사용자수')
         return df_branch
