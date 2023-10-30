@@ -478,7 +478,7 @@ class ServiceData:
         st.write(f"iloc[1,2] : {df_service.iloc[1,2]}")
         st.write(f"iloc[2,1] : {df_service.iloc[2,1]}")
         for i in range(df_service.shape[0]):
-            try: df_service.loc[i+1,2] = df_service.loc[i+1,1] - df_service.loc[i,1]
+            try: df_service.iloc[i+1,2] = df_service.iloc[i+1,1] - df_service.iloc[i,1]
             except: pass
         return df_service
 
