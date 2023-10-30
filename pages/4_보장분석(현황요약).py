@@ -48,7 +48,7 @@ if authentication_status:
 
     # ----------------------------------------    Google Sheet 데이터베이스 호출    --------------------------------------------- 
     st.dataframe(instance.make_service_data('sep'))
-    # st.dataframe(instance_register.make_service_summary())
+    st.dataframe(instance.make_service_summary())
     # instance_register.make_service_branch()
 
     # 요약보고서 제작
