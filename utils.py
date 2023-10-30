@@ -436,7 +436,6 @@ class ServiceData:
         return df_service
     
     def make_set_summary(self, df):
-        # month_list = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
         df_service = pd.DataFrame() # 데이터 정리를 위한 데이터프레임 생성
         columns_service = [
             '로그인수',
@@ -480,6 +479,9 @@ class ServiceData:
         return df_service
     
     def make_set_branch(self, df):
-        df_branch = pd.DataFrame()
-        df_branch = df.groupby(['소속총괄','소속부서'])['사원번호'].count().reset_index(name='사용자수')
+        df_branch = pd.DataFrame(['소속부문','소속총괄','소속부서'])
+        for month in df['월'].unique():
+            df_month = df[df['월'].isin([month])]
+            df_month = df_month.groupby(['소속부문','소속총괄','소속부서'])['사원번호'].count().reset_index(name=month)
+            df_branch = pd.merge(df_branch, df_month, on=['소속부문','소속총괄','소속부서'])
         return df_branch
