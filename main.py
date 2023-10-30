@@ -73,10 +73,13 @@ if authentication_status:
         yaxis='신청인원',
         title=f'{pd.to_datetime(df_main.iloc[-1,0], format="%Y. %m. %d").month}월 신청인원 추이'), use_container_width=True)
     
+    
+    df_call = pd.read_csv(st.secrets["log_url"].replace("/edit#gid=", "/export?format=csv&gid="))
+    st.dataframe(df_call)
     # 두번째 행
     prompt = st.chat_input("Say Something")
-    #if prompt:
-    df_log = pd.concat([df_log, pd.DataFrame({'일시':[pd.Timestamp.now()],'로그':[prompt]})], ignore_index=True)
+    if prompt:
+        df_log = pd.concat([df_log, pd.DataFrame({'일시':[pd.Timestamp.now()],'로그':[prompt]})], ignore_index=True)
     st.dataframe(df_log, use_container_width=True)
 
     # 세번째 행 (신청현황 리스트)
