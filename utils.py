@@ -496,7 +496,7 @@ class ServiceData:
                     df_summary[service_columns[column_name]] = [df_month[service_columns[column_name]].sum()]
                     # df_summary[column_name] = [df_month[column_name].sum()]
                 df_summary.insert(0, '월', month_name)
-                df_summary.insert(1, '사용자수', df_month.groupby(['사원번호'])['사원번호'].sum())
+                df_summary.insert(1, '사용자수', df_month['사원번호'].count())
                 # df_summary['월'] = month_name
                 # df_result = df_result.insert(1, '사용자수', df_month.groupby(['사원번호'])['사원번호'].sum())
                 df_service = pd.concat([df_service, df_summary], axis=0)
