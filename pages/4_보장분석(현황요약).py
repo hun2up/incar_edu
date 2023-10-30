@@ -47,8 +47,9 @@ if authentication_status:
     st.markdown("##### 제작중")
 
     # ----------------------------------------    Google Sheet 데이터베이스 호출    --------------------------------------------- 
-    st.dataframe(instance.test())
-    
+    df_month = instance.test()
+    st.dataframe(df_month)
+    st.dataframe(df_month[df_month['월'].isin(['10월'])])
     # st.dataframe(instance.make_service_summary())
     # instance_register.make_service_branch()
 

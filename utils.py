@@ -446,6 +446,14 @@ class ServiceData:
                     else: pass
                 df_service = pd.concat([df_service, df_month], axis=0) # 전월 데이터와 병합
         return df_service
+    
+    # def summary(self, df):
+        # month = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
+        # for i in range(len(month)):
+            # try: df_month = df[df['월'].isin([month[i]])].drop(columns=['기준일자','소속부문','소속총괄','소속부서','파트너','성명'])
+            
+            # except: pass
+
 
     # ----------------------------------          데이터프레임 제작 (보고서용)          ---------------------------------------
     def make_service_summary(self):
