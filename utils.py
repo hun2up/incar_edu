@@ -467,7 +467,7 @@ class ServiceData:
                 # drop(columns=['소속부문','소속총괄','소속부서','파트너','사원번호','성명']) # 각 월별 데이터 호출
                 except: break
                 df_month.rename(columns={'기준일자':'월'}, inplace=True)
-                for column_name in range(len(df_service.columns)-1):
+                for column_name in df_service.columns:
                     df_summary[column_name] = [df_month[column_name].sum()]
                 df_result = pd.DataFrame(df_summary)
                 df_result['월'] = month_name
