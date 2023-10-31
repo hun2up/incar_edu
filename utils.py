@@ -496,7 +496,7 @@ class ServiceData:
             df_sum = pd.DataFrame()
             df_part_sum = pd.DataFrame()
             for i in df_part.columns:
-                df_sum[i] = [df_part[i].sum()] # 컬럼별 합계
+                df_sum[i] = [df_part[i].astype(int).sum()] # 컬럼별 합계
                 df_sum['소속부문'] = df_part['소속부문']
                 df_sum['소속총괄'] = df_part['소속총괄']
                 df_sum['소속부서'] = ''
