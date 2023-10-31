@@ -521,4 +521,5 @@ class ServiceData:
             df_total = pd.concat([df_total, df_channel_total], axis=0)
             df_total.drop(df_total.index[-2], inplace=True)
             df_total.drop(df_total.index[-3], inplace=True)
+            df_total['합계'] = df_total[df['월'].unique()].sum(axis=0)
         return df_total
