@@ -433,8 +433,8 @@ class ServiceData:
                 for i in range(df_month.shape[0]):
                     if len(df_month.iat[i,6]) < 6: df_month.iat[i,6] = f"16{df_month.iat[i,6]}"
                     else: pass
-                    if int(df_month.iat[i,6]) < 1612000: df_month.drop(df_month.index[i], inplace=True)
-                    else: pass
+                    # if int(df_month.iat[i,6]) < 1612000: df_month.drop(df_month.index[i], inplace=True)
+                    # else: pass
                 df_service = pd.concat([df_service, df_month], axis=0) # 전월 데이터와 병합
         return df_service
     
@@ -491,8 +491,9 @@ class ServiceData:
         # 전체 데이터를 소속부문별로 분리
         df_total = pd.DataFrame()
         df_channel_total = pd.DataFrame()
-        for channel in df_branch['소속부문'].unique():
-            df_channel = df_branch[df_branch['소속부문'].isin([channel])] # 소속부문별로 데이터 추출
+        channel_list = ['개인부문','전략부문','CA부문','MA부문','PA부문','다이렉트부문']
+        for channel in len(channel_list):
+            df_channel = df_branch[df_branch['소속부문'].isin([channel_list[channel]])] # 소속부문별로 데이터 추출
             # ---------------------------------------------------------------------------------------------------------------
             # 소속부문별 데이터를 소속총괄별로 분리
             df_part_result = pd.DataFrame() # 소속총괄별 산하 소속부서의 월별 접속자수 합계 (소계 포함)
