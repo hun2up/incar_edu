@@ -502,8 +502,8 @@ class ServiceData:
                 # df_sum['소속부문'] = df_part['소속부문']
                 # df_sum['소속총괄'] = df_part['소속총괄']
                 # df_sum['소속부서'] = ''
-                df_part_sum = pd.concat([df_part, df_sum], axis=0)
-                if part in ['CA1총괄']: st.dataframe(df_part_sum)
-                else: pass
+            df_part_sum = pd.concat([df_part, df_sum], axis=0)
+            if part in ['CA1총괄']: st.dataframe(df_part_sum)
+            else: pass
             df_branch_sum = pd.concat([df_branch, df_part_sum], axis=0)
         return df_branch_sum
