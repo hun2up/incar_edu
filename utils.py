@@ -436,9 +436,9 @@ class ServiceData:
                     # if int(df_month.iat[i,6]) < 1612000: df_month.drop(df_month.index[i], inplace=True)
                     # else: pass
                 channel_list = ['개인부문','전략부문','CA부문','MA부문','PA부문','다이렉트부문']
-                for channel in range(df_month.shape[0]-1):
+                for channel in range(df_month.shape[0]):
                     if df_month.iloc[channel,2] in channel_list: pass
-                    else: df_month.drop(df_month.index[channel], inplace=True)
+                    else: df_month.drop(df_month.index[channel])
                 if month_name == '9월': st.dataframe(df_month)
                 else: pass
                 df_service = pd.concat([df_service, df_month], axis=0) # 전월 데이터와 병합
