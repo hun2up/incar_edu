@@ -271,6 +271,7 @@ class EduMain(Charts):
     
     def make_set_new(self, df):
         df_before = df.drop(df[df.iloc[:,0] == df.iloc[-1,0]].index)
+        df_before = df_before.drop(df_before[df_before.iloc[:,0] != df_before.iloc[-1,0]].index)
         st.dataframe(df_before)
         return df_before
 
