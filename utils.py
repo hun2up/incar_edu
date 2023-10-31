@@ -500,10 +500,10 @@ class ServiceData:
                 if i in ['소속부문','소속총괄']: df_sum[i] = df_part[i]
                 elif i in ['소속부서']: df_sum[i] = ''
                 else: df_sum[i] = df_part[i].sum() # 컬럼별 합계
-                for delete in range(df_sum.shape[0]+1):
+                for delete in range(df_sum.shape[0]-1):
                     if df_sum.iloc[delete+1,2] == df_sum.iloc[delete,2]: 
                         df_sum.drop(df_sum.index[delete], inplace=True)
-                        df_sum.reset_index(drop=True, inplace=True)
+                        # df_sum.reset_index(drop=True, inplace=True)
                     else: pass
             df_part_sum = pd.concat([df_part, df_sum], axis=0)
             if part in ['CA1총괄']: st.dataframe(df_part_sum)
