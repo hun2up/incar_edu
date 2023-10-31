@@ -502,7 +502,10 @@ class ServiceData:
                 else: df_sum[i] = df_part[i].sum() # 컬럼별 합계
                 if part in ['CA1총괄']: st.dataframe(df_sum)
                 else: pass
+            df_sum = df_sum.iloc[[0]]
             df_part_sum = pd.concat([df_part, df_sum], axis=0)
+            if part in ['CA1총괄']: st.dataframe(df_part_sum)
+            else: pass
 
             df_branch_sum = pd.concat([df_branch, df_part_sum], axis=0)
         return df_branch_sum
