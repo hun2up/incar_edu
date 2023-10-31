@@ -498,7 +498,7 @@ class ServiceData:
                 df_sum = pd.DataFrame() # 산하 소속부서의 월별 접속자수 합계
                 for part_detail in df_part.columns:
                     if part_detail in ['소속부문','소속총괄']: df_sum[part_detail] = df_part[part_detail]
-                    elif part_detail in ['소속부서']: df_sum[i] = ''
+                    elif part_detail in ['소속부서']: df_sum[part_detail] = ''
                     else: df_sum[part_detail] = df_part[part_detail].sum() # 컬럼별 합계
                 df_sum = df_sum.iloc[[0]] # 소속부서 개수만큼 생성된 동일한 내용의 ROW를 하나만 남기고 삭제
                 df_part = pd.concat([df_part, df_sum], axis=0) # 소속부서별 접속자수 데이터프레임 하단에 소속총괄 합계 추가
