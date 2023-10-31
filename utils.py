@@ -429,6 +429,7 @@ class ServiceData:
                 df_month = df_month.drop(df_month[df_month['파트너'] == '인카본사'].index) # [파트너]에서 '인카본사' 삭제
                 df_month.insert(23, '약관조회', 0)
                 df_month.insert(0, '월', month_name) # 기준일자 대신 월 항목 추가
+                df_month['사원번호'] = df_month['사원번호'].astype(int) # 사번정리
                 for i in range(df_month.shape[0]):
                     if len(df_month.iat[i,5]) < 6: df_month.iat[i,5] = f"16{df_month.iat[i,5]}"
                     else: pass
