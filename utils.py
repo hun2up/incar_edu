@@ -268,6 +268,11 @@ class EduMain(Charts):
         df_main = df.drop(df[df.iloc[:,0] != df.iloc[-1,0]].index) # 신청일자 가장 최근 데이터만 남기기
         df_main = df_main.groupby([select])['신청인원'].sum().reset_index(name='신청인원')
         return df_main
+    
+    def make_set_new(self, df):
+        df_before = df.drop(df[df.iloc[:,0] == df.iloc[-1,0]].index)
+        st.dataframe(df_before)
+        return df_before
 
 #########################################################################################################################
 ##############                        교육관리(하위페이지) 클래스 정의 : Charts 클래스 상속                        ################
@@ -439,9 +444,9 @@ class ServiceData:
                 for channel in range(df_month.shape[0]):
                     if df_month.iloc[channel,2] in ['개인부문','전략부문','CA부문','MA부문','PA부문','다이렉트부문']: pass
                     else: df_month.drop(df_month.index[channel])
-                '''
                 if month_name == '9월': st.dataframe(df_month)
                 else: pass
+                '''
                 df_service = pd.concat([df_service, df_month], axis=0) # 전월 데이터와 병합
         return df_service
     

@@ -74,10 +74,8 @@ if authentication_status:
         yaxis='신청인원',
         title=f'{pd.to_datetime(df_main.iloc[-1,0], format="%Y. %m. %d").month}월 신청인원 추이'), use_container_width=True)
 
-    # 두번째 행 (신청현황 리스트)
-    st.dataframe(df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['교육일자','과정명','소속부문','파트너','사원번호','성명']], use_container_width=True) # 마지막 신청일자 제외한 나머지 신청내역 삭제
-
     # 세번째 행 (소속부문별 신청현황, 입사연차별 신청현황)
+    st.markdown('---')
     hbar_channel, hbar_career = st.columns(2)
     hbar_channel.plotly_chart(instance.make_hbarchart_single(
         df=instance.make_set_main(df_main,'소속부문'),
@@ -90,4 +88,11 @@ if authentication_status:
         axis_a='신청인원',
         title='입사연차별 신청인원 현황'), use_container_width=True)
 
+    # 두번째 행 (신청현황 리스트)
+    st.markdown('---')
+    st.markdown('##### 신규 신청인원')
+    instance.make_set_new(df_main)
+    st.markdown('---')
+    st.markdown('##### 전체 신청인원')
+    st.dataframe(df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['교육일자','과정명','소속부문','파트너','사원번호','성명']], use_container_width=True) # 마지막 신청일자 제외한 나머지 신청내역 삭제
 
