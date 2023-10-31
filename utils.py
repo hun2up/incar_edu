@@ -430,11 +430,14 @@ class ServiceData:
                 df_month.insert(23, '약관조회', 0)
                 df_month.insert(0, '월', month_name) # 기준일자 대신 월 항목 추가
                 df_month['사원번호'] = df_month['사원번호'].astype(str) # 사번정리
+                st.dataframe(df_month)
+                '''
                 for i in range(df_month.shape[0]):
                     if len(df_month.iat[i,5]) < 6: df_month.iat[i,5] = f"16{df_month.iat[i,5]}"
                     else: pass
                     if int(df_month.iat[i,5]) < 1612000: df_month.drop(df_month.index[i], inplace=True)
                     else: pass
+                '''
                 df_service = pd.concat([df_service, df_month], axis=0) # 전월 데이터와 병합
         return df_service
     
