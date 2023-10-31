@@ -490,6 +490,8 @@ class ServiceData:
         df_branch_sum = pd.DataFrame()
         for part in df_branch['소속총괄'].unique():
             df_part = df_branch[df_branch['소속총괄'].isin([part])] # 해당 총괄에 해당하는 데이터만 추출
+            if part in ['CA1총괄']: st.dataframe(df_part)
+            else: pass
         # ---------------------------------------------------------------------------------------------------------------
             df_sum = pd.DataFrame()
             df_part_sum = pd.DataFrame()
