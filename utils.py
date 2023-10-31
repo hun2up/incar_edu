@@ -488,6 +488,7 @@ class ServiceData:
         # ---------------------------------------------------------------------------------------------------------------
         # 전체 데이터를 소속부문별로 분리
         df_total = pd.DataFrame()
+        df_channel_total = pd.DataFrame()
         for channel in df_branch['소속부문'].unique():
             df_channel = df_branch[df_branch['소속부문'].isin([channel])] # 소속부문별로 데이터 추출
             # ---------------------------------------------------------------------------------------------------------------
@@ -512,5 +513,6 @@ class ServiceData:
                 if channel_detail in ['소속부문']: df_sum_channel[channel_detail] = df_part_temp[channel_detail]
                 elif channel_detail in ['소속총괄','소속부서']: df_sum_channel[channel_detail] = ''
                 else: df_sum_channel[channel_detail] = df_part_temp[channel_detail].sum()
-            df_total = pd.concat([df_part_result, df_sum_channel], axis=0)
+            df_channel_total = pd.concat([df_part_result, df_sum_channel.iloc[[0]]], axis=0)
+            df_total = pd.concat([df_total, df_channel_total], axis=0)
         return df_total
