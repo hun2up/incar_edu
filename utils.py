@@ -489,7 +489,7 @@ class ServiceData:
         # 전체 데이터를 소속부문별로 분리
         df_total = pd.DataFrame()
         for channel in df_branch['소속부문'].unique():
-            df_channel = df_branch[df_branch['소속부문'].isin([i])] # 소속부문별로 데이터 추출
+            df_channel = df_branch[df_branch['소속부문'].isin([channel])] # 소속부문별로 데이터 추출
             # ---------------------------------------------------------------------------------------------------------------
             # 소속부문별 데이터를 소속총괄별로 분리
             df_total = pd.DataFrame() # 소속부문별 산하 소속총괄의 월별 접속자수 합계 (소계 포함)
