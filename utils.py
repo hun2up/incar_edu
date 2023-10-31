@@ -488,6 +488,7 @@ class ServiceData:
         # df_branch : | 소속부문 | 소속총괄 | 소속부서 | 1월 | 2월 | 3월 | 4월 | 5월 | 6월 | 7월 | 8월 | 9월 | 10월 | 11월 | 12월 |
         # ---------------------------------------------------------------------------------------------------------------
         df_branch_sum = pd.DataFrame()
+        df_part_sum = pd.DataFrame()
         for part in df_branch['소속총괄'].unique():
             df_part = df_branch[df_branch['소속총괄'].isin([part])] # 해당 총괄에 해당하는 데이터만 추출
             if part in ['CA1총괄']: st.dataframe(df_part)
@@ -495,17 +496,12 @@ class ServiceData:
         # ---------------------------------------------------------------------------------------------------------------
             # 총괄별 합계
             df_sum = pd.DataFrame()
-            df_part_sum = pd.DataFrame()
             for i in df_part.columns:
                 if i in ['소속부문','소속총괄']: df_sum[i] = df_part[i]
-                elif i in ['소속부서']: df_sum[i] = ''
+                elif i in ['소속부서']: df_sum[i] = '소계'
                 else: df_sum[i] = df_part[i].sum() # 컬럼별 합계
-                if part in ['CA1총괄']: st.dataframe(df_sum)
-                else: pass
             df_sum = df_sum.iloc[[0]]
-            df_part_sum = pd.concat([df_part, df_sum], axis=0)
-            if part in ['CA1총괄']: st.dataframe(df_part_sum)
-            else: pass
-
-            df_branch_sum = pd.concat([df_branch, df_part_sum], axis=0)
-        return df_branch_sum
+            df_part = pd.concat([df_part, df_sum], axis=0)
+            df_part_sum = pd.concat([df_part_sum, df_part], axis=0)
+        # df_branch_sum = pd.concat([df_branch, df_part_sum], axis=0)
+        return df_part_sum
