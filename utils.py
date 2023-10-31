@@ -272,8 +272,10 @@ class EduMain(Charts):
     def make_set_new(self, df):
         df_before = df.drop(df[df.iloc[:,0] == df.iloc[-1,0]].index)
         df_before = df_before.drop(df_before[df_before.iloc[:,0] != df_before.iloc[-1,0]].index)
-        st.dataframe(df_before)
-        return df_before
+        df_today = df.drop(df[df.iloc[:,0] != df.iloc[-1,0]].index)
+        df_today = df_today.drop(df_today[df_today.iloc[:,4] == df_before.iloc[:,4]].index)
+        st.dataframe(df_today)
+        return df_today
 
 #########################################################################################################################
 ##############                        교육관리(하위페이지) 클래스 정의 : Charts 클래스 상속                        ################
