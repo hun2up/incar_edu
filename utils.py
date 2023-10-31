@@ -493,15 +493,16 @@ class ServiceData:
             if part in ['CA1총괄']: st.dataframe(df_part)
             else: pass
         # ---------------------------------------------------------------------------------------------------------------
+            # 총괄별 합계
             df_sum = pd.DataFrame()
             df_part_sum = pd.DataFrame()
             for i in df_part.columns:
                 if i in ['소속부문','소속총괄']: df_sum[i] = df_part[i]
                 elif i in ['소속부서']: df_sum[i] = ''
                 else: df_sum[i] = df_part[i].sum() # 컬럼별 합계
-                # df_sum['소속부문'] = df_part['소속부문']
-                # df_sum['소속총괄'] = df_part['소속총괄']
-                # df_sum['소속부서'] = ''
+                for delete in range(df_sum.shape[0]):
+                    if df_sum.iloc[delete+1,2] == df_sum.iloc[delete,2]: df_sum.drop(df.index[delete+1], inplace=True)
+                    else: pass
             df_part_sum = pd.concat([df_part, df_sum], axis=0)
             if part in ['CA1총괄']: st.dataframe(df_part_sum)
             else: pass
