@@ -492,7 +492,7 @@ class ServiceData:
             df_channel = df_branch[df_branch['소속부문'].isin([channel])] # 소속부문별로 데이터 추출
             # ---------------------------------------------------------------------------------------------------------------
             # 소속부문별 데이터를 소속총괄별로 분리
-            df_total = pd.DataFrame() # 소속부문별 산하 소속총괄의 월별 접속자수 합계 (소계 포함)
+            df_part_result = pd.DataFrame() # 소속부문별 산하 소속총괄의 월별 접속자수 합계 (소계 포함)
             for part in df_channel['소속총괄'].unique():
                 df_part = df_channel[df_channel['소속총괄'].isin([part])] # 소속총괄별로 데이터 추출 (소속부서별 접속자수)
                 df_sum = pd.DataFrame() # 산하 소속부서의 월별 접속자수 합계
@@ -502,7 +502,9 @@ class ServiceData:
                     else: df_sum[part_detail] = df_part[part_detail].sum() # 컬럼별 합계
                 df_sum = df_sum.iloc[[0]] # 소속부서 개수만큼 생성된 동일한 내용의 ROW를 하나만 남기고 삭제
                 df_part = pd.concat([df_part, df_sum], axis=0) # 소속부서별 접속자수 데이터프레임 하단에 소속총괄 합계 추가
-                df_total = pd.concat([df_total, df_part], axis=0) # 소속부문 산하 전체 소속총괄 데이터 병합
+                df_part_result = pd.concat([df_total, df_part], axis=0) # 소속부문 산하 전체 소속총괄 데이터 병합
+                if part == ['전략1총괄']: st.dataframe(df_part_result)
+                else: pass
         # ---------------------------------------------------------------------------------------------------------------
             df_sum = pd.DataFrame() # 산하 소속총괄의 월별 접속자수 합계
             for channel_detail in df_channel.columns:
