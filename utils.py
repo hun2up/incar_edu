@@ -433,8 +433,8 @@ class ServiceData:
                 for i in range(df_month.shape[0]):
                     if len(df_month.iat[i,6]) < 6: df_month.iat[i,6] = f"16{df_month.iat[i,6]}"
                     else: pass
-                    # if int(df_month.iat[i,6]) < 1612000: df_month.drop(df_month.index[i], inplace=True)
-                    # else: pass
+                    if int(df_month.iat[i,6]) < 1612000: df_month.drop(df_month.index[i], inplace=True)
+                    else: pass
                 df_service = pd.concat([df_service, df_month], axis=0) # 전월 데이터와 병합
         return df_service
     
@@ -518,4 +518,6 @@ class ServiceData:
                 else: df_sum_channel[channel_detail] = df_part_temp[channel_detail].sum()
             df_channel_total = pd.concat([df_part_result, df_sum_channel.iloc[[0]]], axis=0)
             df_total = pd.concat([df_total, df_channel_total], axis=0)
+            df_total.drop(df_total.index[-2], inplace=True)
+            df_total.drop(df_total.index[-3], inplace=True)
         return df_total
