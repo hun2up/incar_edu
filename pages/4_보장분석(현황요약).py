@@ -44,11 +44,17 @@ if authentication_status:
     hide_st_style()
     instance = ServiceData() # 인스턴스 생성
     st.header("보장분석 사용현황 요약")
-    st.markdown("##### 제작중")
+    st.markdown("# 제작중")
 
     # ----------------------------------------    Google Sheet 데이터베이스 호출    --------------------------------------------- 
     df_month = instance.call_data_service()
+
+    st.markdown('---')
+    st.markdown('### 보장분석 사용현황 통계')
     st.dataframe(instance.make_set_summary(df_month), use_container_width=True)
+
+    st.markdown('---')
+    st.markdown('### 보장분석 부문별 사용인원')
     st.dataframe(instance.make_set_branch(df_month), use_container_width=True)
 
     # 요약보고서 제작
