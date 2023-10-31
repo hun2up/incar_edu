@@ -487,7 +487,7 @@ class ServiceData:
             df_branch = pd.merge(df_branch, df_month, on=['소속부문','소속총괄','소속부서'], how='outer').fillna(0) # 기존 데이터와 병합하고 빈 셀은 0으로 채워넣기
         # df_branch : | 소속부문 | 소속총괄 | 소속부서 | 1월 | 2월 | 3월 | 4월 | 5월 | 6월 | 7월 | 8월 | 9월 | 10월 | 11월 | 12월 |
         # ---------------------------------------------------------------------------------------------------------------
-        df_branch_sum = pd.DataFrame()
+        
         df_part_sum = pd.DataFrame()
         for part in df_branch['소속총괄'].unique():
             df_part = df_branch[df_branch['소속총괄'].isin([part])] # 해당 총괄에 해당하는 데이터만 추출
@@ -501,9 +501,19 @@ class ServiceData:
             df_sum = df_sum.iloc[[0]]
             df_part = pd.concat([df_part, df_sum], axis=0)
             df_part_sum = pd.concat([df_part_sum, df_part], axis=0)
+        # ---------------------------------------------------------------------------------------------------------------
+        df_channel_sum = pd.DataFrame()
         for channel in df_part_sum['소속부문'].unique():
             df_channel = df_part_sum[df_part_sum['소속부문'].isin([channel])]
             df_channel = df_channel[df_channel['소속부서'].isin([''])]
+            df_sum = pd.DataFrame()
+            for i in df_channel.columns:
+                if i in ['소속부문']: df_sum[i] = df_channel[i]
+                elif i in ['소속총괄','소속부서']: df_sum[i] = ''
+                else: df_sum[i] = df_channel[i].sum()
+            df_sum = df_sum.iloc[[0]]
+            df_channel = pd.concat([df_channel, df_sum], axis=0)
             if channel in ['CA부문']: st.dataframe(df_channel)
             else: pass
-        return df_part_sum
+            df_channel_sum = pd.concat([df_channel_sum, df_channel], axis=0)
+        return df_channel_sum
