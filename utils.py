@@ -437,7 +437,7 @@ class ServiceData:
                 '''
                 channel_list = ['개인부문','전략부문','CA부문','MA부문','PA부문','다이렉트부문']
                 for channel in range(df_month.shape[0]):
-                    if df_month.iloc[channel,2] in [channel_list]: pass
+                    if df_month.iloc[channel,2] in ['개인부문','전략부문','CA부문','MA부문','PA부문','다이렉트부문']: pass
                     else: df_month.drop(df_month.index[channel])
                 if month_name == '9월': st.dataframe(df_month)
                 else: pass
