@@ -496,10 +496,11 @@ class ServiceData:
             df_sum = pd.DataFrame()
             df_part_sum = pd.DataFrame()
             for i in df_part.columns:
-                df_sum[i] = [df_part[i].astype(int).sum()] # 컬럼별 합계
-                df_sum['소속부문'] = df_part['소속부문']
-                df_sum['소속총괄'] = df_part['소속총괄']
-                df_sum['소속부서'] = ''
+                if i in ['소속부문','소속총괄','소속부서']: df_sum[i] = df_part[i]
+                else: df_sum[i] = [df_part[i].astype(int).sum()] # 컬럼별 합계
+                # df_sum['소속부문'] = df_part['소속부문']
+                # df_sum['소속총괄'] = df_part['소속총괄']
+                # df_sum['소속부서'] = ''
                 df_part_sum = pd.concat([df_part, df_sum], axis=0)
                 if part in ['CA1총괄']: st.dataframe(df_part_sum)
                 else: pass
