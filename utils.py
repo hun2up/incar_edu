@@ -492,7 +492,7 @@ class ServiceData:
         df_total = pd.DataFrame()
         df_channel_total = pd.DataFrame()
         channel_list = ['개인부문','전략부문','CA부문','MA부문','PA부문','다이렉트부문']
-        for channel in len(channel_list):
+        for channel in range(len(channel_list)):
             df_channel = df_branch[df_branch['소속부문'].isin([channel_list[channel]])] # 소속부문별로 데이터 추출
             # ---------------------------------------------------------------------------------------------------------------
             # 소속부문별 데이터를 소속총괄별로 분리
