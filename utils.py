@@ -520,6 +520,8 @@ class ServiceData:
             df_total = pd.concat([df_total, df_channel_total], axis=0)
             df_total.drop(df_total.index[-2], inplace=True)
             df_total.drop(df_total.index[-3], inplace=True)
-            df_total['전월대비증감'] = df_total.iloc[:,-1] - df_total.iloc[:,-2]
+            df_total['전월대비증감'] = ''
+            for i in range(df_total.shape[0]):
+                df_total.iloc[i,-1] = df_total.iloc[i,-2] - df_total.iloc[i,-3]
             df_total['합계'] = df_total[df['월'].unique().tolist()].sum(axis=1)
         return df_total
