@@ -491,8 +491,6 @@ class ServiceData:
         df_part_sum = pd.DataFrame()
         for part in df_branch['소속총괄'].unique():
             df_part = df_branch[df_branch['소속총괄'].isin([part])] # 해당 총괄에 해당하는 데이터만 추출
-            if part in ['CA1총괄']: st.dataframe(df_part)
-            else: pass
         # ---------------------------------------------------------------------------------------------------------------
             # 총괄별 합계
             df_sum = pd.DataFrame()
@@ -503,5 +501,9 @@ class ServiceData:
             df_sum = df_sum.iloc[[0]]
             df_part = pd.concat([df_part, df_sum], axis=0)
             df_part_sum = pd.concat([df_part_sum, df_part], axis=0)
-        # df_branch_sum = pd.concat([df_branch, df_part_sum], axis=0)
+        for channel in df_part_sum['소속부문'].unique():
+            df_channel = df_part_sum[df_part_sum['소속부문'].isin([channel])]
+            df_channel = df_channel[df_channel['소속부서'].isin([''])]
+            if channel in ['CA부문']: st.dataframe(df_channel)
+            else: pass
         return df_part_sum
