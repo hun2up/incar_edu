@@ -498,7 +498,7 @@ class ServiceData:
             df_sum = pd.DataFrame()
             for i in df_part.columns:
                 if i in ['소속부문','소속총괄']: df_sum[i] = df_part[i]
-                elif i in ['소속부서']: df_sum[i] = '소계'
+                elif i in ['소속부서']: df_sum[i] = ''
                 else: df_sum[i] = df_part[i].sum() # 컬럼별 합계
             df_sum = df_sum.iloc[[0]]
             df_part = pd.concat([df_part, df_sum], axis=0)
