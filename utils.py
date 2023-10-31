@@ -496,21 +496,21 @@ class ServiceData:
             df_part_temp = pd.DataFrame()
             for part in df_channel['소속총괄'].unique():
                 df_part = df_channel[df_channel['소속총괄'].isin([part])] # 소속총괄별로 데이터 추출 (소속부서별 접속자수)
-                df_sum = pd.DataFrame() # 산하 소속부서의 월별 접속자수 합계
+                df_sum_part = pd.DataFrame() # 산하 소속부서의 월별 접속자수 합계
+                # ---------------------------------------------------------------------------------------------------------------
+                # 소속총괄 합계
                 for part_detail in df_part.columns:
-                    if part_detail in ['소속부문','소속총괄']: df_sum[part_detail] = df_part[part_detail]
-                    elif part_detail in ['소속부서']: df_sum[part_detail] = ''
-                    else: df_sum[part_detail] = df_part[part_detail].sum() # 컬럼별 합계
-                df_part_temp = pd.concat([df_part_temp, df_sum.iloc[[0]]], axis=0) # 소속부서 개수만큼 생성된 동일한 내용의 ROW를 하나만 남기고 삭제
-                df_part = pd.concat([df_part, df_sum.iloc[[0]]], axis=0) # 소속부서별 접속자수 데이터프레임 하단에 소속총괄 합계 추가
-                df_part_result = pd.concat([df_total, df_part], axis=0) # 소속부문 산하 전체 소속총괄 데이터 병합
+                    if part_detail in ['소속부문','소속총괄']: df_sum_part[part_detail] = df_part[part_detail]
+                    elif part_detail in ['소속부서']: df_sum_part[part_detail] = ''
+                    else: df_sum_part[part_detail] = df_part[part_detail].sum() # 컬럼별 합계
+                # ---------------------------------------------------------------------------------------------------------------
+                df_part_temp = pd.concat([df_part_temp, df_sum_part.iloc[[0]]], axis=0) # 소속총괄 합계만 따로 모아놓기
+                df_part_result = pd.concat([df_part, df_sum_part.iloc[[0]]], axis=0) # 소속부문 산하 전체 소속총괄 데이터 병합    ( 이 밑에 부문 합계! )
         # ---------------------------------------------------------------------------------------------------------------
-            df_sum_total = pd.DataFrame() # 산하 소속총괄의 월별 접속자수 합계
+            df_sum_channel = pd.DataFrame() # 산하 소속총괄의 월별 접속자수 합계
             for channel_detail in df_channel.columns:
-                if channel_detail in ['소속부문']: df_sum_total[channel_detail] = df_part_temp[channel_detail]
-                elif channel_detail in ['소속총괄','소속부서']: df_sum_total[channel_detail] = ''
-                else: df_sum_total[channel_detail] = df_part_temp[channel_detail].sum()
-            df_sum_total = df_sum_total.iloc[[0]] # 소속부서 개수만큼 생성된 동일한 내용의 ROW를 하나만 남기고 삭제
-            df_channel = pd.concat([df_part_result, df_sum_total.iloc[[0]]], axis=0)
-            df_total = pd.concat([df_total, df_channel], axis=0)
+                if channel_detail in ['소속부문']: df_sum_channel[channel_detail] = df_part_temp[channel_detail]
+                elif channel_detail in ['소속총괄','소속부서']: df_sum_channel[channel_detail] = ''
+                else: df_sum_channel[channel_detail] = df_part_temp[channel_detail].sum()
+            df_total = pd.concat([df_part_result, df_sum_channel], axis=0)
         return df_total
