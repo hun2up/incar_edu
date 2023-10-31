@@ -489,7 +489,7 @@ class ServiceData:
             df_part = df_branch[df_branch['소속총괄'].isin([part])] # 해당 총괄에 해당하는 데이터만 추출
             df_sum = pd.DataFrame()
             for i in df_part.columns:
-                if i == '소속부문'&'소속총괄'&'소속부서' : df_sum[i] = df_part[i]
+                if i in ['소속부문','소속총괄','소속부서']: df_sum[i] = df_part[i]
                 else: df_sum[i] = [[df_part[i].astype(int).sum()]] # 컬럼별 합계
                 df_part_sum = pd.concat([df_part, df_sum], axis=0)
             df_part_sum['소속부서'] = ''
