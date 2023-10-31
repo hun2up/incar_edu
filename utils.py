@@ -426,7 +426,7 @@ class ServiceData:
             with st.spinner(f"{month_name} 데이터를 불러오는 중입니다."): # 로딩 화면 구현
                 try: df_month = call_sheets(month_key).rename(columns={'컨설턴트ID':'사원번호','컨설턴트성명':'성명'}) # 각 월별 데이터 호출
                 except: break # 아직 월별 데이터 생성 안 됐으면 반복문 탈출
-                # df_month = df_month.drop(df_month[df_month['파트너'] == '인카본사'].index) # [파트너]에서 '인카본사' 삭제
+                df_month = df_month.drop(df_month[df_month['파트너'] == '인카본사'or'기획실'].index) # [파트너]에서 '인카본사' 삭제
                 df_month.insert(23, '약관조회', 0)
                 df_month.insert(0, '월', month_name) # 기준일자 대신 월 항목 추가
                 df_month['사원번호'] = df_month['사원번호'].astype(str) # 사번정리
@@ -434,11 +434,11 @@ class ServiceData:
                 for i in range(df_month.shape[0]):
                     if len(df_month.iat[i,6]) < 6: df_month.iat[i,6] = f"16{df_month.iat[i,6]}"
                     else: pass
-                '''
                 channel_list = ['개인부문','전략부문','CA부문','MA부문','PA부문','다이렉트부문']
                 for channel in range(df_month.shape[0]):
                     if df_month.iloc[channel,2] in ['개인부문','전략부문','CA부문','MA부문','PA부문','다이렉트부문']: pass
                     else: df_month.drop(df_month.index[channel])
+                '''
                 if month_name == '9월': st.dataframe(df_month)
                 else: pass
                 df_service = pd.concat([df_service, df_month], axis=0) # 전월 데이터와 병합
