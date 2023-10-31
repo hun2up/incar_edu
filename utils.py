@@ -467,7 +467,7 @@ class ServiceData:
             except: pass
             df_summary = pd.DataFrame()
             for columns in range(len(columns_service)):
-                df_summary[columns_service[columns]] = [df_month[columns_service[columns]].sum().astype(int)] # 각 항목 합계 계산
+                df_summary[columns_service[columns]] = [df_month[columns_service[columns]].sum().astype(int, errors='ignore')] # 각 항목 합계 계산
             df_summary.insert(0, '월', month) # 기준일자 대신 월 항목 추가
             df_summary.insert(1, '사용자수', df_month['사원번호'].nunique()) # 사원번호 개수 구해서 사용자수 삽입
             df_service = pd.concat([df_service, df_summary], axis=0) # 전월 데이터와 병합
@@ -489,7 +489,7 @@ class ServiceData:
             df_part = df_branch[df_branch['소속총괄'].isin([part])] # 해당 총괄에 해당하는 데이터만 추출
             df_sum = pd.DataFrame()
             for i in df_part.columns:
-                df_sum[i] = [[df_part[i].sum().astype(int)]] # 컬럼별 합계
+                df_sum[i] = [[df_part[i].sum().astype(int, errors='ignore')]] # 컬럼별 합계
                 df_part_sum = pd.concat([df_part, df_sum], axis=0)
             df_part_sum['소속부서'] = ''
             df_branch_sum = pd.concat([df_branch, df_part_sum], axis=0)
