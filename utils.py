@@ -433,8 +433,10 @@ class ServiceData:
                 for i in range(df_month.shape[0]):
                     if len(df_month.iat[i,6]) < 6: df_month.iat[i,6] = f"16{df_month.iat[i,6]}"
                     else: pass
-                    if int(df_month.iat[i,6]) < 1612000: df_month.drop(df_month.index[i], inplace=True)
-                    else: pass
+                    # if int(df_month.iat[i,6]) < 1612000: df_month.drop(df_month.index[i], inplace=True)
+                    # else: pass
+                if month_name == '9월': st.dataframe(df_month)
+                else: pass
                 df_service = pd.concat([df_service, df_month], axis=0) # 전월 데이터와 병합
         return df_service
     
