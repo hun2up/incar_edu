@@ -482,6 +482,7 @@ class ServiceData:
         return df_service
     
     def make_set_branch(self, df):
+        st.dataframe(df['월'].unique())
         df_branch = pd.DataFrame(columns=['소속부문','소속총괄','소속부서'])
         for month in df['월'].unique():
             df_month = df[df['월'].isin([month])].groupby(['소속부문','소속총괄','소속부서'])['사원번호'].nunique().reset_index(name=month) # 해당 월에 해당하는 데이터만 추출하고 사원번호 개수 카운트 (월별 사용자수)
