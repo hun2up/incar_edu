@@ -500,7 +500,7 @@ class ServiceData:
                 if i in ['소속부문','소속총괄']: df_sum[i] = df_part[i]
                 elif i in ['소속부서']: df_sum[i] = ''
                 else: df_sum[i] = df_part[i].sum() # 컬럼별 합계
-                if part in ['CA1총괄']: st.dataframe(df_part_sum)
+                if part in ['CA1총괄']: st.dataframe(df_sum)
                 else: pass
             df_part_sum = pd.concat([df_part, df_sum], axis=0)
 
