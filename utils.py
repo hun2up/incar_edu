@@ -430,11 +430,11 @@ class ServiceData:
                 df_month.insert(23, '약관조회', 0)
                 df_month.insert(0, '월', month_name) # 기준일자 대신 월 항목 추가
                 df_month['사원번호'] = df_month['사원번호'].astype(str) # 사번정리
+                '''
                 for i in range(df_month.shape[0]):
                     if len(df_month.iat[i,6]) < 6: df_month.iat[i,6] = f"16{df_month.iat[i,6]}"
                     else: pass
-                    # if int(df_month.iat[i,6]) < 1612000: df_month.drop(df_month.index[i], inplace=True)
-                    # else: pass
+                '''
                 channel_list = ['개인부문','전략부문','CA부문','MA부문','PA부문','다이렉트부문']
                 for channel in range(df_month.shape[0]):
                     if df_month.iloc[channel,2] in channel_list: pass
