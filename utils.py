@@ -501,7 +501,7 @@ class ServiceData:
                 elif i in ['소속부서']: df_sum[i] = ''
                 else: df_sum[i] = df_part[i].sum() # 컬럼별 합계
                 for delete in range(df_sum.shape[0]-1):
-                    st.write(df_sum.iloc[delete+1,2])
+                    st.write(df_sum.iloc[delete,2])
                     if df_sum.iloc[delete+1,2] == df_sum.iloc[delete,2]: 
                         df_sum.drop(df_sum.index[delete], inplace=True)
                         # df_sum.reset_index(drop=True, inplace=True)
