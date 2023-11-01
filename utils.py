@@ -166,25 +166,25 @@ class Charts():
         return return_chart
 
     # -----------------------------------          수평막대그래프 제작 (Grouped)          ------------------------------------
-    def make_barchart_group(self, df, category, axis_a, axis_b, title, orientation):
+    def make_vbarchart_group(self, df, category, axis_a, axis_b, title):
         # axis_a: 고유값 (신청인원, 수료인원) / axis_b: 누계값 (신청누계, 수료누계)
         fig_a = pl.graph_objs.Bar(
-            x=df[axis_a],
-            y=df[category],
+            x=df[category],
+            y=df[axis_a],
             name=axis_a,
             text=df[axis_a],
             marker={'color':'grey'},
-            orientation=orientation
+            orientation='v'
         )
         fig_b = pl.graph_objs.Bar(
-            x=df[axis_b],
-            y=df[category],
+            x=df[category],
+            y=df[axis_b],
             name=axis_b,
             text=df[axis_b],
             marker={'color':self.generate_chart_colors(df)},
-            orientation=orientation
+            orientation='v'
         )
-        layout_chart = pl.graph_objs.Layout(title=title,yaxis={'categoryorder':'array', 'categoryarray':self.generate_barchart_orders(df,category)}, annotations=[dict(text='색상 차트는 누적인원(중복포함), 회색 차트는 고유인원(중복제거)',showarrow=False,xref='paper',yref='paper',x=0,y=1.1)])
+        layout_chart = pl.graph_objs.Layout(title=title,xaxis={'categoryorder':'array', 'categoryarray':self.generate_barchart_orders(df,category)}, annotations=[dict(text='색상 차트는 누적인원(중복포함), 회색 차트는 고유인원(중복제거)',showarrow=False,xref='paper',yref='paper',x=1.1,y=0)])
         return_chart = pl.graph_objs.Figure(data=[fig_a, fig_b],layout=layout_chart)
         return_chart.update_traces(textposition=self.generate_chart_outsides(df))
         return_chart.update_layout(showlegend=False)
