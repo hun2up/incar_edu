@@ -439,20 +439,12 @@ class ServiceData:
                 # df_month = df_month.drop(df_month[df_month['소속부문'] == '기획실'].index) # [파트너]에서 '인카본사' 삭제
                 df_month.insert(23, '약관조회', 0)
                 df_month.insert(0, '월', month_name) # 기준일자 대신 월 항목 추가
-                
                 df_month['사원번호'] = df_month['사원번호'].astype(str) # 사번정리
                 for i in range(df_month.shape[0]):
                     if len(df_month.iat[i,6]) < 6: df_month.iat[i,6] = f"16{df_month.iat[i,6]}"
                     else: pass
-                '''
-
-                channel_list = ['개인부문','전략부문','CA부문','MA부문','PA부문','다이렉트부문']
-                for channel in range(df_month.shape[0]):
-                    if df_month.iloc[channel,2] in ['개인부문','전략부문','CA부문','MA부문','PA부문','다이렉트부문']: pass
-                    else: df_month.drop(df_month.index[channel])
-                if month_name == '9월': st.dataframe(df_month)
+                if month_name == '9월': st.dataframe(df_month, use_container_width=True)
                 else: pass
-                '''
                 df_service = pd.concat([df_service, df_month], axis=0) # 전월 데이터와 병합
         return df_service
     
