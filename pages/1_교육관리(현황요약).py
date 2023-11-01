@@ -81,8 +81,6 @@ if authentication_status:
         value=instance.make_rates(df=df_all,item_a='IMO',item_b='IIMS',reference='IMO신청여부',column='IMO신청률')['IMO신청률']),
         use_container_width=True)
 
-    st.dataframe(instance.make_summary_status(df_all))
-
     # 두번째 행 (신청인원 & 수료인원 / 월별 신청인원 & 수료인원 현황)
     edu_total = st.columns((1,3))
     edu_total[0].plotly_chart(instance.make_vbarchart_group(
@@ -97,22 +95,7 @@ if authentication_status:
         xaxis='월',
         yaxis='값',
         title='신청인원 및 수료인원 추이'), use_container_width=True)
-    
-    # 세번째 행 (신청인원 & 수료인원 추이 / 재적인원 대비 신청인원 & 재적인원 대비 수료인원 추이)
-    line_total, line_people = st.columns(2)
-    line_total.plotly_chart(instance.make_linechart(
-        df=instance.make_trend_all(df_all),
-        category='구분',
-        xaxis='월',
-        yaxis='값',
-        title='신청인원 및 수료인원 추이'), use_container_width=True)
-    line_people.plotly_chart(instance.make_linechart(
-        df=instance.make_trend_people(df_all),
-        category='구분',
-        xaxis='월',
-        yaxis='값',
-        title='재적인원 대비 신청인원 및 수료인원 추이'), use_container_width=True)
-    
+
     ##########################################################################################################################
     ##############################################     스타일 카드 (랭킹)     #################################################
     ##########################################################################################################################  
