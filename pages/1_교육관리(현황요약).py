@@ -83,12 +83,12 @@ if authentication_status:
 
     # 두번째 행 (신청인원 & 수료인원 / 월별 신청인원 & 수료인원 현황)
     edu_total = st.columns((1,3))
-    edu_total[0].plotly_chart(instance.make_hbarchart_group(
+    edu_total[0].plotly_chart(instance.make_barchart_group(
         df=instance.make_summary_status(df_all),
         category='구분',
         axis_a='고유인원',
         axis_b='누계인원',
-        title='신청/수료 현황'), use_container_width=True)
+        title='신청/수료 현황', orientation='v'), use_container_width=True)
     
     # 세번째 행 (신청인원 & 수료인원 추이 / 재적인원 대비 신청인원 & 재적인원 대비 수료인원 추이)
     line_total, line_people = st.columns(2)

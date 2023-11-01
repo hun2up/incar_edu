@@ -165,6 +165,31 @@ class Charts():
         return_chart.update_layout(showlegend=False)
         return return_chart
 
+    # -----------------------------------          수평막대그래프 제작 (Grouped)          ------------------------------------
+    def make_barchart_group(self, df, category, axis_a, axis_b, title, orientation):
+        # axis_a: 고유값 (신청인원, 수료인원) / axis_b: 누계값 (신청누계, 수료누계)
+        fig_a = pl.graph_objs.Bar(
+            x=df[axis_a],
+            y=df[category],
+            name=axis_a,
+            text=df[axis_a],
+            marker={'color':'grey'},
+            orientation=orientation
+        )
+        fig_b = pl.graph_objs.Bar(
+            x=df[axis_b],
+            y=df[category],
+            name=axis_b,
+            text=df[axis_b],
+            marker={'color':self.generate_chart_colors(df)},
+            orientation=orientation
+        )
+        layout_chart = pl.graph_objs.Layout(title=title,yaxis={'categoryorder':'array', 'categoryarray':self.generate_barchart_orders(df,category)}, annotations=[dict(text='색상 차트는 누적인원(중복포함), 회색 차트는 고유인원(중복제거)',showarrow=False,xref='paper',yref='paper',x=0,y=1.1)])
+        return_chart = pl.graph_objs.Figure(data=[fig_a, fig_b],layout=layout_chart)
+        return_chart.update_traces(textposition=self.generate_chart_outsides(df))
+        return_chart.update_layout(showlegend=False)
+        return return_chart
+
     # ----------------------------------------          꺾은선그래프 제작          ------------------------------------------
     def make_linechart(self, df, category, xaxis, yaxis, title):
         # xaxis : '월'(df_apply), '날짜'(df_attend) / yaxis : 데이터 (신청인원, 신청누계, 수료인원, 수료누계, 수료율, IMO신청률 등)
