@@ -91,6 +91,12 @@ if authentication_status:
         axis_a='고유인원',
         axis_b='누계인원',
         title='신청/수료 현황'), use_container_width=True)
+    edu_total[1].plotly_chart(instance.make_linechart(
+        df=instance.make_trend_all(df_all),
+        category='구분',
+        xaxis='월',
+        yaxis='값',
+        title='신청인원 및 수료인원 추이'), use_container_width=True)
     
     # 세번째 행 (신청인원 & 수료인원 추이 / 재적인원 대비 신청인원 & 재적인원 대비 수료인원 추이)
     line_total, line_people = st.columns(2)
