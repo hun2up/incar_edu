@@ -275,7 +275,6 @@ class EduMain(Charts):
         df_before = df_before.drop(df_before[df_before.iloc[:,0] != df_before.iloc[-1,0]].index)
         df_today = df.drop(df[df.iloc[:,0] != df.iloc[-1,0]].index)
         df_today = df_today[~df_today['사원번호'].isin(df_before['사원번호'])][['교육일자','과정명','소속부문','파트너','사원번호','성명','입사연차']].reset_index(drop=True)
-        st.dataframe(df_today)
         return df_today
 
 #########################################################################################################################
