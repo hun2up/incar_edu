@@ -265,18 +265,18 @@ class EduMain(Charts):
         df_main = call_sheets("month").drop(columns=['번호','비고']).rename(columns={'성함':'성명','날짜':'신청일자'}) # 시트 호출 & 컬럼 삭제 (번호) & 컬럼명 변경 (성함 ▶ 성명)
         df_main = df_main.drop(df_main[df_main['파트너'] == '인카본사'].index) # [파트너]에서 '인카본사' 삭제
         # 과정코드 정리
-        df_main.insert(0, column='과정코드', value=[df_main.iloc[change,1].split(")")[0].replace('(','') for change in range(df_main.shape[0])]) # 첫번째 컬럼에 [과정코드] 컬럼 추가
-        # df_main['과정코드'] = [df_main.iloc[change,1].split(")")[0].replace('(','') for change in range(df_main.shape[0])] # [과정명]에서 '과정코드'만 추출하여 [과정코드] 컬럼에 추가
+        df_main.insert(0, column='과정코드', value=None) # 첫번째 컬럼에 [과정코드] 컬럼 추가
+        df_main['과정코드'] = [df_main.iloc[change,1].split(")")[0].replace('(','') for change in range(df_main.shape[0])] # [과정명]에서 '과정코드'만 추출하여 [과정코드] 컬럼에 추가
         df_main = df_main.drop(columns=['과정명']) # 기존 과정명 컬럼 삭제
         # 신청인원 컬럼 추가
         df_main = df_main.groupby(['신청일자','과정코드','소속부문','파트너','사원번호','성명'])['사원번호'].count().reset_index(name='신청인원')
-        df_main['과정코드'] = df_main['과정코드'].astype(str) # df_main의 '과정코드' 열을 문자열로 변환
+        # df_main['과정코드'] = df_main['과정코드'].astype(str) # df_main의 '과정코드' 열을 문자열로 변환
         # 입사연차 컬럼 추가
         df_main['입사연차'] = (datetime.now().year%100 + 1 - df_main['사원번호'].astype(str).str[:2].astype(int, errors='ignore')).apply(lambda x: f'{x}년차') # [입사연차] 컬럼 추가 및 데이터(입사연차) 삽입
         # ---------------------------------------------------------------------------------------------------------------
         df_course = call_sheets("course")
         df_course['과정명'] = '['+df_course['지역']+'] '+df_course['과정명']
-        df_course['과정코드'] = df_course['과정코드'].astype(str) # df_course의 '과정코드' 열을 문자열로 변환
+        # df_course['과정코드'] = df_course['과정코드'].astype(str) # df_course의 '과정코드' 열을 문자열로 변환
         # ---------------------------------------------------------------------------------------------------------------
         df_result = pd.merge(df_main, df_course[['과정코드','과정명','교육일자','목표인원']], on=['과정코드']) # 테이블 병합 (신청현황 + 과정현황)
         df_result = df_result.sort_values(by='신청일자', ascending=True) # df_apl: 신청일자 오름차순으로 정렬
