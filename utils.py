@@ -244,7 +244,7 @@ class EduMain(Charts):
             .drop(columns=['번호','비고'])
             .rename(columns={'성함':'성명','날짜':'신청일자'})
             # .drop(df_main[df_main['파트너'] == '인카본사'].index)
-            .assign(입사연차=lambda x: (datetime.now().year % 100 + 1 - x['사원번호'].str[:2].astype(int, errors='ignore')).apply(lambda y: f'{y}년차'))
+            .assign(입사연차=lambda x: (datetime.now().year % 100 + 1 - x['사원번호'].astype(str).str[:2].astype(int, errors='ignore')).apply(lambda y: f'{y}년차'))
         )
 
 
