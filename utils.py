@@ -239,10 +239,20 @@ class EduMain(Charts):
         super().__init__()
 
     def call_data_main(self):
+        df_main = (
+            call_sheets("month")
+            .drop(columns=['번호','비고'])
+            .rename(columns={'성함':'성명','날짜':'신청일자'})
+            .drop(df_main[df_main['파트너'] == '인카본사'].index)
+            .assign(입사연차=lambda x: (datetime.now().year % 100 + 1 - x['사원번호'].str[:2].astype(int, errors='ignore')).apply(lambda y: f'{y}년차'))
+        )
+
+
+
         # [매일] 시트 호출 ()
-        # df_attend : | 과정명 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 성명 | IMO신청여부 | 수료현황 | 비고
-        df_main = call_sheets("month").drop(columns=['번호','비고']).rename(columns={'성함':'성명','날짜':'신청일자'}) # 시트 호출 & 컬럼 삭제 (번호) & 컬럼명 변경 (성함 ▶ 성명)
-        df_main = df_main.drop(df_main[df_main['파트너'] == '인카본사'].index) # [파트너]에서 '인카본사' 삭제
+        #df_attend : | 과정명 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 성명 | IMO신청여부 | 수료현황 | 비고
+        #df_main = call_sheets("month").drop(columns=['번호','비고']).rename(columns={'성함':'성명','날짜':'신청일자'}) # 시트 호출 & 컬럼 삭제 (번호) & 컬럼명 변경 (성함 ▶ 성명)
+        #df_main = df_main.drop(df_main[df_main['파트너'] == '인카본사'].index) # [파트너]에서 '인카본사' 삭제
         # 과정코드 정리
         df_main.insert(0, column='과정코드', value=None) # 첫번째 컬럼에 [과정코드] 컬럼 추가
         df_main['과정코드'] = [df_main.iloc[change,1].split(")")[0].replace('(','') for change in range(df_main.shape[0])] # [과정명]에서 '과정코드'만 추출하여 [과정코드] 컬럼에 추가
@@ -251,7 +261,7 @@ class EduMain(Charts):
         df_main = df_main.groupby(['신청일자','과정코드','소속부문','파트너','사원번호','성명'])['사원번호'].count().reset_index(name='신청인원')
         df_main['과정코드'] = df_main['과정코드'].astype(str) # df_main의 '과정코드' 열을 문자열로 변환
         # 입사연차 컬럼 추가
-        df_main['입사연차'] = (datetime.now().year%100 + 1 - df_main['사원번호'].astype(str).str[:2].astype(int, errors='ignore')).apply(lambda x: f'{x}년차') # [입사연차] 컬럼 추가 및 데이터(입사연차) 삽입
+        #df_main['입사연차'] = (datetime.now().year%100 + 1 - df_main['사원번호'].astype(str).str[:2].astype(int, errors='ignore')).apply(lambda x: f'{x}년차') # [입사연차] 컬럼 추가 및 데이터(입사연차) 삽입
         # ---------------------------------------------------------------------------------------------------------------
         df_course = call_sheets("course")
         df_course['과정명'] = '['+df_course['지역']+'] '+df_course['과정명']
@@ -471,13 +481,6 @@ class ServiceData:
             df_service = pd.concat([df_service, df_summary], axis=0) # 전월 데이터와 병합
         # ---------------------------------------------------------------------------------------------------------------
         df_service.insert(2, '전월 대비 증감', df_service['사용자수'].diff().fillna(0).astype(int))
-        '''
-        df_service['사용자수'] = df_service['사용자수'].astype(int)
-        df_service.insert(2, '전월 대비 증감', '')
-        for i in range(df_service.shape[0]):
-            try: df_service.iloc[i+1,2] = df_service.iloc[i+1,1] - df_service.iloc[i,1]
-            except: pass
-        '''
         return df_service
     
     def make_set_branch(self, df):
