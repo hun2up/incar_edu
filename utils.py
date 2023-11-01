@@ -259,7 +259,7 @@ class EduMain(Charts):
     def __init__(self):
         super().__init__()
 
-    # ------------------------------------          신청현황 시트 호출          ---------------------------------------
+    # ----------------------------------------          신청현황 시트 호출          -------------------------------------------
     def call_data_main(self):
         # [매일]신청현황 시트 호출 (https://docs.google.com/spreadsheets/d/1AG89W1nwRzZxYreM6i1qmwS6APf-8GM2K_HDyX7REG4/edit#gid=216302834)
         #df_attend : | 과정명 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 성명 | IMO신청여부 | 수료현황 | 비고
@@ -285,16 +285,15 @@ class EduMain(Charts):
         # df_result : | 신청일자 | 과정코드 | 소속부문 | 파트너 | 사원번호 | 성명 | 신청인원 | 과정명 | 교육일자 | 목표인원
         return df_result  
 
-    # ------------------------------------          신청인원          ---------------------------------------
+    # ------------------------------------------          전체 교육신청          ---------------------------------------------
     def make_set_main(self, df, select):
         # df : | 신청일자 | 과정코드 | 소속부문 | 파트너 | 사원번호 | 성명 | 신청인원 | 과정명 | 교육일자 | 목표인원
         df_main = df.drop(df[df.iloc[:,0] != df.iloc[-1,0]].index) # 신청일자 가장 최근 데이터만 남기기
         df_main = df_main.groupby([select])['신청인원'].sum().reset_index(name='신청인원')
         return df_main
     
-    # ------------------------------------          신규 신청          ---------------------------------------
+    # ------------------------------------------          신규 교육신청          ---------------------------------------------
     def make_set_new(self, df):
-        # try: df_month = df[df['월'].isin([month])].drop(columns=['기준일자','소속부문','소속총괄','소속부서','파트너','성명'])
         df_before = df.drop(df[df.iloc[:,0] == df.iloc[-1,0]].index)
         df_before = df_before.drop(df_before[df_before.iloc[:,0] != df_before.iloc[-1,0]].index)
         df_today = df.drop(df[df.iloc[:,0] != df.iloc[-1,0]].index)
@@ -325,7 +324,7 @@ class EduPages(Charts):
 
     # --------------------         수료현황 테이블 정리 & 테이블 병합 (신청현황+과정현황)          -------------------------
     def call_data_pages(self):
-        # [매월]교육과정수료현황 시트 호출 ()
+        # [매월]교육과정수료현황 시트 호출 (https://docs.google.com/spreadsheets/d/1AG89W1nwRzZxYreM6i1qmwS6APf-8GM2K_HDyX7REG4/edit#gid=0)
         # df_attend : | 과정명 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 성명 | IMO신청여부 | 수료현황 | 비고
         df_attend = call_sheets("attend").drop(columns=['번호','비고']).rename(columns={'성함':'성명'}) # 시트 호출 & 컬럼 삭제 (번호) & 컬럼명 변경 (성함 ▶ 성명)
         df_attend = df_attend.drop(df_attend[df_attend['파트너'] == '인카본사'].index) # [파트너]에서 '인카본사' 삭제
@@ -497,6 +496,33 @@ class ServiceData:
         return df_service
     
     def make_set_branch(self, df):
+        import pandas as pd
+
+    def make_set_branch(self, df):
+        df_branch = df.groupby(['소속부문', '소속총괄', '소속부서', '월'])['사원번호'].nunique().reset_index(name='월별_사원수')
+        df_branch = df_branch.pivot_table(index=['소속부문', '소속총괄', '소속부서'], columns='월', values='월별_사원수', fill_value=0).reset_index()
+
+        channel_list = ['개인부문','전략부문','CA부문','MA부문','PA부문','다이렉트부문']
+        dfs = []
+
+        for channel in channel_list:
+            channel_df = df_branch[df_branch['소속부문'] == channel]
+            for part in channel_df['소속총괄'].unique():
+                part_df = channel_df[channel_df['소속총괄'] == part]
+                part_sum = part_df.drop(columns=['소속부문', '소속총괄', '소속부서']).sum().rename(lambda x: f"{x}월_합계").to_frame().T
+                part_df_with_sum = pd.concat([part_df, part_sum])
+                dfs.append(part_df_with_sum)
+
+            channel_sum = channel_df.drop(columns=['소속부문', '소속총괄', '소속부서']).sum().rename(lambda x: f"{x}월_합계").to_frame().T
+            channel_df_with_sum = pd.concat([channel_df, channel_sum])
+            dfs.append(channel_df_with_sum)
+
+        result_df = pd.concat(dfs).reset_index(drop=True)
+        result_df['월별_합계'] = result_df.filter(like='월_').sum(axis=1)
+        return result_df
+
+
+        '''
         df_branch = pd.DataFrame(columns=['소속부문','소속총괄','소속부서'])
         for month in df['월'].unique():
             df_month = df[df['월'].isin([month])].groupby(['소속부문','소속총괄','소속부서'])['사원번호'].nunique().reset_index(name=month) # 해당 월에 해당하는 데이터만 추출하고 사원번호 개수 카운트 (월별 사용자수)
@@ -536,4 +562,5 @@ class ServiceData:
             df_total.drop(df_total.index[-2], inplace=True)
             df_total.drop(df_total.index[-3], inplace=True)
             df_total['합계'] = df_total[df['월'].unique().tolist()].sum(axis=1)
-        return df_total
+        '''
+        # return df_total
