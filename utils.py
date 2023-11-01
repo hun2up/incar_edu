@@ -423,35 +423,65 @@ class EduPages(Charts):
 ##############                      보장분석 클래스 정의 (차트제작) : MakeSet 상속                           ###############
 #########################################################################################################################
 class ServiceData:
+    MONTH_DICT = {'jan':'1월','feb':'2월','mar':'3월','apr':'4월','may':'5월','jun':'6월','jul':'7월','aug':'8월','sep':'9월','oct':'10월','nov':'11월','dec':'12월'} # 반복문 실행을 위한 딕셔너리 선언
+    TARGET_CHANNEL = ['개인부문','전략부문','CA부문','MA부문','PA부문','다이렉트부문']
+    
     def __init__(self) -> None:
         pass
     
+    # -------------------------------          데이터베이스 호출 (Google Sheets)          -----------------------------------
     def call_data_service(self):
-        month_dict = {'jan':'1월','feb':'2월','mar':'3월','apr':'4월','may':'5월','jun':'6월','jul':'7월','aug':'8월','sep':'9월','oct':'10월','nov':'11월','dec':'12월'} # 반복문 실행을 위한 딕셔너리 선언
         df_service = pd.DataFrame() # 데이터 정리를 위한 데이터프레임 생성
         # ---------------------------------------------------------------------------------------------------------------
         # 1월부터 12월까지 데이터 정리
-        for month_key, month_name in month_dict.items():
+        for month_key, month_name in self.MONTH_DICT.items():
             with st.spinner(f"{month_name} 데이터를 불러오는 중입니다."): # 로딩 화면 구현
                 try: df_month = call_sheets(month_key).rename(columns={'컨설턴트ID':'사원번호','컨설턴트성명':'성명'}) # 각 월별 데이터 호출
                 except: break # 아직 월별 데이터 생성 안 됐으면 반복문 탈출
                 # ---------------------------------------------------------------------------------------------------------------
-                df_month = df_month[df_month['소속부문'].isin(['개인부문','전략부문','CA부문','MA부문','PA부문','다이렉트부문'])]
+                df_month = df_month[df_month['소속부문'].isin(self.TARGET_CHANNEL)]
                 df_month = df_month[~df_month['파트너'].isin(['인카본사'])].reset_index(drop=True)
-                df_month.insert(23, '약관조회', 0)
+                df_month.insert(23, '약관조회', 0) # 약관조회 컬럼 추가 (현재 오마이매니저에서 약관조회 데이터가 다운로드 안 되는 현상 있음)
                 df_month.insert(0, '월', month_name) # 기준일자 대신 월 항목 추가
                 df_month['사원번호'] = df_month['사원번호'].astype(str) # 사번정리
                 df_month.iloc[:, 6] = [f"16{value}" if len(str(value)) < 6 else str(value) for value in df_month.iloc[:, 6]]
-
-                '''
-                for i in range(df_month.shape[0]):
-                    if len(df_month.iat[i,6]) < 6: df_month.iat[i,6] = f"16{df_month.iat[i,6]}"
-                    else: pass
-                '''
                 df_service = pd.concat([df_service, df_month], axis=0) # 전월 데이터와 병합
         return df_service
     
+    # -------------------------------          데이터 정리          -----------------------------------
     def make_set_summary(self, df):
+        columns_service = [
+            '로그인수',
+            '보장분석접속건수', '보장분석고객등록수', '보장분석컨설팅고객수', '보장분석출력건수',
+            '간편보장_접속건수', '간편보장_출력건수',
+            'APP 보험다보여전송건수', 'APP 주요보장합계조회건수', 'APP 명함_접속건수', 'APP 의료비/보험금조회건수',
+            '보험료비교접속건수', '보험료비교출력건수', '한장보험료비교_접속건수', '약관조회',
+            '상품비교설명확인서_접속건수', '영업자료접속건수', '영업자료출력건수', '(NEW)영업자료접속건수', '(NEW)영업자료출력건수', '라이프사이클접속건수', '라이프사이클출력건수'
+        ]
+
+        df_summary = (
+            df.groupby('월')[columns_service]
+            .agg({
+                '로그인수': 'sum', '보장분석접속건수': 'sum', '보장분석고객등록수': 'sum', 
+                '보장분석컨설팅고객수': 'sum', '보장분석출력건수': 'sum', 
+                '간편보장_접속건수': 'sum', '간편보장_출력건수': 'sum', 
+                'APP 보험다보여전송건수': 'sum', 'APP 주요보장합계조회건수': 'sum',
+                'APP 명함_접속건수': 'sum', 'APP 의료비/보험금조회건수': 'sum', 
+                '보험료비교접속건수': 'sum', '보험료비교출력건수': 'sum',
+                '한장보험료비교_접속건수': 'sum', '약관조회': 'sum', 
+                '상품비교설명확인서_접속건수': 'sum', '영업자료접속건수': 'sum',
+                '영업자료출력건수': 'sum', '(NEW)영업자료접속건수': 'sum', 
+                '(NEW)영업자료출력건수': 'sum', '라이프사이클접속건수': 'sum',
+                '라이프사이클출력건수': 'sum'
+            })
+            .assign(월=lambda x: x.index, 사용자수=lambda x: df.groupby('월')['사원번호'].nunique())
+            .assign(전월대비증감=lambda x: x['사용자수'].diff().fillna(0).astype(int))
+        )
+        
+        return df_summary.reset_index(drop=True)
+
+
+        '''
         df_service = pd.DataFrame() # 데이터 정리를 위한 데이터프레임 생성
         columns_service = [
             '로그인수',
@@ -492,6 +522,7 @@ class ServiceData:
         for i in range(df_service.shape[0]):
             try: df_service.iloc[i+1,2] = df_service.iloc[i+1,1] - df_service.iloc[i,1]
             except: pass
+        '''
         return df_service
     
     def make_set_branch(self, df):
