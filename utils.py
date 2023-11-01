@@ -270,10 +270,11 @@ class EduMain(Charts):
         return df_main
     
     def make_set_new(self, df):
+        # try: df_month = df[df['월'].isin([month])].drop(columns=['기준일자','소속부문','소속총괄','소속부서','파트너','성명'])
         df_before = df.drop(df[df.iloc[:,0] == df.iloc[-1,0]].index)
         df_before = df_before.drop(df_before[df_before.iloc[:,0] != df_before.iloc[-1,0]].index).reset_index(drop=True)
         df_today = df.drop(df[df.iloc[:,0] != df.iloc[-1,0]].index).reset_index(drop=True)
-        df_today = df_today.drop(df_today[df_today.iloc[:,4] == df_before.iloc[:,4]].index)
+        df_today = df_today[df_today['사원번호'].isin(df_before['사원번호'])]
         st.dataframe(df_today)
         return df_today
 
