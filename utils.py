@@ -251,10 +251,8 @@ class Charts():
         for loop in range(4):
             st.write(select[loop])
             df = df.sort_values(by=[*index_card[loop]], ascending=[index_ascending[loop], False])
-            # 카드 5개 씩 만들기
-            
             sector = st.columns(6)
-            [sector[i].metric(df.iat[i,0], f"{df.iat[i, index_column[loop]]} ({index_units[loop]})") for i in range(5)]
+            [sector[i].metric(df.iat[i,0], f"{df.iat[i, index_column[loop]]} ({index_units[loop]})") for i in range(5)] # 카드 5개 씩 만들기
             
             '''
             sector = st.columns(6)
