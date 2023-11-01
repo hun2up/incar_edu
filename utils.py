@@ -184,7 +184,7 @@ class Charts():
             marker={'color':self.generate_chart_colors(df)},
             orientation='v'
         )
-        layout_chart = pl.graph_objs.Layout(title=title,xaxis={'categoryorder':'array', 'categoryarray':self.generate_barchart_orders(df,category)}, annotations=[dict(text='색상 차트는 누적인원(중복포함), 회색 차트는 고유인원(중복제거)',showarrow=False,xref='paper',yref='paper',x=0,y=1.1)])
+        layout_chart = pl.graph_objs.Layout(title=title,xaxis={'categoryorder':'array', 'categoryarray':self.generate_barchart_orders(df,category)}, annotations=[dict(text='색상 차트는 누적인원(중복포함), 회색 차트는 고유인원(중복제거)',showarrow=False,xref='paper',yref='paper',x=-0.1,y=1.1)])
         return_chart = pl.graph_objs.Figure(data=[fig_a, fig_b],layout=layout_chart)
         return_chart.update_traces(textposition=self.generate_chart_outsides(df))
         return_chart.update_layout(showlegend=False)
