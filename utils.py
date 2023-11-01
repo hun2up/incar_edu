@@ -259,8 +259,9 @@ class EduMain(Charts):
     def __init__(self):
         super().__init__()
 
+    # ------------------------------------          신청현황 시트 호출          ---------------------------------------
     def call_data_main(self):
-        # [매일] 시트 호출 ()
+        # [매일]신청현황 시트 호출 (https://docs.google.com/spreadsheets/d/1AG89W1nwRzZxYreM6i1qmwS6APf-8GM2K_HDyX7REG4/edit#gid=216302834)
         #df_attend : | 과정명 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 성명 | IMO신청여부 | 수료현황 | 비고
         df_main = call_sheets("month").drop(columns=['번호','비고']).rename(columns={'성함':'성명','날짜':'신청일자'}) # 시트 호출 & 컬럼 삭제 (번호) & 컬럼명 변경 (성함 ▶ 성명)
         df_main = df_main.drop(df_main[df_main['파트너'] == '인카본사'].index) # [파트너]에서 '인카본사' 삭제
@@ -270,13 +271,13 @@ class EduMain(Charts):
         df_main = df_main.drop(columns=['과정명']) # 기존 과정명 컬럼 삭제
         # 신청인원 컬럼 추가
         df_main = df_main.groupby(['신청일자','과정코드','소속부문','파트너','사원번호','성명'])['사원번호'].count().reset_index(name='신청인원')
-        # df_main['과정코드'] = df_main['과정코드'].astype(str) # df_main의 '과정코드' 열을 문자열로 변환
+        df_main['과정코드'] = df_main['과정코드'].astype(str) # df_main의 '과정코드' 열을 문자열로 변환
         # 입사연차 컬럼 추가
         df_main['입사연차'] = (datetime.now().year%100 + 1 - df_main['사원번호'].astype(str).str[:2].astype(int, errors='ignore')).apply(lambda x: f'{x}년차') # [입사연차] 컬럼 추가 및 데이터(입사연차) 삽입
         # ---------------------------------------------------------------------------------------------------------------
         df_course = call_sheets("course")
         df_course['과정명'] = '['+df_course['지역']+'] '+df_course['과정명']
-        # df_course['과정코드'] = df_course['과정코드'].astype(str) # df_course의 '과정코드' 열을 문자열로 변환
+        df_course['과정코드'] = df_course['과정코드'].astype(str) # df_course의 '과정코드' 열을 문자열로 변환
         # ---------------------------------------------------------------------------------------------------------------
         df_result = pd.merge(df_main, df_course[['과정코드','과정명','교육일자','목표인원']], on=['과정코드']) # 테이블 병합 (신청현황 + 과정현황)
         df_result = df_result.sort_values(by='신청일자', ascending=True) # df_apl: 신청일자 오름차순으로 정렬
@@ -284,12 +285,14 @@ class EduMain(Charts):
         # df_result : | 신청일자 | 과정코드 | 소속부문 | 파트너 | 사원번호 | 성명 | 신청인원 | 과정명 | 교육일자 | 목표인원
         return df_result  
 
+    # ------------------------------------          신청인원          ---------------------------------------
     def make_set_main(self, df, select):
         # df : | 신청일자 | 과정코드 | 소속부문 | 파트너 | 사원번호 | 성명 | 신청인원 | 과정명 | 교육일자 | 목표인원
         df_main = df.drop(df[df.iloc[:,0] != df.iloc[-1,0]].index) # 신청일자 가장 최근 데이터만 남기기
         df_main = df_main.groupby([select])['신청인원'].sum().reset_index(name='신청인원')
         return df_main
     
+    # ------------------------------------          신규 신청          ---------------------------------------
     def make_set_new(self, df):
         # try: df_month = df[df['월'].isin([month])].drop(columns=['기준일자','소속부문','소속총괄','소속부서','파트너','성명'])
         df_before = df.drop(df[df.iloc[:,0] == df.iloc[-1,0]].index)
