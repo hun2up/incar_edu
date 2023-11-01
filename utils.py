@@ -243,12 +243,12 @@ class EduMain(Charts):
             call_sheets("month")
             .drop(columns=['번호','비고'])
             .rename(columns={'성함':'성명','날짜':'신청일자'})
-            .drop(df_main[df_main['파트너'] == '인카본사'].index)
+            # .drop(df_main[df_main['파트너'] == '인카본사'].index)
             .assign(입사연차=lambda x: (datetime.now().year % 100 + 1 - x['사원번호'].str[:2].astype(int, errors='ignore')).apply(lambda y: f'{y}년차'))
         )
 
 
-
+        df_main = df_main.drop(df_main[df_main['파트너'] == '인카본사'].index)
         # [매일] 시트 호출 ()
         #df_attend : | 과정명 | 소속부문 | 소속총괄 | 소속부서 | 파트너 | 사원번호 | 성명 | IMO신청여부 | 수료현황 | 비고
         #df_main = call_sheets("month").drop(columns=['번호','비고']).rename(columns={'성함':'성명','날짜':'신청일자'}) # 시트 호출 & 컬럼 삭제 (번호) & 컬럼명 변경 (성함 ▶ 성명)
