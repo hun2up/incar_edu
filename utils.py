@@ -444,7 +444,6 @@ class ServiceData:
                 df_month.insert(23, '약관조회', 0) # 약관조회 컬럼 추가 (현재 오마이매니저에서 약관조회 데이터가 다운로드 안 되는 현상 있음)
                 df_month.insert(0, '월', month_name) # 기준일자 대신 월 항목 추가
                 df_month['사원번호'] = df_month['사원번호'].astype(str) # 사번정리
-                # df_month.iloc[:, 6] = [f"16{value}" if len(str(value)) < 6 else str(value) for value in df_month.iloc[:, 6]]
                 df_service = pd.concat([df_service, df_month], axis=0) # 전월 데이터와 병합
         return df_service
     
