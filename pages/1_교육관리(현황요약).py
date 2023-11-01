@@ -88,7 +88,7 @@ if authentication_status:
         category='구분',
         axis_a='고유인원',
         axis_b='누계인원',
-        title='신청/수료 현황', orientation='v'), use_container_width=True)
+        title='신청/수료 현황', orientation='h'), use_container_width=True)
     
     # 세번째 행 (신청인원 & 수료인원 추이 / 재적인원 대비 신청인원 & 재적인원 대비 수료인원 추이)
     line_total, line_people = st.columns(2)
