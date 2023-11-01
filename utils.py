@@ -233,11 +233,8 @@ class Charts():
         for loop in range(4):
             st.write(select[loop])
             df = df.sort_values(by=[*index_card[loop]], ascending=[index_ascending[loop], False])
-            # 카드 5개 씩 만들기
             sector = st.columns(5)
-            [sector[i].metric(f"{df.iat[i,1]} ({df.iat[i, 0]})", f"{df.iat[i, index_columns[loop]]} ({index_units[loop]})") for i in range(5)]
-            # for i in range(5):
-            #    sector[i].metric(f"{df.iat[i,1]} ({df.iat[i, 0]})", f"{df.iat[i, index_columns[loop]]} ({index_units[loop]})")
+            [sector[i].metric(f"{df.iat[i,1]} ({df.iat[i, 0]})", f"{df.iat[i, index_columns[loop]]} ({index_units[loop]})") for i in range(5)] # 카드 5개 씩 만들기
 
     # ------------------------------------          B형 스타일카드 제작 (랭킹)          ---------------------------------------
     def make_cards_b(self, df, select, title):
@@ -268,8 +265,8 @@ class EduMain(Charts):
         df_main = call_sheets("month").drop(columns=['번호','비고']).rename(columns={'성함':'성명','날짜':'신청일자'}) # 시트 호출 & 컬럼 삭제 (번호) & 컬럼명 변경 (성함 ▶ 성명)
         df_main = df_main.drop(df_main[df_main['파트너'] == '인카본사'].index) # [파트너]에서 '인카본사' 삭제
         # 과정코드 정리
-        df_main.insert(0, column='과정코드', value=None) # 첫번째 컬럼에 [과정코드] 컬럼 추가
-        df_main['과정코드'] = [df_main.iloc[change,1].split(")")[0].replace('(','') for change in range(df_main.shape[0])] # [과정명]에서 '과정코드'만 추출하여 [과정코드] 컬럼에 추가
+        df_main.insert(0, column='과정코드', value=[df_main.iloc[change,1].split(")")[0].replace('(','') for change in range(df_main.shape[0])]) # 첫번째 컬럼에 [과정코드] 컬럼 추가
+        # df_main['과정코드'] = [df_main.iloc[change,1].split(")")[0].replace('(','') for change in range(df_main.shape[0])] # [과정명]에서 '과정코드'만 추출하여 [과정코드] 컬럼에 추가
         df_main = df_main.drop(columns=['과정명']) # 기존 과정명 컬럼 삭제
         # 신청인원 컬럼 추가
         df_main = df_main.groupby(['신청일자','과정코드','소속부문','파트너','사원번호','성명'])['사원번호'].count().reset_index(name='신청인원')
