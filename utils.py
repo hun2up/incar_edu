@@ -452,71 +452,26 @@ class ServiceData:
     def make_set_summary(self, df):
         columns_service = [
             '로그인수',
-            '보장분석접속건수', '보장분석고객등록수', '보장분석컨설팅고객수', '보장분석출력건수',
-            '간편보장_접속건수', '간편보장_출력건수',
-            'APP 보험다보여전송건수', 'APP 주요보장합계조회건수', 'APP 명함_접속건수', 'APP 의료비/보험금조회건수',
-            '보험료비교접속건수', '보험료비교출력건수', '한장보험료비교_접속건수', '약관조회',
-            '상품비교설명확인서_접속건수', '영업자료접속건수', '영업자료출력건수', '(NEW)영업자료접속건수', '(NEW)영업자료출력건수', '라이프사이클접속건수', '라이프사이클출력건수'
+            '보장분석접속건수','보장분석고객등록수','보장분석컨설팅고객수','보장분석출력건수',
+            '간편보장_접속건수','간편보장_출력건수',
+            'APP 보험다보여전송건수','APP 주요보장합계조회건수','APP 명함_접속건수','APP 의료비/보험금조회건수',
+            '보험료비교접속건수','보험료비교출력건수','한장보험료비교_접속건수',
+            '약관조회','상품비교설명확인서_접속건수',
+            '영업자료접속건수','영업자료출력건수','(NEW)영업자료접속건수','(NEW)영업자료출력건수',
+            '라이프사이클접속건수','라이프사이클출력건수'
         ]
-
-        df_summary = (
-            df.groupby('월')[columns_service]
-            .agg({
-                '로그인수': 'sum', '보장분석접속건수': 'sum', '보장분석고객등록수': 'sum', 
-                '보장분석컨설팅고객수': 'sum', '보장분석출력건수': 'sum', 
-                '간편보장_접속건수': 'sum', '간편보장_출력건수': 'sum', 
-                'APP 보험다보여전송건수': 'sum', 'APP 주요보장합계조회건수': 'sum',
-                'APP 명함_접속건수': 'sum', 'APP 의료비/보험금조회건수': 'sum', 
-                '보험료비교접속건수': 'sum', '보험료비교출력건수': 'sum',
-                '한장보험료비교_접속건수': 'sum', '약관조회': 'sum', 
-                '상품비교설명확인서_접속건수': 'sum', '영업자료접속건수': 'sum',
-                '영업자료출력건수': 'sum', '(NEW)영업자료접속건수': 'sum', 
-                '(NEW)영업자료출력건수': 'sum', '라이프사이클접속건수': 'sum',
-                '라이프사이클출력건수': 'sum'
-            })
-            .assign(월=lambda x: x.index, 사용자수=lambda x: df.groupby('월')['사원번호'].nunique())
-            .assign(전월대비증감=lambda x: x['사용자수'].diff().fillna(0).astype(int))
-        )
-        
-        return df_summary.reset_index(drop=True)
-
-
-        '''
         df_service = pd.DataFrame() # 데이터 정리를 위한 데이터프레임 생성
-        columns_service = [
-            '로그인수',
-            '보장분석접속건수',
-            '보장분석고객등록수',
-            '보장분석컨설팅고객수',
-            '보장분석출력건수',
-            '간편보장_접속건수',
-            '간편보장_출력건수',
-            'APP 보험다보여전송건수',
-            'APP 주요보장합계조회건수',
-            'APP 명함_접속건수',
-            'APP 의료비/보험금조회건수',
-            '보험료비교접속건수',
-            '보험료비교출력건수',
-            '한장보험료비교_접속건수',
-            '약관조회',
-            '상품비교설명확인서_접속건수',
-            '영업자료접속건수',
-            '영업자료출력건수',
-            '(NEW)영업자료접속건수',
-            '(NEW)영업자료출력건수',
-            '라이프사이클접속건수',
-            '라이프사이클출력건수']
         # ---------------------------------------------------------------------------------------------------------------
         for month in df['월'].unique():
-            try: df_month = df[df['월'].isin([month])].drop(columns=['기준일자','소속부문','소속총괄','소속부서','파트너','성명'])
+            try: df_month = df[df['월'].isin([month])].drop(columns=['기준일자','소속부문','소속총괄','소속부서','파트너','성명']) # 각 월별 데이터 집계
             except: pass
-            df_summary = pd.DataFrame()
-            for columns in range(len(columns_service)):
-                df_summary[columns_service[columns]] = [df_month[columns_service[columns]].astype(int).sum()] # 각 항목 합계 계산
+            df_summary = pd.DataFrame({col: [df_month[col].astype(int).sum()] for col in columns_service}) # 각 항목별 합계
             df_summary.insert(0, '월', month) # 기준일자 대신 월 항목 추가
             df_summary.insert(1, '사용자수', df_month['사원번호'].nunique()) # 사원번호 개수 구해서 사용자수 삽입
             df_service = pd.concat([df_service, df_summary], axis=0) # 전월 데이터와 병합
         # ---------------------------------------------------------------------------------------------------------------
+        df_service.insert(2, '전월 대비 증감', df_service['사용자수'].diff().fillna(0).astype(int))
+        '''
         df_service['사용자수'] = df_service['사용자수'].astype(int)
         df_service.insert(2, '전월 대비 증감', '')
         for i in range(df_service.shape[0]):
