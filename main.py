@@ -90,9 +90,9 @@ if authentication_status:
 
     # 두번째 행 (신청현황 리스트)
     st.markdown('---')
-    st.markdown('###### 신규 교육신청 명단')
+    st.markdown('###### 신규 교육신청 명단 (전전일 대비 전일 기준)')
     st.dataframe(instance.make_set_new(df_main), use_container_width=True)
     st.markdown('---')
-    st.markdown('###### 전체 교육신청 명단')
+    st.markdown('###### 전체 교육신청 명단 (전일 기준)')
     st.dataframe(df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['교육일자','과정명','소속부문','파트너','사원번호','성명','입사연차']], use_container_width=True) # 마지막 신청일자 제외한 나머지 신청내역 삭제
 
