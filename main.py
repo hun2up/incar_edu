@@ -88,6 +88,10 @@ if authentication_status:
         axis_a='신청인원',
         title='입사연차별 신청인원 현황'), use_container_width=True)
 
+    pie_apply, pie_target = st.columns(2)
+    pie_apply.write("신청인원 기준 타겟홍보 유입률")
+    pie_target.write("홍보인원 기준 반응률")
+    
     # 두번째 행 (신청현황 리스트)
     st.markdown('---')
     st.markdown('###### 신규 교육신청 명단 (전전일 대비 전일 기준)')
