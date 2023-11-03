@@ -102,7 +102,7 @@ if authentication_status:
     st.markdown('###### 전체 교육신청 명단 (전일 기준)')
     st.dataframe(df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['교육일자','과정명','소속부문','파트너','사원번호','성명','입사연차']], use_container_width=True) # 마지막 신청일자 제외한 나머지 신청내역 삭제
 
-    df_apply = df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['교육일자','과정명','소속부문','파트너','사원번호','성명','입사연차']]
-    df_target = instance.make_set_target()
+    df_apply = df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['교육일자','과정명','소속부문','파트너','사원번호','성명','입사연차']].reset_index(drop=True, inplace=True)
+    df_target = instance.make_set_target().reset_index(drop=True, inplace=True)
     df_apply_target = df_apply[df_apply['사원번호'] == df_target['사원번호']]
     st.dataframe(df_apply_target)
