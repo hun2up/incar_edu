@@ -108,4 +108,4 @@ if authentication_status:
     for apply in df_target['사원번호'].nunique():
         df_compare = df_apply[df_apply['사원번호'] == apply]
         df_apply_target = pd.concat([df_apply_target, df_compare], axis=0)
-    st.dataframe(df_apply_target)
+    st.dataframe(df_target)
