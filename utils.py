@@ -300,6 +300,13 @@ class EduMain(Charts):
         df_today = df_today[~df_today['사원번호'].isin(df_before['사원번호'])][['교육일자','과정명','소속부문','파트너','사원번호','성명','입사연차']].reset_index(drop=True)
         return df_today
 
+    # ------------------------------------------          신규 교육신청          ---------------------------------------------
+    def make_set_target(self):
+        df_apply_rate = pd.DataFrame()
+        df_target = call_sheets("target")
+        # df_main = self.call_data_main().drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['교육일자','과정명','소속부문','파트너','사원번호','성명','입사연차']]
+        return df_target
+    
 #########################################################################################################################
 ##############                   교육관리(하위페이지) 클래스 정의 : Charts 클래스 상속                      ################
 #########################################################################################################################
@@ -440,127 +447,4 @@ class EduPages(Charts):
         # ---------------------------------------------------------------------------------------------------------------
         # 재적인원 대비 신청누계 및 재적인원 대비 수료누계 병합
         df_summary = pd.merge(pd.DataFrame({'월': sorted(df_summary_attend.index, key=self.sort_month)}), pd.concat([df_summary_apply, df_summary_attend], axis=0), on=['월'])
-        return df_summary   
-
-#########################################################################################################################
-##############                      보장분석 클래스 정의 (차트제작) : MakeSet 상속                           ###############
-#########################################################################################################################
-class ServiceData:
-    MONTH_DICT = {'jan':'1월','feb':'2월','mar':'3월','apr':'4월','may':'5월','jun':'6월','jul':'7월','aug':'8월','sep':'9월','oct':'10월','nov':'11월','dec':'12월'} # 반복문 실행을 위한 딕셔너리 선언
-    TARGET_CHANNEL = ['개인부문','전략부문','CA부문','MA부문','PA부문','다이렉트부문']
-    
-    def __init__(self) -> None:
-        pass
-    
-    # -------------------------------          데이터베이스 호출 (Google Sheets)          -----------------------------------
-    def call_data_service(self):
-        df_service = pd.DataFrame() # 데이터 정리를 위한 데이터프레임 생성
-        # ---------------------------------------------------------------------------------------------------------------
-        # 1월부터 12월까지 데이터 정리
-        for month_key, month_name in self.MONTH_DICT.items():
-            with st.spinner(f"{month_name} 데이터를 불러오는 중입니다."): # 로딩 화면 구현
-                try: df_month = call_sheets(month_key).rename(columns={'컨설턴트ID':'사원번호','컨설턴트성명':'성명'}) # 각 월별 데이터 호출
-                except: break # 아직 월별 데이터 생성 안 됐으면 반복문 탈출
-                # ---------------------------------------------------------------------------------------------------------------
-                df_month = df_month[df_month['소속부문'].isin(self.TARGET_CHANNEL)]
-                df_month = df_month[~df_month['파트너'].isin(['인카본사'])].reset_index(drop=True)
-                df_month.insert(23, '약관조회', 0) # 약관조회 컬럼 추가 (현재 오마이매니저에서 약관조회 데이터가 다운로드 안 되는 현상 있음)
-                df_month.insert(0, '월', month_name) # 기준일자 대신 월 항목 추가
-                df_month['사원번호'] = df_month['사원번호'].astype(str) # 사번정리
-                df_service = pd.concat([df_service, df_month], axis=0) # 전월 데이터와 병합
-        return df_service
-    
-    # -------------------------------          데이터 정리          -----------------------------------
-    def make_set_summary(self, df):
-        columns_service = [
-            '로그인수',
-            '보장분석접속건수','보장분석고객등록수','보장분석컨설팅고객수','보장분석출력건수',
-            '간편보장_접속건수','간편보장_출력건수',
-            'APP 보험다보여전송건수','APP 주요보장합계조회건수','APP 명함_접속건수','APP 의료비/보험금조회건수',
-            '보험료비교접속건수','보험료비교출력건수','한장보험료비교_접속건수',
-            '약관조회','상품비교설명확인서_접속건수',
-            '영업자료접속건수','영업자료출력건수','(NEW)영업자료접속건수','(NEW)영업자료출력건수',
-            '라이프사이클접속건수','라이프사이클출력건수'
-        ]
-        df_service = pd.DataFrame() # 데이터 정리를 위한 데이터프레임 생성
-        # ---------------------------------------------------------------------------------------------------------------
-        for month in df['월'].unique():
-            try: df_month = df[df['월'].isin([month])].drop(columns=['기준일자','소속부문','소속총괄','소속부서','파트너','성명']) # 각 월별 데이터 집계
-            except: pass
-            df_summary = pd.DataFrame({col: [df_month[col].astype(int).sum()] for col in columns_service}) # 각 항목별 합계
-            df_summary.insert(0, '월', month) # 기준일자 대신 월 항목 추가
-            df_summary.insert(1, '사용자수', df_month['사원번호'].nunique()) # 사원번호 개수 구해서 사용자수 삽입
-            df_service = pd.concat([df_service, df_summary], axis=0) # 전월 데이터와 병합
-        # ---------------------------------------------------------------------------------------------------------------
-        df_service.insert(2, '전월 대비 증감', df_service['사용자수'].diff().fillna(0).astype(int))
-        return df_service
-    
-    def make_set_branch(self, df):
-        import pandas as pd
-
-    def make_set_branch(self, df):
-        df_branch = df.groupby(['소속부문', '소속총괄', '소속부서', '월'])['사원번호'].nunique().reset_index(name='월별_사원수')
-        df_branch = df_branch.pivot_table(index=['소속부문', '소속총괄', '소속부서'], columns='월', values='월별_사원수', fill_value=0).reset_index()
-
-        channel_list = ['개인부문','전략부문','CA부문','MA부문','PA부문','다이렉트부문']
-        dfs = []
-
-        for channel in channel_list:
-            channel_df = df_branch[df_branch['소속부문'] == channel]
-            for part in channel_df['소속총괄'].unique():
-                part_df = channel_df[channel_df['소속총괄'] == part]
-                part_sum = part_df.drop(columns=['소속부문', '소속총괄', '소속부서']).sum().rename(lambda x: f"{x}월_합계").to_frame().T
-                part_df_with_sum = pd.concat([part_df, part_sum])
-                dfs.append(part_df_with_sum)
-
-            channel_sum = channel_df.drop(columns=['소속부문', '소속총괄', '소속부서']).sum().rename(lambda x: f"{x}월_합계").to_frame().T
-            channel_df_with_sum = pd.concat([channel_df, channel_sum])
-            dfs.append(channel_df_with_sum)
-
-        result_df = pd.concat(dfs).reset_index(drop=True)
-        result_df['월별_합계'] = result_df.filter(like='월_').sum(axis=1)
-        return result_df
-
-
-        '''
-        df_branch = pd.DataFrame(columns=['소속부문','소속총괄','소속부서'])
-        for month in df['월'].unique():
-            df_month = df[df['월'].isin([month])].groupby(['소속부문','소속총괄','소속부서'])['사원번호'].nunique().reset_index(name=month) # 해당 월에 해당하는 데이터만 추출하고 사원번호 개수 카운트 (월별 사용자수)
-            df_branch = pd.merge(df_branch, df_month, on=['소속부문','소속총괄','소속부서'], how='outer').fillna(0) # 기존 데이터와 병합하고 빈 셀은 0으로 채워넣기
-        # df_branch : | 소속부문 | 소속총괄 | 소속부서 | 1월 | 2월 | 3월 | 4월 | 5월 | 6월 | 7월 | 8월 | 9월 | 10월 | 11월 | 12월 |
-        # ---------------------------------------------------------------------------------------------------------------
-        # 전체 데이터를 소속부문별로 분리
-        df_total = pd.DataFrame()
-        df_channel_total = pd.DataFrame()
-        channel_list = ['개인부문','전략부문','CA부문','MA부문','PA부문','다이렉트부문']
-        for channel in range(len(channel_list)):
-            df_channel = df_branch[df_branch['소속부문'].isin([channel_list[channel]])] # 소속부문별로 데이터 추출
-            # ---------------------------------------------------------------------------------------------------------------
-            # 소속부문별 데이터를 소속총괄별로 분리
-            df_part_result = pd.DataFrame() # 소속총괄별 산하 소속부서의 월별 접속자수 합계 (소계 포함)
-            df_part_temp = pd.DataFrame()
-            for part in df_channel['소속총괄'].unique():
-                df_part = df_channel[df_channel['소속총괄'].isin([part])] # 소속총괄별로 데이터 추출 (소속부서별 접속자수)
-                df_sum_part = pd.DataFrame() # 산하 소속부서의 월별 접속자수 합계
-                # ---------------------------------------------------------------------------------------------------------------
-                # 소속총괄 합계
-                for part_detail in df_part.columns:
-                    if part_detail in ['소속부문','소속총괄']: df_sum_part[part_detail] = df_part[part_detail]
-                    elif part_detail in ['소속부서']: df_sum_part[part_detail] = ''
-                    else: df_sum_part[part_detail] = df_part[part_detail].sum() # 컬럼별 합계
-                # ---------------------------------------------------------------------------------------------------------------
-                df_part_temp = pd.concat([df_part_temp, df_sum_part.iloc[[0]]], axis=0) # 소속총괄 합계만 따로 모아놓기
-                df_part_result = pd.concat([df_part, df_sum_part.iloc[[0]]], axis=0) # 소속부문 산하 전체 소속총괄 데이터 병합    ( 이 밑에 부문 합계! )
-        # ---------------------------------------------------------------------------------------------------------------
-            df_sum_channel = pd.DataFrame() # 산하 소속총괄의 월별 접속자수 합계
-            for channel_detail in df_channel.columns:
-                if channel_detail in ['소속부문']: df_sum_channel[channel_detail] = df_part_temp[channel_detail]
-                elif channel_detail in ['소속총괄','소속부서']: df_sum_channel[channel_detail] = ''
-                else: df_sum_channel[channel_detail] = df_part_temp[channel_detail].sum()
-            df_channel_total = pd.concat([df_part_result, df_sum_channel.iloc[[0]]], axis=0)
-            df_total = pd.concat([df_total, df_channel_total], axis=0)
-            df_total.drop(df_total.index[-2], inplace=True)
-            df_total.drop(df_total.index[-3], inplace=True)
-            df_total['합계'] = df_total[df['월'].unique().tolist()].sum(axis=1)
-        '''
-        # return df_total
+        return df_summary
