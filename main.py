@@ -112,5 +112,9 @@ if authentication_status:
     df_apply['사원번호'] = df_apply['사원번호'].astype(str)
     df_target['사원번호'] = df_target['사원번호'].astype(str)
     df_apply = pd.merge(df_apply, df_target, on=['과정코드','소속부문','파트너','사원번호','성명'], how='left')
-    st.dataframe(df_apply)
+    df_apply_rate = pd.DataFrame({
+        '구분':['직접신청','타겟유입'],
+        '인원':[df_apply['타겟명'].notnull().sum(), df_apply['타겟명'].isnull().sum()]
+    })
+    st.dataframe(df_apply_rate)
     
