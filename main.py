@@ -106,7 +106,7 @@ if authentication_status:
     df_target = instance.make_set_target().drop(columns='번호').reset_index(drop=True)
     df_target = df_target.drop(df_target[df_target['파트너'] == '인카본사'].index)
     df_target.insert(1, column='과정코드', value=0)
-    df_target['과정코드'] = [df_target.iloc[change,2].split(")")[1].replace('[','') for change in range(df_target.shape[0])] # [과정명]에서 '과정코드'만 추출하여 [과정코드] 컬럼에 추가
+    df_target['과정코드'] = [df_target.iloc[change,2].split("]")[1].replace('[','') for change in range(df_target.shape[0])] # [과정명]에서 '과정코드'만 추출하여 [과정코드] 컬럼에 추가
     df_target.insert(2, column='타겟명', value=df_target['과정명'].str.split(']').str[2])
     df_target = df_target.drop(columns='과정명')
     # df_target['과정코드'] = df_target['과정명'].str.split(']').str[1]
