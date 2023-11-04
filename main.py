@@ -104,9 +104,11 @@ if authentication_status:
 
     df_apply = df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['교육일자','과정명','소속부문','파트너','사원번호','성명','입사연차']]
     df_target = instance.make_set_target()
+    df_target['과정코드'] = df_target['과정명'].split(']')[1]
+    st.dataframe(df_target)
     df_apply['사원번호'] = df_apply['사원번호'].astype(str)
     df_target['사원번호'] = df_target['사원번호'].astype(str)
-    df_apply = pd.merge(df_apply, df_target, on='사원번호', how='inner')
+    # df_apply = pd.merge(df_apply, df_target, on='사원번호', how='inner')
 
-    st.dataframe(df_apply)
+    # st.dataframe(df_apply)
     
