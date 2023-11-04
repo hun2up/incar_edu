@@ -113,6 +113,6 @@ if authentication_status:
     
     st.dataframe(df_apply_target)
 
-    test = df_apply[df_apply['사원번호'] == df_target['사원버  ']]
+    test = df_apply[df_apply['사원번호'] == df_target['사원번호']]
     st.dataframe(test)
     
