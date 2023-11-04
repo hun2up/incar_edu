@@ -107,7 +107,8 @@ if authentication_status:
     st.dataframe(df_apply)
     st.dataframe(df_target)
     df_apply_target = pd.DataFrame()
-    for apply in df_target['사원번호'].nunique():
+    apply_unique = df_target['사원번호'].unique()
+    for apply in apply_unique:
         df_compare = df_apply[df_apply['사원번호'] == apply]
         df_apply_target = pd.concat([df_apply_target, df_compare], axis=0)
     
