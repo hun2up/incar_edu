@@ -111,6 +111,6 @@ if authentication_status:
     df_target = df_target.drop(columns='과정명')
     df_apply['사원번호'] = df_apply['사원번호'].astype(str)
     df_target['사원번호'] = df_target['사원번호'].astype(str)
-    df_apply = pd.merge(df_apply, df_target, on=['교육일자','과정코드','과정명','소속부문','파트너','사원번호','성명','입사연차'], how='left')
+    df_apply = pd.merge(df_apply, df_target, on=['과정코드','소속부문','파트너','사원번호','성명'], how='left')
     st.dataframe(df_apply)
     
