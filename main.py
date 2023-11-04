@@ -102,19 +102,15 @@ if authentication_status:
     st.markdown('###### 전체 교육신청 명단 (전일 기준)')
     st.dataframe(df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['교육일자','과정명','소속부문','파트너','사원번호','성명','입사연차']], use_container_width=True) # 마지막 신청일자 제외한 나머지 신청내역 삭제
 
-    df_apply = df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['교육일자','과정명','소속부문','파트너','사원번호','성명','입사연차']]
+    df_apply = df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['교육일자','과정코드','과정명','소속부문','파트너','사원번호','성명','입사연차']]
     df_target = instance.make_set_target().drop(columns='번호').reset_index(drop=True)
     df_target = df_target.drop(df_target[df_target['파트너'] == '인카본사'].index)
     df_target.insert(1, column='과정코드', value=df_target['과정명'].str.split("]").str[1])
     df_target['과정코드'] = df_target['과정코드'].str.replace('[','')
-    # df_target['과정코드'] = [df_target.iloc[change,2].split("]")[1].replace('[','') for change in range(df_target.shape[0])] # [과정명]에서 '과정코드'만 추출하여 [과정코드] 컬럼에 추가
     df_target.insert(2, column='타겟명', value=df_target['과정명'].str.split(']').str[2])
     df_target = df_target.drop(columns='과정명')
-    # df_target['과정코드'] = df_target['과정명'].str.split(']').str[1]
-    st.dataframe(df_target)
     df_apply['사원번호'] = df_apply['사원번호'].astype(str)
     df_target['사원번호'] = df_target['사원번호'].astype(str)
-    # df_apply = pd.merge(df_apply, df_target, on='사원번호', how='inner')
-
-    # st.dataframe(df_apply)
+    df_apply = pd.merge(df_apply, df_target, on=['교육일자','과정코드','과정명','소속부문','파트너','사원번호','성명','입사연차'], how='left')
+    st.dataframe(df_apply)
     
