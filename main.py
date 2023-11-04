@@ -103,7 +103,7 @@ if authentication_status:
     st.dataframe(df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['교육일자','과정명','소속부문','파트너','사원번호','성명','입사연차']], use_container_width=True) # 마지막 신청일자 제외한 나머지 신청내역 삭제
 
     df_apply = df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['교육일자','과정코드','과정명','소속부문','파트너','사원번호','성명','입사연차']]
-    df_target = instance.make_set_target().drop(columns='번호').reset_index(drop=True)
+    df_target = instance.make_set_target().drop(columns='번호').rename(columns={'성함':'성명'}).reset_index(drop=True)
     df_target = df_target.drop(df_target[df_target['파트너'] == '인카본사'].index)
     df_target.insert(1, column='과정코드', value=df_target['과정명'].str.split("]").str[1])
     df_target['과정코드'] = df_target['과정코드'].str.replace('[','')
