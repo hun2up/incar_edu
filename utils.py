@@ -343,9 +343,9 @@ class EduMain(Charts):
         df_target_all = pd.merge(df_target_all, df_target_isin, on=select)
         df_target_all['반응률'] = (df_target_all['반응인원']/df_target_all['타겟인원']*100).round(1)
         # -------------------------------------------------------------------------------------------------------------------
+        df_all = pd.merge(df_apply_all, df_target_all, on=select)
         # | 소속부문/입사연차 | 신청인원 | 유입인원 | 유입률 | 타겟인원 | 반응인원 | 반응률
-        return pd.merge(df_apply_all, df_target_all, on=select)
-        
+        return df_all
 
     # ------------------------------------------          홍보효과 데이터프레임 제작          ---------------------------------------------
     def make_dataframe_target(self, df, data_type):
