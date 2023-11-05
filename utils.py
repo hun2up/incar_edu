@@ -329,16 +329,23 @@ class EduMain(Charts):
         })
 
     # ------------------------------------------          원형차트 제작          ---------------------------------------------
-    def make_bar_target(self, df):
+    def make_bar_target(self, df, select):
         df_apply = self.target_set_apply(df)
         df_target = self.target_set_target()
         # -------------------------------------------------------------------------------------------------------------------
-        df_apply_all = df_apply.groupby(['소속부문'])['사원번호'].count().reset_index(name='신청인원')
-        df_isin = df_apply[df_apply['사원번호'].isin(df_target['사원번호'])].groupby(['소속부문'])['사원번호'].count().reset_index(name='유입인원')
-        df_all = pd.merge(df_apply_all, df_isin, on='소속부문')
-        df_all['유입률'] = (df_all['유입인원']/df_all['신청인원']*100).round(1) # 수료율 및 IMO신청률 구하기
-        return df_all
+        df_apply_all = df_apply.groupby([select])['사원번호'].count().reset_index(name='신청인원')
+        df_apply_isin = df_apply[df_apply['사원번호'].isin(df_target['사원번호'])].groupby([select])['사원번호'].count().reset_index(name='유입인원')
+        df_apply_all = pd.merge(df_apply_all, df_apply_isin, on=select)
+        df_apply_all['유입률'] = (df_apply_all['유입인원']/df_apply_all['신청인원']*100).round(1) # 수료율 및 IMO신청률 구하기
+        # -------------------------------------------------------------------------------------------------------------------
+        df_target_all = df_target.groupby([select])['사원번호'].count().reset_index(name='타겟인원')
+        df_target_isin = df_target[df_target['사원번호'].isin[df_apply['사원번호']]].groupby([select])['사원번호'].count().reset_index(name='반응인원')
+        df_target_all = pd.merge(df_target_all, df_target_isin, on=select)
+        df_target_all['반응률'] = (df_target_all['반응인원']/df_target_all['타겟인원']*100).round(1)
+        # -------------------------------------------------------------------------------------------------------------------
         # | 소속부문/입사연차 | 신청인원 | 유입인원 | 유입률 | 타겟인원 | 반응인원 | 반응률
+        return pd.merge(df_apply_all, df_target_all, on=select)
+        
 
     # ------------------------------------------          홍보효과 데이터프레임 제작          ---------------------------------------------
     def make_dataframe_target(self, df, data_type):

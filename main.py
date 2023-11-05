@@ -127,7 +127,8 @@ if authentication_status:
         caption=False), use_container_width=True)
     
 
-    st.dataframe(instance.make_bar_target(df_main))
+    st.dataframe(instance.make_bar_target(df_main,'소속부문'))
+    st.dataframe(instance.make_bar_target(df_main,'소속부문'))
 
     # 여섯번째 행
     chart_apply, chart_target = st.columns(2)
