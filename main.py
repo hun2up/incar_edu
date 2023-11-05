@@ -99,10 +99,10 @@ if authentication_status:
     # 네번째 행 (신청현황 리스트)
     pie_apply, pie_target, bar_compare = st.columns(3)
     pie_apply.plotly_chart(instance.make_piechart(
-        label=instance.make_set_target(df=df_main)['구분'],
-        value=instance.make_set_target(df=df_main)['인원'],
+        label=instance.apply_by_target(df=df_main)['구분'],
+        value=instance.apply_by_target(df=df_main)['인원'],
         title="신청인원 기준 타겟홍보 유입률", font=18), use_container_width=True)
     pie_target.plotly_chart(instance.make_piechart(
-        label=instance.test(df=df_main)['구분'],
-        value=instance.test(df=df_main)['인원'],
+        label=instance.target_by_apply(df=df_main)['구분'],
+        value=instance.target_by_apply(df=df_main)['인원'],
         title="홍보인원 기준 교육신청 반응률", font=18), use_container_width=True)
