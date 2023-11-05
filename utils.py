@@ -336,7 +336,6 @@ class EduMain(Charts):
         return df_result
         # | 소속부문/입사연차 | 신청인원 | 유입인원 | 유입률 | 타겟인원 | 반응인원 | 반응률
 
-
     # ------------------------------------------          홍보효과 데이터프레임 제작          ---------------------------------------------
     def make_dataframe_target(self, df, data_type):
         df_apply = self.target_set_apply(df)
