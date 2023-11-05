@@ -105,6 +105,19 @@ if authentication_status:
         default=df[column].unique()
     )
     '''
+
+    slicer_apply, slicer_target = st.columns(2)
+    slicer_apply.multiselect(
+        '과정명',
+        options=instance.target_set_apply(df=df_main)['과정명'].unique(),
+        default=instance.target_set_apply(df=df_main)['과정명'].unique()
+    )
+    slicer_target.multiselect(
+        '타겟명',
+        options=instance.target_set_target()['타겟명'].unique(),
+        default=instance.target_set_apply()['타겟명'].unique()
+    )
+
     # 네번째 행 (신청인원 기준 타겟홍보 유입현황)
     st.markdown('---')
     apply_by_target = st.columns((1,2))
