@@ -95,11 +95,13 @@ if authentication_status:
     chart_new.dataframe(instance.make_set_new(df_main), use_container_width=True)
     chart_all.dataframe(df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['신청일자','교육일자','과정명','소속부문','파트너','사원번호','성명','입사연차']].reset_index(drop=True), use_container_width=True) # 마지막 신청일자 제외한 나머지 신청내역 삭제
 
+    '''
     st.dataframe(instance.make_set_target(df=df_main, merge_type='right'))
     df_all = instance.make_set_target(df=df_main, merge_type='right').groupby(['타겟명'])['사원번호'].nunique().reset_index(name='타겟인원')
     df_target = instance.make_set_target(df=df_main, merge_type='right').groupby(['타겟명','과정명'])['사원번호'].nunique().reset_index(name='반응인원')
     df_bar = pd.merge(df_all, df_target.groupby(['타겟명'])['반응인원'].sum() , on='과정명', how='left')
     st.dataframe(df_bar)
+    '''
     
 
     
