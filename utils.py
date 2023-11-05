@@ -318,7 +318,7 @@ class EduMain(Charts):
     
 
     def test_apply(self, df):
-        df_target = call_sheets("target").drop(columns=['번호','소속총괄','소속부서','IMO신청여부','수료현황']).rename(columns={'성함':'성명'}).reset_index(drop=True)
+        df_target = call_sheets("target").drop(columns=['번호','소속총괄','소속부서','IMO신청여부','수료현황']).rename(columns={'성함':'성명','과정명':'타겟명'}).reset_index(drop=True)
         df_apply = df.drop(df[df.iloc[:,0] != df.iloc[-1,0]].index)[['교육일자','과정코드','과정명','소속부문','파트너','사원번호','성명','입사연차']] # 마지막 신청일자 제외한 나머지 신청내역 삭제
         df_target = df_target.drop(df_target[df_target['파트너'] == '인카본사'].index)
         df_apply['사원번호'] = df_apply['사원번호'].astype(str)
@@ -329,7 +329,7 @@ class EduMain(Charts):
         return df_result
     
     def test_target(self, df):
-        df_target = call_sheets("target").drop(columns=['번호','소속총괄','소속부서','IMO신청여부','수료현황']).rename(columns={'성함':'성명'}).reset_index(drop=True)
+        df_target = call_sheets("target").drop(columns=['번호','소속총괄','소속부서','IMO신청여부','수료현황']).rename(columns={'성함':'성명','과정명':'타겟명'}).reset_index(drop=True)
         df_apply = df.drop(df[df.iloc[:,0] != df.iloc[-1,0]].index)[['교육일자','과정코드','과정명','소속부문','파트너','사원번호','성명','입사연차']] # 마지막 신청일자 제외한 나머지 신청내역 삭제
         df_target = df_target.drop(df_target[df_target['파트너'] == '인카본사'].index)
         df_apply['사원번호'] = df_apply['사원번호'].astype(str)
