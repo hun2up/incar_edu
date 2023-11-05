@@ -327,7 +327,7 @@ class EduMain(Charts):
     
     # ------------------------------------------          신규 교육신청          ---------------------------------------------
     def target_by_apply(self, df):
-        df_target = self.make_set_target(df=df, merge_type='left')
+        df_target = self.make_set_target(df=df, merge_type='right')
         df_target_rate = pd.DataFrame({
             '구분':['타겟유입','반응없음'],
             '인원':[df_target['과정명'].notnull().sum(), df_target['과정명'].isnull().sum()]
