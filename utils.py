@@ -306,8 +306,6 @@ class EduMain(Charts):
     def make_set_target(self, df):
         df_target = call_sheets("target").drop(columns=['번호','소속총괄','소속부서','IMO신청여부','수료현황']).rename(columns={'성함':'성명'}).reset_index(drop=True)
         df_apply = df.drop(df[df.iloc[:,0] != df.iloc[-1,0]].index)[['교육일자','과정코드','소속부문','파트너','사원번호','성명','입사연차']] # 마지막 신청일자 제외한 나머지 신청내역 삭제
-        # df_apply = df.drop(df[df.iloc[:,0] != df.iloc[-1,0]].index)[['교육일자','과정코드','과정명','소속부문','파트너','사원번호','성명','입사연차']] # 마지막 신청일자 제외한 나머지 신청내역 삭제
-        # df_target = instance.make_set_target().drop(columns=['번호','소속총괄','소속부서','IMO신청여부','수료현황']).rename(columns={'성함':'성명'}).reset_index(drop=True)
         df_target = df_target.drop(df_target[df_target['파트너'] == '인카본사'].index)
         df_target.insert(1, column='과정코드', value=df_target['과정명'].str.split("]").str[1])
         df_target['과정코드'] = df_target['과정코드'].str.replace('[','')
@@ -326,7 +324,6 @@ class EduMain(Charts):
     def test(self, df):
         df_target = call_sheets("target").drop(columns=['번호','소속총괄','소속부서','IMO신청여부','수료현황']).rename(columns={'성함':'성명'}).reset_index(drop=True)
         df_apply = df.drop(df[df.iloc[:,0] != df.iloc[-1,0]].index)[['교육일자','과정코드','소속부문','파트너','사원번호','성명','입사연차']] # 마지막 신청일자 제외한 나머지 신청내역 삭제
-        # df_apply = df.drop(df[df.iloc[:,0] != df.iloc[-1,0]].index)[['교육일자','과정코드','과정명','소속부문','파트너','사원번호','성명','입사연차']] # 마지막 신청일자 제외한 나머지 신청내역 삭제
         df_target = df_target.drop(df_target[df_target['파트너'] == '인카본사'].index)
         df_target.insert(1, column='과정코드', value=df_target['과정명'].str.split("]").str[1])
         df_target['과정코드'] = df_target['과정코드'].str.replace('[','')
@@ -334,10 +331,10 @@ class EduMain(Charts):
         df_target = df_target.drop(columns='과정명')
         df_apply['사원번호'] = df_apply['사원번호'].astype(str)
         df_target['사원번호'] = df_target['사원번호'].astype(str)
-        df_apply = pd.merge(df_apply, df_target, on=['과정코드','소속부문','파트너','사원번호','성명'], how='left')
+        df_apply = pd.merge(df_apply, df_target, on=['과정코드','소속부문','파트너','사원번호','성명'], how='right')
         df_apply_rate = pd.DataFrame({
             '구분':['직접신청','타겟유입'],
-            '인원':[df_apply['타겟명'].notnull().sum(), df_apply['타겟명'].isnull().sum()]
+            '인원':[df_apply['과정명'].notnull().sum(), df_apply['과정명'].isnull().sum()]
         })
         return df_apply_rate
     
