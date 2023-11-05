@@ -127,25 +127,31 @@ if authentication_status:
         caption=False), use_container_width=True)
     
     # 여섯번째 행
-    channel_apply, channel_target, channel_rate = st.columns(3)
+    channel_apply, channel_apply_rate = st.columns(2)
     channel_apply.plotly_chart(instance.make_hbarchart_group(
         df=instance.make_bar_target(df_main,'소속부문'),
         category='소속부문',
-        axis_a='유입인원',
-        axis_b='신청인원',
+        axis_a='신청인원',
+        axis_b='유입인원',
         title='소속부문별 신청인원 대비 타겟홍보 유입인원'), use_container_width=True)
-    channel_target.plotly_chart(instance.make_hbarchart_group(
-        df=instance.make_bar_target(df_main,'소속부문'),
-        category='소속부문',
-        axis_a='반응인원',
-        axis_b='타겟인원',
-        title='소속부문별 홍보인원 대비 교육신청 반응인원'), use_container_width=True)
-    channel_rate.plotly_chart(instance.make_hbarchart_group(
+    channel_apply_rate.plotly_chart(instance.make_hbarchart_single(
         df=instance.make_bar_target(df_main,'소속부문'),
         category='소속부문',
         axis_a='유입률',
-        axis_b='반응률',
-        title='소속부문별 신청인원 대비 타겟홍보 유입인원'), use_container_width=True)
+        title='소속부문별 신청인원 대비 타겟홍보 유입률'), use_container_width=True)
+    channel_target, channel_target_rate = st.columns(2)
+    channel_target.plotly_chart(instance.make_hbarchart_group(
+        df=instance.make_bar_target(df_main,'소속부문'),
+        category='소속부문',
+        axis_a='타겟인원',
+        axis_b='반응인원',
+        title='소속부문별 홍보인원 대비 교육신청 반응인원'), use_container_width=True)
+    channel_target_rate.plotly_chart(instance.make_hbarchart_single(
+        df=instance.make_bar_target(df_main,'소속부문'),
+        category='소속부문',
+        axis_a='반응률',
+        title='소속부문별 홍보인원 대비 교육신청 반응률'), use_container_width=True)
+    
     st.dataframe(instance.make_bar_target(df_main,'소속부문'))
     st.dataframe(instance.make_bar_target(df_main,'입사연차'))
 
