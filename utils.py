@@ -344,7 +344,7 @@ class EduMain(Charts):
         df_isin['유입여부'] = '타겟유입'
         df_notin = df_left[~df_left['사원번호'].isin(df_right['사원번호'])]
         df_notin['유입여부'] = '직접신청'
-        df_result = pd.concat([df_isin,df_notin], axis=0).sort_values(by='과정명',ascending=True)
+        df_result = pd.concat([df_isin,df_notin], axis=0).sort_values(by='과정명',ascending=True).reset_index(drop=True)
         return df_result
 
 #########################################################################################################################
