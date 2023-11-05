@@ -100,33 +100,10 @@ if authentication_status:
     st.markdown('---')
     pie_apply, bar_apply, pie_target, bar_target = st.columns(4)
     pie_apply.plotly_chart(instance.make_piechart(
-        label=instance.chart_abt(instance.test_apply(df_main))['구분'],
-        value=instance.chart_abt(instance.test_apply(df_main))['인원'],
+        label=instance.chart_abt(instance.apply_by_target(df_main))['구분'],
+        value=instance.chart_abt(instance.apply_by_target(df_main))['인원'],
         title="신청인원 기준 타겟홍보 유입률", font=18), use_container_width=True)
     pie_target.plotly_chart(instance.make_piechart(
-        label=instance.chart_tba(instance.test_target(df_main))['구분'],
-        value=instance.chart_tba(instance.test_target(df_main))['인원'],
+        label=instance.chart_tba(instance.target_by_apply(df_main))['구분'],
+        value=instance.chart_tba(instance.target_by_apply(df_main))['인원'],
         title="홍보인원 기준 교육신청 반응률", font=18), use_container_width=True)
-    
-    st.dataframe(instance.test_apply(df_main))
-    st.dataframe(instance.test_target(df_main))
-    '''
-    st.dataframe(instance.make_set_target(df=df_main, merge_type='right'))
-    df_all = instance.make_set_target(df=df_main, merge_type='right').groupby(['타겟명'])['사원번호'].nunique().reset_index(name='타겟인원')
-    df_target = instance.make_set_target(df=df_main, merge_type='right').groupby(['타겟명','과정명'])['사원번호'].nunique().reset_index(name='반응인원')
-    df_bar = pd.merge(df_all, df_target.groupby(['타겟명'])['반응인원'].sum() , on='타겟명', how='left')
-    st.dataframe(df_bar)
-    
-    # 네번째 행 (신청현황 리스트)
-    st.markdown('---')
-    pie_apply, pie_target, bar_compare = st.columns(3)
-    pie_apply.plotly_chart(instance.make_piechart(
-        label=instance.apply_by_target(df_main)['구분'],
-        value=instance.apply_by_target(df_main)['인원'],
-        title="신청인원 기준 타겟홍보 유입률", font=18), use_container_width=True)
-    pie_target.plotly_chart(instance.make_piechart(
-        label=instance.target_by_apply(df_main)['구분'],
-        value=instance.target_by_apply(df_main)['인원'],
-        title="홍보인원 기준 교육신청 반응률", font=18), use_container_width=True)
-    '''
-    
