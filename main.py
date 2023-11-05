@@ -104,11 +104,11 @@ if authentication_status:
         '인원':[df_apply['타겟명'].notnull().sum(), df_apply['타겟명'].isnull().sum()]
     })
 
-    st.dataframe(instance.make_set_target(df_main))
+    st.dataframe(instance.make_set_target(df=df_main))
     pie_apply, pie_target, bar_compare = st.columns(3)
     pie_apply.plotly_chart(instance.make_piechart(
-        label=instance.make_set_target(df_main)['구분'],
-        value=instance.make_set_target(df_main)['인원'],
+        label=instance.make_set_target(df=df_main)['구분'],
+        value=instance.make_set_target(df=df_main)['인원'],
         title="신청인원 기준 타겟홍보 유입률", font=18), use_container_width=True)
     '''
     pie_apply.plotly_chart(instance.make_piechart(
