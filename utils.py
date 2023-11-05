@@ -334,17 +334,17 @@ class EduMain(Charts):
         if data_type == '신청':
             df_left = df_apply
             df_right = df_target
-            label_dataframe = ['유입여부','타겟유입',['교육일자','과정명','소속부문','파트너','사원번호','성명','입사연차','유입여부']]
+            label_dataframe = ['유입여부','타겟유입','과정명',['교육일자','과정명','소속부문','파트너','사원번호','성명','입사연차','유입여부']]
         elif data_type =='타겟': 
             df_left = df_target
             df_right = df_apply
-            label_dataframe = ['반응여부','타겟반응']
+            label_dataframe = ['반응여부','타겟반응','타겟명']
         # -------------------------------------------------------------------------------------------------------------------
         df_isin = df_left[df_left['사원번호'].isin(df_right['사원번호'])]
         df_isin[label_dataframe[0]] = label_dataframe[1]
         df_notin = df_left[~df_left['사원번호'].isin(df_right['사원번호'])]
         df_notin[label_dataframe[0]] = ''
-        df_result = pd.concat([df_isin,df_notin], axis=0).sort_values(by='과정명',ascending=True).reset_index(drop=True)
+        df_result = pd.concat([df_isin,df_notin], axis=0).sort_values(by=label_dataframe[2],ascending=True).reset_index(drop=True)
         return df_result
 
 #########################################################################################################################
