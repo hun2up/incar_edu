@@ -315,7 +315,7 @@ class EduMain(Charts):
         df_target['사원번호'] = df_target['사원번호'].astype(str)
         df_apply = pd.merge(df_apply, df_target, on=['과정코드','소속부문','파트너','사원번호','성명'], how='left')
         df_apply_rate = pd.DataFrame({
-            '구분':['직접신청','타겟유입'],
+            '구분':['타겟유입','직접신청'],
             '인원':[df_apply['타겟명'].notnull().sum(), df_apply['타겟명'].isnull().sum()]
         })
         return df_apply_rate
@@ -333,10 +333,10 @@ class EduMain(Charts):
         df_target['사원번호'] = df_target['사원번호'].astype(str)
         df_apply = pd.merge(df_apply, df_target, on=['과정코드','소속부문','파트너','사원번호','성명'], how='right')
         df_apply_rate = pd.DataFrame({
-            '구분':['직접신청','타겟유입'],
+            '구분':['타겟유입','반응없음'],
             '인원':[df_apply['과정명'].notnull().sum(), df_apply['과정명'].isnull().sum()]
         })
-        return df_apply
+        return df_apply_rate
     
 #########################################################################################################################
 ##############                   교육관리(하위페이지) 클래스 정의 : Charts 클래스 상속                      ################
