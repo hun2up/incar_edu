@@ -126,11 +126,18 @@ if authentication_status:
         title='타겟홍보별 교육과정 반응현황',
         caption=False), use_container_width=True)
     
-
+    # 여섯번째 행
+    channel_apply, channel_target, channel_rate = st.columns(3)
+    channel_apply.plotly_chart(instance.make_hbarchart_group(
+        df=instance.make_bar_target(df_main,'소속부문'),
+        category='소속부문',
+        axis_a='신청인원',
+        axis_b='유입인원',
+        title='소속부문별 신청인원 대비 타겟홍보 유입인원'), use_container_width=True)
     st.dataframe(instance.make_bar_target(df_main,'소속부문'))
     st.dataframe(instance.make_bar_target(df_main,'입사연차'))
 
-    # 여섯번째 행
+    # 일곱번째 행
     chart_apply, chart_target = st.columns(2)
     chart_apply.dataframe(instance.make_dataframe_target(df=df_main,data_type='신청'), use_container_width=True)
     chart_target.dataframe(instance.make_dataframe_target(df=df_main,data_type='타겟'), use_container_width=True)
