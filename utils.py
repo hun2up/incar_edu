@@ -339,7 +339,7 @@ class EduMain(Charts):
         df_apply_all['유입률'] = (df_apply_all['유입인원']/df_apply_all['신청인원']*100).round(1) # 수료율 및 IMO신청률 구하기
         # -------------------------------------------------------------------------------------------------------------------
         df_target_all = df_target.groupby([select])['사원번호'].count().reset_index(name='타겟인원')
-        df_target_isin = df_target[df_target['사원번호'].isin[df_apply['사원번호']]].groupby([select])['사원번호'].count().reset_index(name='반응인원')
+        df_target_isin = df_target[df_target['사원번호'].isin(df_apply['사원번호'])].groupby([select])['사원번호'].count().reset_index(name='반응인원')
         df_target_all = pd.merge(df_target_all, df_target_isin, on=select)
         df_target_all['반응률'] = (df_target_all['반응인원']/df_target_all['타겟인원']*100).round(1)
         # -------------------------------------------------------------------------------------------------------------------
