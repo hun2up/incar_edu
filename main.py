@@ -192,8 +192,8 @@ if authentication_status:
 
     # 열번째 행
     title_apply, title_target = st.columns(2)
-    title_new.markdown('###### 타겟홍보 유입여부 (교육신청인원)')
-    title_all.markdown('###### 교육신청 반응여부 (타겟홍보인원)')
+    title_apply.markdown('###### 타겟홍보 유입여부 (교육신청인원)')
+    title_target.markdown('###### 교육신청 반응여부 (타겟홍보인원)')
     chart_apply, chart_target = st.columns(2)
     chart_apply.dataframe(instance.make_dataframe_target(df=df_main,data_type='신청'), use_container_width=True)
     chart_target.dataframe(instance.make_dataframe_target(df=df_main,data_type='타겟'), use_container_width=True)
