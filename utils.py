@@ -328,6 +328,12 @@ class EduMain(Charts):
         df_result = pd.merge(df_apply_all, df_apply_target, on='과정명')
         return df_result
     
+    def chart_abt(self, df):
+        return pd.DataFrame({
+            '구분':['타겟유입','직접신청'],
+            '인원':[df['유입인원'].sum(), df['신청인원'].sum()]
+        })
+    
     def test_target(self, df):
         df_target = call_sheets("target").drop(columns=['번호','소속총괄','소속부서','IMO신청여부','수료현황']).rename(columns={'성함':'성명','과정명':'타겟명'}).reset_index(drop=True)
         df_apply = df.drop(df[df.iloc[:,0] != df.iloc[-1,0]].index)[['교육일자','과정코드','과정명','소속부문','파트너','사원번호','성명','입사연차']] # 마지막 신청일자 제외한 나머지 신청내역 삭제
@@ -338,6 +344,12 @@ class EduMain(Charts):
         df_target_apply = df_target[df_target['사원번호'].isin(df_apply['사원번호'])].groupby(['타겟명'])['사원번호'].nunique().reset_index(name='반응인원')
         df_result = pd.merge(df_target_all, df_target_apply, on='타겟명')
         return df_result
+    
+    def chart_tba(self, df):
+        return pd.DataFrame({
+            '구분':['타겟반응','반응없음'],
+            '인원':[df['반응인원'].sum(), df['타겟인원'].sum()]
+        })
 
     # ------------------------------------------          신규 교육신청          ---------------------------------------------
     def apply_by_target(self, df):
