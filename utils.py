@@ -332,19 +332,19 @@ class EduMain(Charts):
         df_target = self.target_set_target()
         # -------------------------------------------------------------------------------------------------------------------
         if data_type == '신청':
-            number = 0
             df_left = df_apply
             df_right = df_target
+            label_dataframe = ['유입여부','타겟유입']
         elif data_type =='타겟': 
-            number = 1
             df_left = df_target
             df_right = df_apply
+            label_dataframe = ['반응여부','타겟반응']
         # -------------------------------------------------------------------------------------------------------------------
         df_isin = df_left[df_left['사원번호'].isin(df_right['사원번호'])]
-        df_isin['유입여부'] = '타겟유입'
+        df_isin[label_dataframe[0]] = label_dataframe[1]
         df_notin = df_left[~df_left['사원번호'].isin(df_right['사원번호'])]
-        df_notin['유입여부'] = '직접신청'
-        df_result = pd.concat([df_isin,df_notin], axis=0).sort_values(by='과정명',ascending=True).reset_index(drop=True)
+        df_notin[label_dataframe[0]] = ''
+        df_result = pd.concat([df_isin,df_notin], axis=0)[['교육일자','과정명','소속부문','파트너','사원번호','성명','입사연차','유입여부']].sort_values(by='과정명',ascending=True).reset_index(drop=True)
         return df_result
 
 #########################################################################################################################

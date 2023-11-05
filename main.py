@@ -129,4 +129,5 @@ if authentication_status:
 
     # 여섯번째 행
     chart_apply, chart_target = st.columns(2)
-    chart_apply.dataframe(instance.make_dataframe_target(df=df_main,data_type='신청'))
+    chart_apply.dataframe(instance.make_dataframe_target(df=df_main,data_type='신청'), use_container_width=True)
+    chart_target.dataframe(instance.make_dataframe_target(df=df_main,data_type='타겟'), use_container_width=True)
