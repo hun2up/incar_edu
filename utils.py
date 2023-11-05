@@ -141,7 +141,9 @@ class Charts():
         return return_chart
 
     # -----------------------------------          수평막대그래프 제작 (Grouped)          ------------------------------------
-    def make_vbarchart_group(self, df, category, axis_a, axis_b, title):
+    def make_vbarchart_group(self, df, category, axis_a, axis_b, title, caption=True):
+        if caption == True: caption_text = '색상 차트는 누적인원(중복포함), 회색 차트는 고유인원(중복제거)'
+        else: caption_text = None
         # axis_a: 고유값 (신청인원, 수료인원) / axis_b: 누계값 (신청누계, 수료누계)
         fig_a = pl.graph_objs.Bar(
             x=df[category],
@@ -159,7 +161,7 @@ class Charts():
             marker={'color':self.generate_chart_colors(df)},
             orientation='v'
         )
-        layout_chart = pl.graph_objs.Layout(title=title,xaxis={'categoryorder':'array', 'categoryarray':self.generate_barchart_orders(df,category)}, annotations=[dict(text='색상 차트는 누적인원(중복포함), 회색 차트는 고유인원(중복제거)',showarrow=False,xref='paper',yref='paper',x=-0.1,y=1.1)])
+        layout_chart = pl.graph_objs.Layout(title=title,xaxis={'categoryorder':'array', 'categoryarray':self.generate_barchart_orders(df,category)}, annotations=[dict(text=caption_text,showarrow=False,xref='paper',yref='paper',x=-0.1,y=1.1)])
         return_chart = pl.graph_objs.Figure(data=[fig_a, fig_b],layout=layout_chart)
         return_chart.update_traces(textposition=self.generate_chart_outsides(df))
         return_chart.update_layout(showlegend=False)
