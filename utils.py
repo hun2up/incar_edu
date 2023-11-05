@@ -328,6 +328,15 @@ class EduMain(Charts):
             '인원':[self.make_set_target(df=df,data_type=data_type)[label_chart[2]].sum(), self.make_set_target(df=df,data_type=data_type)[label_chart[3]].sum() - self.make_set_target(df=df,data_type=data_type)[label_chart[2]].sum()]
         })
 
+    # ------------------------------------------          원형차트 제작          ---------------------------------------------
+    def make_bar_target(self, df, data_type):
+        df_result = pd.DataFrame({'구분':df['소속부문'].unique().tolist()})
+        df_result['신청인원'] = df.groupby(['소속부문'])['사원번호'].count().reset_index(name='신청인원')
+        df_result['유입인원'] = df.groupby(['소속부문'])['유입여부'].apply(lambda x: x.notnull().sum()).reset_index(name='유입인원')
+        return df_result
+        # | 소속부문/입사연차 | 신청인원 | 유입인원 | 유입률 | 타겟인원 | 반응인원 | 반응률
+
+
     # ------------------------------------------          홍보효과 데이터프레임 제작          ---------------------------------------------
     def make_dataframe_target(self, df, data_type):
         df_apply = self.target_set_apply(df)

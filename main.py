@@ -127,6 +127,8 @@ if authentication_status:
         caption=False), use_container_width=True)
     
 
+    st.dataframe(instance.make_bar_target(df_main))
+
     # 여섯번째 행
     chart_apply, chart_target = st.columns(2)
     chart_apply.dataframe(instance.make_dataframe_target(df=df_main,data_type='신청'), use_container_width=True)
