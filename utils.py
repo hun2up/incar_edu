@@ -329,7 +329,7 @@ class EduMain(Charts):
         })
 
     # ------------------------------------------          원형차트 제작          ---------------------------------------------
-    def make_bar_target(self, df, data_type):
+    def make_bar_target(self, df):
         df_result = pd.DataFrame({'구분':df['소속부문'].unique().tolist()})
         df_result['신청인원'] = df.groupby(['소속부문'])['사원번호'].count().reset_index(name='신청인원')
         df_result['유입인원'] = df.groupby(['소속부문'])['유입여부'].apply(lambda x: x.notnull().sum()).reset_index(name='유입인원')
