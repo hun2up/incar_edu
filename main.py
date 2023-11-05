@@ -131,8 +131,20 @@ if authentication_status:
     channel_apply.plotly_chart(instance.make_hbarchart_group(
         df=instance.make_bar_target(df_main,'소속부문'),
         category='소속부문',
-        axis_a='신청인원',
-        axis_b='유입인원',
+        axis_a='유입인원',
+        axis_b='신청인원',
+        title='소속부문별 신청인원 대비 타겟홍보 유입인원'), use_container_width=True)
+    channel_target.plotly_chart(instance.make_hbarchart_group(
+        df=instance.make_bar_target(df_main,'소속부문'),
+        category='소속부문',
+        axis_a='반응인원',
+        axis_b='타겟인원',
+        title='소속부문별 홍보인원 대비 교육신청 반응인원'), use_container_width=True)
+    channel_rate.plotly_chart(instance.make_hbarchart_group(
+        df=instance.make_bar_target(df_main,'소속부문'),
+        category='소속부문',
+        axis_a='유입률',
+        axis_b='반응률',
         title='소속부문별 신청인원 대비 타겟홍보 유입인원'), use_container_width=True)
     st.dataframe(instance.make_bar_target(df_main,'소속부문'))
     st.dataframe(instance.make_bar_target(df_main,'입사연차'))
