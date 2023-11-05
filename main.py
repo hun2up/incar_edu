@@ -98,6 +98,32 @@ if authentication_status:
 
     # 네번째 행 (신청현황 리스트)
     st.markdown('---')
+    apply_by_target = st.columns((1,2))
+    apply_by_target[0].plotly_chart(instance.make_piechart(
+        label=instance.chart_abt(instance.apply_by_target(df_main))['구분'],
+        value=instance.chart_abt(instance.apply_by_target(df_main))['인원'],
+        title="신청인원 기준 타겟홍보 유입률", font=18), use_container_width=True)
+    apply_by_target[1].plotly_chart(instance.make_vbarchart_group(
+        df=instance.apply_by_target(df_main),
+        category='과정명',
+        axis_a='신청인원',
+        axis_b='유입인원',
+        title='교육과정별 타겟홍보 유입현황'), use_container_width=True)
+    target_by_apply = st.columns((1,2))
+    target_by_apply[0].plotly_chart(instance.make_piechart(
+        label=instance.chart_tba(instance.target_by_apply(df_main))['구분'],
+        value=instance.chart_tba(instance.target_by_apply(df_main))['인원'],
+        title="홍보인원 기준 교육신청 반응률", font=18), use_container_width=True)
+    target_by_apply[1].plotly_chart(instance.make_vbarchart_group(
+        df=instance.target_by_apply(df_main),
+        category='타겟명',
+        axis_a='타겟인원',
+        axis_b='반응인원',
+        title='타겟홍보별 교육과정 반응현황'), use_container_width=True)
+
+
+
+    '''
     pie_apply, bar_apply, pie_target, bar_target = st.columns(4)
     pie_apply.plotly_chart(instance.make_piechart(
         label=instance.chart_abt(instance.apply_by_target(df_main))['구분'],
@@ -119,3 +145,4 @@ if authentication_status:
         axis_a='타겟인원',
         axis_b='반응인원',
         title='타겟홍보별 교육과정 반응현황'), use_container_width=True)
+    '''
