@@ -140,31 +140,6 @@ class Charts():
         return_chart.update_layout(showlegend=False)
         return return_chart
 
-    # -----------------------------------          수직막대그래프 제작 (Grouped)          ------------------------------------
-    def make_vbarchart(self, df, title):
-        # axis_a: 고유값 (신청인원, 수료인원) / axis_b: 누계값 (신청누계, 수료누계)
-        fig_a = pl.graph_objs.Bar(
-            x=df['과정명'],
-            y=df['목표인원'],
-            name='목표인원',
-            text=df['목표인원'],
-            marker={'color':'grey'},
-            orientation='v'
-        )
-        fig_b = pl.graph_objs.Bar(
-            x=df['과정명'],
-            y=df['신청인원'],
-            name='신청인원',
-            text=df['신청인원'],
-            marker={'color':self.generate_chart_colors(df)},
-            orientation='v'
-        )
-        layout_chart = pl.graph_objs.Layout(title=title,yaxis={'categoryorder':'array', 'categoryarray':self.generate_barchart_orders(df, None)})
-        return_chart = pl.graph_objs.Figure(data=[fig_a,fig_b],layout=layout_chart)
-        return_chart.update_traces(textposition=self.generate_chart_outsides(df))
-        return_chart.update_layout(showlegend=False)
-        return return_chart
-
     # -----------------------------------          수평막대그래프 제작 (Grouped)          ------------------------------------
     def make_vbarchart_group(self, df, category, axis_a, axis_b, title):
         # axis_a: 고유값 (신청인원, 수료인원) / axis_b: 누계값 (신청누계, 수료누계)
