@@ -287,7 +287,7 @@ class EduMain(Charts):
         df_target = df_target.drop(df_target[df_target['파트너'] == '인카본사'].index)
         df_apply['사원번호'] = df_apply['사원번호'].astype(str)
         df_target['사원번호'] = df_target['사원번호'].astype(str)
-
+        # -------------------------------------------------------------------------------------------------------------------
         if data_type == '신청':
             number = 0
             df_left = df_apply
@@ -296,7 +296,7 @@ class EduMain(Charts):
             number = 1
             df_left = df_target
             df_right = df_apply
-        
+        # -------------------------------------------------------------------------------------------------------------------
         df_all = df_left.groupby([label[number][0]])['사원번호'].nunique().reset_index(name=label[number][1])
         df_selected = df_left[df_left['사원번호'].isin(df_right['사원번호'])].groupby([label[number][0]])['사원번호'].nunique().reset_index(name=label[number][2])
         df_result = pd.merge(df_all, df_selected, on=label[number][0])
