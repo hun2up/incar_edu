@@ -311,13 +311,13 @@ class EduMain(Charts):
         df_target = df_target.drop(df_target[df_target['파트너'] == '인카본사'].index)
         df_apply['사원번호'] = df_apply['사원번호'].astype(str)
         df_target['사원번호'] = df_target['사원번호'].astype(str)
-        if type == '신청': type_order = 0
-        elif type == '타겟': type_order = 1
+        if type == '신청': type_order = 0 # 신청인원
+        elif type == '타겟': type_order = 1 # 타겟인원
         df_apply_all = df_apply.groupby([apply_or_target[type_order][0]])['사원번호'].nunique().reset_index(name=[apply_or_target[type_order][1]])
-        df_apply_target = df_apply[df_apply['사원번호'].isin(df_target['사원번호'])].groupby([[apply_or_target[type_order][0]]])['사원번호'].nunique().reset_index(name=[apply_or_target[type_order][2]])
+        df_apply_target = df_apply[df_apply['사원번호'].isin(df_target['사원번호'])]
+        df_apply_target = df_apply_target.groupby([[apply_or_target[type_order][0]]])['사원번호'].nunique().reset_index(name=[apply_or_target[type_order][2]])
         df_result = pd.merge(df_apply_all, df_apply_target, on=[apply_or_target[type_order][0]])
         return df_result
-    
 
     def apply_by_target(self, df):
         df_target = call_sheets("target").drop(columns=['번호','소속총괄','소속부서','IMO신청여부','수료현황']).rename(columns={'성함':'성명','과정명':'타겟명'}).reset_index(drop=True)
