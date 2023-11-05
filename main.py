@@ -104,7 +104,7 @@ if authentication_status:
         '인원':[df_apply['타겟명'].notnull().sum(), df_apply['타겟명'].isnull().sum()]
     })
 
-
+    st.dataframe(instance.make_set_target(df_main))
     pie_apply, pie_target, bar_compare = st.columns(3)
     pie_apply.plotly_chart(instance.make_piechart(
         label=instance.make_set_target(df_main)['구분'],
