@@ -101,8 +101,8 @@ if authentication_status:
     st.markdown('---')
     apply_by_target = st.columns((1,2))
     apply_by_target[0].plotly_chart(instance.make_piechart(
-        label=instance.chart_abt(instance.apply_by_target(df_main))['구분'],
-        value=instance.chart_abt(instance.apply_by_target(df_main))['인원'],
+        label=instance.chart_abt(instance.make_set_target(df=df_main,data_type='신청'))['구분'],
+        value=instance.chart_abt(instance.make_set_target(df=df_main,data_type='타겟'))['인원'],
         title="신청인원 기준 타겟홍보 유입률", font=18), use_container_width=True)
     apply_by_target[1].plotly_chart(instance.make_vbarchart_group(
         df=instance.apply_by_target(df_main),

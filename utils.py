@@ -279,6 +279,32 @@ class EduMain(Charts):
         df_today = df_today[~df_today['사원번호'].isin(df_before['사원번호'])][['신청일자','교육일자','과정명','소속부문','파트너','사원번호','성명','입사연차']].reset_index(drop=True)
         return df_today
 
+
+    def make_set_target(self, df, data_type):
+        label = [['과정명','신청인원','유입인원'],['타겟명','타겟인원','반응인원']]
+
+        df_target = call_sheets("target").drop(columns=['번호','소속총괄','소속부서','IMO신청여부','수료현황']).rename(columns={'성함':'성명','과정명':'타겟명'}).reset_index(drop=True)
+        df_apply = df.drop(df[df.iloc[:,0] != df.iloc[-1,0]].index)[['교육일자','과정코드','과정명','소속부문','파트너','사원번호','성명','입사연차']] # 마지막 신청일자 제외한 나머지 신청내역 삭제
+        df_target = df_target.drop(df_target[df_target['파트너'] == '인카본사'].index)
+        df_apply['사원번호'] = df_apply['사원번호'].astype(str)
+        df_target['사원번호'] = df_target['사원번호'].astype(str)
+
+        if data_type == '신청':
+            number = 0
+            df_left = df_apply
+            df_right = df_target
+        elif data_type == '타겟':
+            number = 1
+            df_left = df_target
+            df_right = df_apply
+        
+        df_left = df_left.groupby([label[number][0]])['사원번호'].nunique().reset_index(name=label[number][1])
+        df_right = df_left[df_left['사원번호'].isin(df_right['사원번호'])].groupby([label[number][0]])['사원번호'].nunique().reset_index(name=label[number][2])
+        return pd.merge(df_left, df_right, on=label[number][0])
+        
+
+
+
     # ------------------------------------------          신규 교육신청          ---------------------------------------------
     def apply_by_target(self, df):
         df_target = call_sheets("target").drop(columns=['번호','소속총괄','소속부서','IMO신청여부','수료현황']).rename(columns={'성함':'성명','과정명':'타겟명'}).reset_index(drop=True)
