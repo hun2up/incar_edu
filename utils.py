@@ -300,7 +300,8 @@ class EduMain(Charts):
         
         df_left = df_left.groupby([label[number][0]])['사원번호'].nunique().reset_index(name=label[number][1])
         df_right = df_left[df_left['사원번호'].isin(df_right['사원번호'])].groupby([label[number][0]])['사원번호'].nunique().reset_index(name=label[number][2])
-        return pd.merge(df_left, df_right, on=label[number][0])
+        df_result = pd.merge(df_left, df_right, on=label[number][0])
+        return df_result
         
 
 
