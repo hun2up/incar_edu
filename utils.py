@@ -315,7 +315,7 @@ class EduMain(Charts):
         df_result = pd.merge(df_all, df_selected, on=label_data[number][0])
         return pd.DataFrame({
             '구분':[label_chart[0],label_chart[1]],
-            '인원':[df_result(df=df,data_type=data_type)[label_chart[2]].sum(), df_result(df=df,data_type=data_type)[label_chart[3]].sum() - df_result(df=df,data_type=data_type)[label_chart[2]].sum()]
+            '인원':[df_result[label_chart[2]].sum(), df_result[label_chart[3]].sum() - df_result[label_chart[2]].sum()]
         })
 
 
