@@ -279,6 +279,51 @@ class EduMain(Charts):
         df_today = df_today[~df_today['사원번호'].isin(df_before['사원번호'])][['신청일자','교육일자','과정명','소속부문','파트너','사원번호','성명','입사연차']].reset_index(drop=True)
         return df_today
 
+
+    def target_set_apply(self, df):
+        df_apply = df.drop(df[df.iloc[:,0] != df.iloc[-1,0]].index)[['교육일자','과정코드','과정명','소속부문','파트너','사원번호','성명','입사연차']] # 마지막 신청일자 제외한 나머지 신청내역 삭제
+        df_apply['사원번호'] = df_apply['사원번호'].astype(str)
+        return df_apply
+
+    def target_set_target(self):
+        df_target = call_sheets("target").drop(columns=['번호','소속총괄','소속부서','IMO신청여부','수료현황']).rename(columns={'성함':'성명'}).reset_index(drop=True)
+        df_target = df_target.drop(df_target[df_target['파트너'] == '인카본사'].index)
+        df_target.insert(0, column='타겟명', value=None)
+        df_target['타겟명'] = df_target['과정명'].str.split(']').str[1]
+        df_target = df_target.drop(columns='과정명')
+        df_target['사원번호'] = df_target['사원번호'].astype(str)        
+        return df_target
+        
+    def make_pie_target(self, df, data_type):
+        label_data = [['과정명','신청인원','유입인원'],['타겟명','타겟인원','반응인원']]
+        df_apply = self.target_set_apply(df)
+        df_target = self.target_set_target()
+        # -------------------------------------------------------------------------------------------------------------------
+        if data_type == '신청':
+            number = 0
+            df_left = df_apply
+            df_right = df_target
+            label_chart = ['타겟유입','직접신청','유입인원','신청인원']
+        elif data_type =='타겟': 
+            number = 1
+            df_left = df_target
+            df_right = df_apply
+            label_chart = ['타겟반응','반응없음','반응인원','타겟인원']
+        # -------------------------------------------------------------------------------------------------------------------
+        df_all = df_left.groupby([label_data[number][0]])['사원번호'].nunique().reset_index(name=label_data[number][1])
+        df_selected = df_left[df_left['사원번호'].isin(df_right['사원번호'])].groupby([label_data[number][0]])['사원번호'].nunique().reset_index(name=label_data[number][2])
+        df_result = pd.merge(df_all, df_selected, on=label_data[number][0])
+        return pd.DataFrame({
+            '구분':[label_chart[0],label_chart[1]],
+            '인원':[df_result(df=df,data_type=data_type)[label_chart[2]].sum(), df_result(df=df,data_type=data_type)[label_chart[3]].sum() - df_result(df=df,data_type=data_type)[label_chart[2]].sum()]
+        })
+
+
+
+
+
+
+    '''
     def make_set_target(self, df, data_type):
         label = [['과정명','신청인원','유입인원'],['타겟명','타겟인원','반응인원']]
         # -------------------------------------------------------------------------------------------------------------------
@@ -312,6 +357,7 @@ class EduMain(Charts):
             '구분':[label[0],label[1]],
             '인원':[self.make_set_target(df=df,data_type=data_type)[label[2]].sum(), self.make_set_target(df=df,data_type=data_type)[label[3]].sum() - self.make_set_target(df=df,data_type=data_type)[label[2]].sum()]
         })
+    '''
 
 #########################################################################################################################
 ##############                   교육관리(하위페이지) 클래스 정의 : Charts 클래스 상속                      ################
