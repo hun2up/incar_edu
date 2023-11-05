@@ -316,6 +316,7 @@ class EduMain(Charts):
         df_apply_all = df_apply.groupby([apply_or_target[type_order][0]])['사원번호'].nunique().reset_index(name=[apply_or_target[type_order][1]])
         df_apply_target = df_apply[df_apply['사원번호'].isin(df_target['사원번호'])].groupby([apply_or_target[type_order][0]])['사원번호'].nunique().reset_index(name=apply_or_target[type_order][2])
         df_result = pd.merge(df_apply_all, df_apply_target, on=apply_or_target[type_order][0])
+        st.write(apply_or_target[type_order][0])
         return df_result
 
     def apply_by_target(self, df):
