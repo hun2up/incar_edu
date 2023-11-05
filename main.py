@@ -115,7 +115,7 @@ if authentication_status:
     slicer_target.multiselect(
         '타겟명',
         options=instance.target_set_target()['타겟명'].unique(),
-        default=instance.target_set_apply()['타겟명'].unique()
+        default=instance.target_set_target()['타겟명'].unique()
     )
 
     # 네번째 행 (신청인원 기준 타겟홍보 유입현황)
