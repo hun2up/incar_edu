@@ -88,7 +88,7 @@ if authentication_status:
         axis_a='신청인원',
         title='입사연차별 신청인원 현황'), use_container_width=True)
 
-
+    '''
     df_apply = df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['교육일자','과정코드','과정명','소속부문','파트너','사원번호','성명','입사연차']] # 마지막 신청일자 제외한 나머지 신청내역 삭제
     df_target = instance.make_set_target().drop(columns=['번호','소속총괄','소속부서','IMO신청여부','수료현황']).rename(columns={'성함':'성명'}).reset_index(drop=True)
     df_target = df_target.drop(df_target[df_target['파트너'] == '인카본사'].index)
@@ -103,6 +103,7 @@ if authentication_status:
         '구분':['직접신청','타겟유입'],
         '인원':[df_apply['타겟명'].notnull().sum(), df_apply['타겟명'].isnull().sum()]
     })
+    '''
 
     st.dataframe(instance.make_set_target(df=df_main))
     pie_apply, pie_target, bar_compare = st.columns(3)
