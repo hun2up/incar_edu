@@ -104,8 +104,8 @@ if authentication_status:
         value=instance.chart_abt(instance.test_apply(df_main))['인원'],
         title="신청인원 기준 타겟홍보 유입률", font=18), use_container_width=True)
     pie_target.plotly_chart(instance.make_piechart(
-        label=instance.chart_tba(instance.test_target(df_main)),
-        value=instance.chart_tba(instance.test_target(df_main)),
+        label=instance.chart_tba(instance.test_target(df_main))['구분'],
+        value=instance.chart_tba(instance.test_target(df_main))['인원'],
         title="홍보인원 기준 교육신청 반응률", font=18), use_container_width=True)
     
     st.dataframe(instance.test_apply(df_main))
