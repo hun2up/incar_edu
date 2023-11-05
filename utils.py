@@ -299,7 +299,7 @@ class EduMain(Charts):
         df_before = df.drop(df[df.iloc[:,0] == df.iloc[-1,0]].index)
         df_before = df_before.drop(df_before[df_before.iloc[:,0] != df_before.iloc[-1,0]].index)
         df_today = df.drop(df[df.iloc[:,0] != df.iloc[-1,0]].index)
-        df_today = df_today[~df_today['사원번호'].isin(df_before['사원번호'])][['날짜','교육일자','과정명','소속부문','파트너','사원번호','성명','입사연차']].reset_index(drop=True)
+        df_today = df_today[~df_today['사원번호'].isin(df_before['사원번호'])][['신청일자','교육일자','과정명','소속부문','파트너','사원번호','성명','입사연차']].reset_index(drop=True)
         return df_today
 
     # ------------------------------------------          신규 교육신청          ---------------------------------------------

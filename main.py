@@ -120,7 +120,7 @@ if authentication_status:
     st.dataframe(instance.make_set_new(df_main), use_container_width=True)
     st.markdown('---')
     st.markdown('###### 전체 교육신청 명단 (전일 기준)')
-    st.dataframe(df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['날짜','교육일자','과정명','소속부문','파트너','사원번호','성명','입사연차']], use_container_width=True) # 마지막 신청일자 제외한 나머지 신청내역 삭제
+    st.dataframe(df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['신청일자','교육일자','과정명','소속부문','파트너','사원번호','성명','입사연차']], use_container_width=True) # 마지막 신청일자 제외한 나머지 신청내역 삭제
 
 
     
