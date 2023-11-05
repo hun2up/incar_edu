@@ -88,21 +88,8 @@ if authentication_status:
         axis_a='신청인원',
         title='입사연차별 신청인원 현황'), use_container_width=True)
 
-    pie_apply, pie_target = st.columns(2)
-    pie_apply.write("신청인원 기준 타겟홍보 유입률")
-    pie_target.write("홍보인원 기준 반응률")
-    
-    #st.dataframe()
-    
-    # 두번째 행 (신청현황 리스트)
-    st.markdown('---')
-    st.markdown('###### 신규 교육신청 명단 (전전일 대비 전일 기준)')
-    st.dataframe(instance.make_set_new(df_main), use_container_width=True)
-    st.markdown('---')
-    st.markdown('###### 전체 교육신청 명단 (전일 기준)')
-    st.dataframe(df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['교육일자','과정명','소속부문','파트너','사원번호','성명','입사연차']], use_container_width=True) # 마지막 신청일자 제외한 나머지 신청내역 삭제
 
-    df_apply = df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['교육일자','과정코드','과정명','소속부문','파트너','사원번호','성명','입사연차']]
+    df_apply = df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['교육일자','과정코드','과정명','소속부문','파트너','사원번호','성명','입사연차']] # 마지막 신청일자 제외한 나머지 신청내역 삭제
     df_target = instance.make_set_target().drop(columns=['번호','소속총괄','소속부서','IMO신청여부','수료현황']).rename(columns={'성함':'성명'}).reset_index(drop=True)
     df_target = df_target.drop(df_target[df_target['파트너'] == '인카본사'].index)
     df_target.insert(1, column='과정코드', value=df_target['과정명'].str.split("]").str[1])
@@ -116,5 +103,26 @@ if authentication_status:
         '구분':['직접신청','타겟유입'],
         '인원':[df_apply['타겟명'].notnull().sum(), df_apply['타겟명'].isnull().sum()]
     })
-    st.dataframe(df_apply_rate)
+
+
+    pie_apply, pie_target, bar_compare = st.columns(3)
+    pie_apply.plotly_chart(instance.make_piechart(
+        label=df_apply_rate['구분'],
+        value=df_apply_rate['인원']),
+        use_container_width=True)
+    pie_apply.write("신청인원 기준 타겟홍보 유입률")
+    pie_target.write("홍보인원 기준 반응률")
+    
+    #st.dataframe()
+    
+    # 두번째 행 (신청현황 리스트)
+    st.markdown('---')
+    st.markdown('###### 신규 교육신청 명단 (전전일 대비 전일 기준)')
+    st.dataframe(instance.make_set_new(df_main), use_container_width=True)
+    st.markdown('---')
+    st.markdown('###### 전체 교육신청 명단 (전일 기준)')
+    st.dataframe(df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['교육일자','과정명','소속부문','파트너','사원번호','성명','입사연차']], use_container_width=True) # 마지막 신청일자 제외한 나머지 신청내역 삭제
+
+
+    
     
