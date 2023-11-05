@@ -292,7 +292,9 @@ class EduMain(Charts):
         df_target.insert(0, column='타겟명', value=None)
         df_target['타겟명'] = df_target['과정명'].str.split(']').str[1]
         df_target = df_target.drop(columns='과정명')
-        df_target['사원번호'] = df_target['사원번호'].astype(str)        
+        df_target['사원번호'] = df_target['사원번호'].astype(str)     
+        # 입사연차 컬럼 추가
+        df_target['입사연차'] = (datetime.now().year%100 + 1 - df_target['사원번호'].astype(str).str[:2].astype(int, errors='ignore')).apply(lambda x: f'{x}년차') # [입사연차] 컬럼 추가 및 데이터(입사연차) 삽입   
         return df_target
     
     # ------------------------------------------          홍보효과 분석을 위한 신청현황 및 타겟홍보 데이터 병합          ---------------------------------------------
@@ -344,7 +346,7 @@ class EduMain(Charts):
         df_isin[label_dataframe[1]] = label_dataframe[2]
         df_notin = df_left[~df_left['사원번호'].isin(df_right['사원번호'])]
         df_notin[label_dataframe[1]] = ''
-        df_result = pd.concat([df_isin,df_notin], axis=0).sort_values(by=[label_dataframe[0],'소속부문','파트너','사원번호','성명',label_dataframe[1]],ascending=True).reset_index(drop=True)
+        df_result = pd.concat([df_isin,df_notin], axis=0).sort_values(by=[label_dataframe[0],'소속부문','파트너','사원번호','성명','입사연차',label_dataframe[1]],ascending=True).reset_index(drop=True)
         return df_result
 
 #########################################################################################################################
