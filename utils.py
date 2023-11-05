@@ -309,44 +309,7 @@ class EduMain(Charts):
             '구분':[label[0],label[1]],
             '인원':[self.make_set_target(df=df,data_type=data_type)[label[2]].sum(), self.make_set_target(df=df,data_type=data_type)[label[3]].sum() - self.make_set_target(df=df,data_type=data_type)[label[2]].sum()]
         })
-        
 
-
-    # ------------------------------------------          신규 교육신청          ---------------------------------------------
-    def apply_by_target(self, df):
-        df_target = call_sheets("target").drop(columns=['번호','소속총괄','소속부서','IMO신청여부','수료현황']).rename(columns={'성함':'성명','과정명':'타겟명'}).reset_index(drop=True)
-        df_apply = df.drop(df[df.iloc[:,0] != df.iloc[-1,0]].index)[['교육일자','과정코드','과정명','소속부문','파트너','사원번호','성명','입사연차']] # 마지막 신청일자 제외한 나머지 신청내역 삭제
-        df_target = df_target.drop(df_target[df_target['파트너'] == '인카본사'].index)
-        df_apply['사원번호'] = df_apply['사원번호'].astype(str)
-        df_target['사원번호'] = df_target['사원번호'].astype(str)
-        df_apply_all = df_apply.groupby(['과정명'])['사원번호'].nunique().reset_index(name='신청인원')
-        df_apply_target = df_apply[df_apply['사원번호'].isin(df_target['사원번호'])].groupby(['과정명'])['사원번호'].nunique().reset_index(name='유입인원')
-        df_result = pd.merge(df_apply_all, df_apply_target, on='과정명')
-        return df_result
-    
-    def chart_abt(self, df):
-        return pd.DataFrame({
-            '구분':['타겟유입','직접신청'],
-            '인원':[df['유입인원'].sum(), df['신청인원'].sum()]
-        })
-    
-    def target_by_apply(self, df):
-        df_target = call_sheets("target").drop(columns=['번호','소속총괄','소속부서','IMO신청여부','수료현황']).rename(columns={'성함':'성명','과정명':'타겟명'}).reset_index(drop=True)
-        df_apply = df.drop(df[df.iloc[:,0] != df.iloc[-1,0]].index)[['교육일자','과정코드','과정명','소속부문','파트너','사원번호','성명','입사연차']] # 마지막 신청일자 제외한 나머지 신청내역 삭제
-        df_target = df_target.drop(df_target[df_target['파트너'] == '인카본사'].index)
-        df_apply['사원번호'] = df_apply['사원번호'].astype(str)
-        df_target['사원번호'] = df_target['사원번호'].astype(str)
-        df_target_all = df_target.groupby(['타겟명'])['사원번호'].nunique().reset_index(name='타겟인원')
-        df_target_apply = df_target[df_target['사원번호'].isin(df_apply['사원번호'])].groupby(['타겟명'])['사원번호'].nunique().reset_index(name='반응인원')
-        df_result = pd.merge(df_target_all, df_target_apply, on='타겟명')
-        return df_result
-    
-    def chart_tba(self, df):
-        return pd.DataFrame({
-            '구분':['타겟반응','반응없음'],
-            '인원':[df['반응인원'].sum(), df['타겟인원'].sum()]
-        })
-    
 #########################################################################################################################
 ##############                   교육관리(하위페이지) 클래스 정의 : Charts 클래스 상속                      ################
 #########################################################################################################################
