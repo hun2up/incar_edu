@@ -182,7 +182,10 @@ if authentication_status:
         axis_a='반응률',
         title='입사연차별 홍보인원 대비 교육신청 반응률'), use_container_width=True)
 
-    # 일곱번째 행
+    # 열번째 행
+    title_apply, title_target = st.columns(2)
+    title_new.markdown('###### 타겟홍보 유입여부 (교육신청인원)')
+    title_all.markdown('###### 교육신청 반응여부 (타겟홍보인원)')
     chart_apply, chart_target = st.columns(2)
     chart_apply.dataframe(instance.make_dataframe_target(df=df_main,data_type='신청'), use_container_width=True)
     chart_target.dataframe(instance.make_dataframe_target(df=df_main,data_type='타겟'), use_container_width=True)
