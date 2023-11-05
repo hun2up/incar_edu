@@ -279,7 +279,6 @@ class EduMain(Charts):
         df_today = df_today[~df_today['사원번호'].isin(df_before['사원번호'])][['신청일자','교육일자','과정명','소속부문','파트너','사원번호','성명','입사연차']].reset_index(drop=True)
         return df_today
 
-
     def make_set_target(self, df, data_type):
         label = [['과정명','신청인원','유입인원'],['타겟명','타겟인원','반응인원']]
 
@@ -302,6 +301,14 @@ class EduMain(Charts):
         df_selected = df_left[df_left['사원번호'].isin(df_right['사원번호'])].groupby([label[number][0]])['사원번호'].nunique().reset_index(name=label[number][2])
         df_result = pd.merge(df_all, df_selected, on=label[number][0])
         return df_result
+        
+    def make_pie_target(self, df, data_type):
+        if data_type == '신청': label = ['타겟유입','직접신청','유입인원','신청인원']
+        elif data_type =='타겟': label = ['타겟반응','반응없음','반응인원','타겟인원']
+        return pd.DataFrame({
+            '구분':[label[0],label[1]],
+            '인원':[self.make_set_target(df=df,data_type=data_type)[label[2]].sum(), self.make_set_target(df=df,data_type=data_type)[label[3]].sum()-self.make_set_target(df=df,data_type=data_type)[label[2]].sum()]
+        })
         
 
 
