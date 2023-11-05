@@ -88,20 +88,14 @@ if authentication_status:
         title='입사연차별 신청인원 현황'), use_container_width=True)
 
     # 세번째 행 (신청현황 리스트)
-    st.markdown('---')
     title_new, title_all = st.columns(2)
     title_new.markdown('###### 신규 교육신청 명단 (전전일 대비 전일 기준)')
     title_all.markdown('###### 전체 교육신청 명단 (전일 기준)')
     chart_new, chart_all = st.columns(2)
     chart_new.dataframe(instance.make_set_new(df_main), use_container_width=True)
     chart_all.dataframe(df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['신청일자','교육일자','과정명','소속부문','파트너','사원번호','성명','입사연차']].reset_index(drop=True), use_container_width=True) # 마지막 신청일자 제외한 나머지 신청내역 삭제
-    '''
-    st.markdown('###### 신규 교육신청 명단 (전전일 대비 전일 기준)')
-    st.dataframe(instance.make_set_new(df_main), use_container_width=True)
-    st.markdown('###### 전체 교육신청 명단 (전일 기준)')
-    st.dataframe(df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['신청일자','교육일자','과정명','소속부문','파트너','사원번호','성명','입사연차']].reset_index(drop=True), use_container_width=True) # 마지막 신청일자 제외한 나머지 신청내역 삭제
-    '''
 
+    # 네번째 행 (신청현황 리스트)
     pie_apply, pie_target, bar_compare = st.columns(3)
     pie_apply.plotly_chart(instance.make_piechart(
         label=instance.make_set_target(df=df_main)['구분'],
