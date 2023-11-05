@@ -329,7 +329,7 @@ class EduMain(Charts):
         })
 
     # ------------------------------------------          원형차트 제작          ---------------------------------------------
-    def make_bar_target(self, df, data_type):
+    def make_bar_target(self, df):
         df_apply = self.target_set_apply(df)
         df_target = self.target_set_target()
         # -------------------------------------------------------------------------------------------------------------------
