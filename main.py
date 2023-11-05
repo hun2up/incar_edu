@@ -139,6 +139,8 @@ if authentication_status:
         category='소속부문',
         axis_a='유입률',
         title='소속부문별 신청인원 대비 타겟홍보 유입률'), use_container_width=True)
+    
+    # 일곱번째 행
     channel_target, channel_target_rate = st.columns(2)
     channel_target.plotly_chart(instance.make_hbarchart_group(
         df=instance.make_bar_target(df_main,'소속부문'),
@@ -152,8 +154,33 @@ if authentication_status:
         axis_a='반응률',
         title='소속부문별 홍보인원 대비 교육신청 반응률'), use_container_width=True)
     
-    st.dataframe(instance.make_bar_target(df_main,'소속부문'))
-    st.dataframe(instance.make_bar_target(df_main,'입사연차'))
+    # 여덟번째 행
+    career_apply, career_apply_rate = st.columns(2)
+    career_apply.plotly_chart(instance.make_hbarchart_group(
+        df=instance.make_bar_target(df_main,'입사연차'),
+        category='입사연차',
+        axis_a='신청인원',
+        axis_b='유입인원',
+        title='입사연차별 신청인원 대비 타겟홍보 유입인원'), use_container_width=True)
+    career_apply_rate.plotly_chart(instance.make_hbarchart_single(
+        df=instance.make_bar_target(df_main,'입사연차'),
+        category='입사연차',
+        axis_a='유입률',
+        title='입사연차별 신청인원 대비 타겟홍보 유입률'), use_container_width=True)
+    
+    # 아홉번째 행
+    career_target, career_target_rate = st.columns(2)
+    career_target.plotly_chart(instance.make_hbarchart_group(
+        df=instance.make_bar_target(df_main,'입사연차'),
+        category='입사연차',
+        axis_a='타겟인원',
+        axis_b='반응인원',
+        title='입사연차별 홍보인원 대비 교육신청 반응인원'), use_container_width=True)
+    career_target_rate.plotly_chart(instance.make_hbarchart_single(
+        df=instance.make_bar_target(df_main,'입사연차'),
+        category='입사연차',
+        axis_a='반응률',
+        title='입사연차별 홍보인원 대비 교육신청 반응률'), use_container_width=True)
 
     # 일곱번째 행
     chart_apply, chart_target = st.columns(2)
