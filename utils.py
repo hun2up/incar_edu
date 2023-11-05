@@ -303,14 +303,13 @@ class EduMain(Charts):
         return df_result
         
     def make_pie_target(self, df, data_type):
-        if data_type == '신청': label = ['타겟유입','직접신청','유입인원','신청인원']
+        if data_type == '신청': label = ['직접신청','타겟유입','신청인원','유입인원']
         elif data_type =='타겟': label = ['타겟반응','반응없음','반응인원','타겟인원']
         return pd.DataFrame({
             '구분':[label[0],label[1]],
-            '인원':[self.make_set_target(df=df,data_type=data_type)[label[2]].sum(), self.make_set_target(df=df,data_type=data_type)[label[3]].sum()-self.make_set_target(df=df,data_type=data_type)[label[2]].sum()]
+            '인원':[self.make_set_target(df=df,data_type=data_type)[label[2]].sum() - self.make_set_target(df=df,data_type=data_type)[label[3]].sum(), self.make_set_target(df=df,data_type=data_type)[label[3]].sum()]
         })
         
-
 
 
     # ------------------------------------------          신규 교육신청          ---------------------------------------------
