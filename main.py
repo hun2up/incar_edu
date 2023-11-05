@@ -95,14 +95,16 @@ if authentication_status:
     chart_new.dataframe(instance.make_set_new(df_main), use_container_width=True)
     chart_all.dataframe(df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['신청일자','교육일자','과정명','소속부문','파트너','사원번호','성명','입사연차']].reset_index(drop=True), use_container_width=True) # 마지막 신청일자 제외한 나머지 신청내역 삭제
 
+    st.dataframe(instance.apply_by_target(df_main))
     # 네번째 행 (신청현황 리스트)
     st.markdown('---')
     pie_apply, pie_target, bar_compare = st.columns(3)
     pie_apply.plotly_chart(instance.make_piechart(
-        label=instance.apply_by_target(df=df_main)['구분'],
-        value=instance.apply_by_target(df=df_main)['인원'],
+        label=instance.apply_by_target(df_main)['구분'],
+        value=instance.apply_by_target(df_main)['인원'],
         title="신청인원 기준 타겟홍보 유입률", font=18), use_container_width=True)
     pie_target.plotly_chart(instance.make_piechart(
-        label=instance.target_by_apply(df=df_main)['구분'],
-        value=instance.target_by_apply(df=df_main)['인원'],
+        label=instance.target_by_apply(df_main)['구분'],
+        value=instance.target_by_apply(df_main)['인원'],
         title="홍보인원 기준 교육신청 반응률", font=18), use_container_width=True)
+    
