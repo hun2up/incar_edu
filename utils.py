@@ -335,7 +335,7 @@ class EduMain(Charts):
         df_apply['사원번호'] = df_apply['사원번호'].astype(str)
         df_target['사원번호'] = df_target['사원번호'].astype(str)
         df_target_all = df_target.groupby(['타겟명'])['사원번호'].nunique().reset_index(name='타겟인원')
-        df_target_apply = df_target[df_target['사원번호'].isin(df_apply['사원번호'])].groupby(['타겟명'])['사원번호'].unique().reset_index(name='반응인원')
+        df_target_apply = df_target[df_target['사원번호'].isin(df_apply['사원번호'])].groupby(['타겟명'])['사원번호'].nunique().reset_index(name='반응인원')
         df_result = pd.merge(df_target_all, df_target_apply, on='타겟명')
         return df_result
 
