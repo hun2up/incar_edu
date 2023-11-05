@@ -101,7 +101,7 @@ if authentication_status:
     pie_apply, bar_apply, pie_target, bar_target = st.columns(4)
     pie_apply.plotly_chart(instance.make_piechart(
         label=instance.test_apply(df_main)['신청인원'].sum(),
-        value=instance.tset_apply(df_main)['유입인원'].sum(),
+        value=instance.test_apply(df_main)['유입인원'].sum(),
         title="신청인원 기준 타겟홍보 유입률", font=18), use_container_width=True)
     pie_target.plotly_chart(instance.make_piechart(
         label=instance.test_target(df_main)['타겟인원'].sum(),
