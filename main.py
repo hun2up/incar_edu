@@ -69,8 +69,11 @@ if authentication_status:
         title='과정별 신청현황'), use_container_width=True)
     # 첫번째 행 (과정별 신청현황, 과정별 신청추이)
     bar_today, line_today = st.columns(2)
-    bar_today.plotly_chart(instance.make_vbarchart(
+    bar_today.plotly_chart(instance.make_vbarchart_group(
         df=df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index).groupby(['신청일자','과정명','목표인원'])['신청인원'].sum().reset_index(name='신청인원'),
+        category='과정명',
+        axis_a='목표인원',
+        axis_b='신청인원',
         title='과정별 신청현황'), use_container_width=True)
     line_today.plotly_chart(instance.make_linechart(
         df=df_main.groupby(['신청일자','과정명'])['신청인원'].sum().reset_index(name='신청인원'),
