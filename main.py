@@ -97,7 +97,7 @@ if authentication_status:
     chart_new.dataframe(instance.make_set_new(df_main), use_container_width=True)
     chart_all.dataframe(df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['신청일자','교육일자','과정명','소속부문','파트너','사원번호','성명','입사연차']].reset_index(drop=True), use_container_width=True) # 마지막 신청일자 제외한 나머지 신청내역 삭제
 
-    # 네번째 행 (신청현황 리스트)
+    # 네번째 행 (신청인원 기준 타겟홍보 유입현황)
     st.markdown('---')
     apply_by_target = st.columns((1,2))
     apply_by_target[0].plotly_chart(instance.make_piechart(
@@ -111,6 +111,8 @@ if authentication_status:
         axis_b='유입인원',
         title='교육과정별 타겟홍보 유입현황',
         caption=False), use_container_width=True)
+    
+    # 다섯번째 행 (홍보인원 기준 교육신청 반응현황)
     target_by_apply = st.columns((1,2))
     target_by_apply[0].plotly_chart(instance.make_piechart(
         label=instance.make_pie_target(df=df_main,data_type='타겟')['구분'],
@@ -123,3 +125,9 @@ if authentication_status:
         axis_b='반응인원',
         title='타겟홍보별 교육과정 반응현황',
         caption=False), use_container_width=True)
+    
+
+    # 여섯번째 행
+    chart_apply, chart_target = st.columns(2)
+    chart_apply.dataframe(instance.make_set_target(df=df_main,data_type='신청'))
+    chart_target.dataframe(instance.make_set_target(df=df_main,data_type='타겟'))
