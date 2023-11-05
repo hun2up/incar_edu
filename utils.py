@@ -293,8 +293,8 @@ class EduMain(Charts):
         df_target = df_target.drop(columns='과정명')
         df_target['사원번호'] = df_target['사원번호'].astype(str)        
         return df_target
-        
-    def make_pie_target(self, df, data_type):
+    
+    def make_set_target(self, df, data_type):
         label_data = [['과정명','신청인원','유입인원'],['타겟명','타겟인원','반응인원']]
         df_apply = self.target_set_apply(df)
         df_target = self.target_set_target()
@@ -303,19 +303,24 @@ class EduMain(Charts):
             number = 0
             df_left = df_apply
             df_right = df_target
-            label_chart = ['타겟유입','직접신청','유입인원','신청인원']
         elif data_type =='타겟': 
             number = 1
             df_left = df_target
             df_right = df_apply
-            label_chart = ['타겟반응','반응없음','반응인원','타겟인원']
         # -------------------------------------------------------------------------------------------------------------------
         df_all = df_left.groupby([label_data[number][0]])['사원번호'].nunique().reset_index(name=label_data[number][1])
         df_selected = df_left[df_left['사원번호'].isin(df_right['사원번호'])].groupby([label_data[number][0]])['사원번호'].nunique().reset_index(name=label_data[number][2])
-        df_result = pd.merge(df_all, df_selected, on=label_data[number][0])
+        return pd.merge(df_all, df_selected, on=label_data[number][0])
+
+    def make_pie_target(self, df, data_type):
+        self.make_set_target(df=df,data_type=data_type)
+        # -------------------------------------------------------------------------------------------------------------------
+        if data_type == '신청': label_chart = ['타겟유입','직접신청','유입인원','신청인원']
+        elif data_type =='타겟': label_chart = ['타겟반응','반응없음','반응인원','타겟인원']
+        # -------------------------------------------------------------------------------------------------------------------
         return pd.DataFrame({
             '구분':[label_chart[0],label_chart[1]],
-            '인원':[df_result[label_chart[2]].sum(), df_result[label_chart[3]].sum() - df_result[label_chart[2]].sum()]
+            '인원':[self.make_set_target(df=df,data_type=data_type)[label_chart[2]].sum(), self.make_set_target(df=df,data_type=data_type)[label_chart[3]].sum() - self.make_set_target(df=df,data_type=data_type)[label_chart[2]].sum()]
         })
 
 
