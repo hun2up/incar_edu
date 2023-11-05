@@ -323,7 +323,7 @@ class EduMain(Charts):
         df_target = df_target.drop(df_target[df_target['파트너'] == '인카본사'].index)
         df_apply['사원번호'] = df_apply['사원번호'].astype(str)
         df_target['사원번호'] = df_target['사원번호'].astype(str)
-        df_apply = df_apply[df_apply['사원번호'].isin(df_target['사원번호'])]
+        df_apply = df_apply[df_apply['사원번호'].isin(df_target['사원번호'])].groupby(['과정명'])['사원번호'].nunique().reset_index(name='유입인원')
         return df_apply
 
     # ------------------------------------------          신규 교육신청          ---------------------------------------------
