@@ -98,7 +98,7 @@ if authentication_status:
     df_result = pd.DataFrame()
     df_all = instance.make_set_target(df=df_main, merge_type='left').groupby(['과정명'])['사원번호'].nunique().reset_index(name='신청인원')
     df_target = instance.make_set_target(df=df_main, merge_type='left').groupby(['과정명','타겟명'])['사원번호'].nunique().reset_index(name='유입인원')
-    df_bar = pd.merge(df_all, df_target, on='과정명', how='left')
+    df_bar = pd.merge(df_all, df_target.groupby(['과정명'])['유입인원'].sum() , on='과정명', how='left')
     st.dataframe(df_bar)
     
 
