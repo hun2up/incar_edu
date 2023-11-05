@@ -4,7 +4,6 @@
 import pandas as pd
 import streamlit as st
 import streamlit_authenticator as stauth
-from streamlit_gsheets import GSheetsConnection
 st.set_page_config(page_title="교육관리 대시보드", layout='wide')
 hashed_passwords = stauth.Hasher(['XXX']).generate()
 import yaml
@@ -97,6 +96,15 @@ if authentication_status:
     chart_new.dataframe(instance.make_set_new(df_main), use_container_width=True)
     chart_all.dataframe(df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['신청일자','교육일자','과정명','소속부문','파트너','사원번호','성명','입사연차']].reset_index(drop=True), use_container_width=True) # 마지막 신청일자 제외한 나머지 신청내역 삭제
 
+
+    '''
+    def make_sidebar(df, column):
+    return st.sidebar.multiselect(
+        column,
+        options=df[column].unique(),
+        default=df[column].unique()
+    )
+    '''
     # 네번째 행 (신청인원 기준 타겟홍보 유입현황)
     st.markdown('---')
     apply_by_target = st.columns((1,2))
