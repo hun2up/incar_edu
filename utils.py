@@ -344,7 +344,7 @@ class EduMain(Charts):
         df_isin[label_dataframe[0]] = label_dataframe[1]
         df_notin = df_left[~df_left['사원번호'].isin(df_right['사원번호'])]
         df_notin[label_dataframe[0]] = ''
-        df_result = pd.concat([df_isin,df_notin], axis=0).sort_values(by=[label_dataframe[2],'소속부문','파트너','사원번호','성명','입사연차','유입여부'],ascending=True).reset_index(drop=True)
+        df_result = pd.concat([df_isin,df_notin], axis=0).sort_values(by=[label_dataframe[2],'소속부문','파트너','사원번호','성명','유입여부'],ascending=True).reset_index(drop=True)
         return df_result
 
 #########################################################################################################################
