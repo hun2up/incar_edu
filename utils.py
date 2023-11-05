@@ -217,7 +217,7 @@ class Charts():
     # -----------------------------------------          원형그래프 제작          -------------------------------------------
     def make_piechart(self, label, value, font=20):
         fig_pchart = pl.graph_objs.Figure(data=[pl.graph_objs.Pie(labels=label, values=value, hole=.3)])
-        fig_pchart.update_traces(hoverinfo='label+percent', textinfo='label+value', textfont_size=font)
+        fig_pchart.update_traces(hoverinfo='label+percent', textinfo='label+value', textfont_size=font, showlegend=False)
         return fig_pchart
 
     # ------------------------------------          A형 스타일카드 제작 (랭킹)          ---------------------------------------
