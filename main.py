@@ -107,9 +107,15 @@ if authentication_status:
 
     pie_apply, pie_target, bar_compare = st.columns(3)
     pie_apply.plotly_chart(instance.make_piechart(
+        label=instance.make_set_target(df_main)['구분'],
+        value=instance.make_set_target(df_main)['인원'],
+        title="신청인원 기준 타겟홍보 유입률", font=18), use_container_width=True)
+    '''
+    pie_apply.plotly_chart(instance.make_piechart(
         label=df_apply_rate['구분'],
         value=df_apply_rate['인원'],
         title="신청인원 기준 타겟홍보 유입률", font=18), use_container_width=True)
+    '''
     pie_target.write("홍보인원 기준 반응률")
     
     #st.dataframe()
