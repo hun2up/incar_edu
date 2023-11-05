@@ -285,7 +285,8 @@ class EduMain(Charts):
         df_target = call_sheets("target").drop(columns=['번호','소속총괄','소속부서','IMO신청여부','수료현황']).rename(columns={'성함':'성명'}).reset_index(drop=True)
         df_target = df_target.drop(df_target[df_target['파트너'] == '인카본사'].index)
         df_target.insert(0, column='타겟명', value=None)
-        df_target['타겟명'] = df_target['과정명'].split(']')[1]
+        df_target['타겟명'] = df_target['과정명'].str.split(']').str[1]
+        df_target = df_target.drop(columns='과정명')
         df_target['사원번호'] = df_target['사원번호'].astype(str)
         df_apply = df.drop(df[df.iloc[:,0] != df.iloc[-1,0]].index)[['교육일자','과정코드','과정명','소속부문','파트너','사원번호','성명','입사연차']] # 마지막 신청일자 제외한 나머지 신청내역 삭제
         df_apply['사원번호'] = df_apply['사원번호'].astype(str)
