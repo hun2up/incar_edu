@@ -347,9 +347,9 @@ class EduMain(Charts):
         return pd.merge(df_apply_all, df_target_all, on=select)
 
     # ------------------------------------------          홍보효과 데이터프레임 제작          ---------------------------------------------
-    def make_dataframe_target(self, df, data_type):
-        df_apply = self.target_set_apply(df)
-        df_target = self.target_set_target()
+    def make_dataframe_target(self, apply, target, data_type):
+        df_apply = apply
+        df_target = target
         # -------------------------------------------------------------------------------------------------------------------
         if data_type == '신청':
             df_left = df_apply
