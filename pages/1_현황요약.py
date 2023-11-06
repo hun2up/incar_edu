@@ -47,7 +47,7 @@ if authentication_status:
     # 사이드바 헤더
     st.sidebar.header("원하는 옵션을 선택하세요")
     #사이드바 제작
-    yeara = make_sidebar(df_all,'년도') # 월도 선택 사이드바
+    year = make_sidebar(df_all,'년도') # 월도 선택 사이드바
     month = make_sidebar(df_all,'월') # 월도 선택 사이드바
     region = make_sidebar(df_all,'지역') # 지역 선택 사이드바
     partner = make_sidebar(df_all,'보험사') # 보험사 선택 사이드바
