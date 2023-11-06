@@ -60,6 +60,9 @@ if authentication_status:
     df_main = df_main.query(
         "소속부문 == @channel & 입사연차 == @career & 과정명 == @course & 신청일자 == @date_apply & 교육일자 == @date_course"
     )
+    df_target = df_target.query(
+        "타겟명 == @target"
+    )
     st.sidebar.markdown('---')
 
     # -----------------------------------------------  당일 교육신청 현황  ---------------------------------------------------
