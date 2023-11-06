@@ -329,9 +329,9 @@ class EduMain(Charts):
         })
 
     # ------------------------------------------          원형차트 제작          ---------------------------------------------
-    def make_bar_target(self, df, select):
-        df_apply = self.target_set_apply(df)
-        df_target = self.target_set_target()
+    def make_bar_target(self, apply, target, select):
+        df_apply = apply
+        df_target = target
         # -------------------------------------------------------------------------------------------------------------------
         df_apply_all = df_apply.groupby([select])['사원번호'].count().reset_index(name='신청인원')
         df_apply_isin = df_apply[df_apply['사원번호'].isin(df_target['사원번호'])].groupby([select])['사원번호'].count().reset_index(name='유입인원')
