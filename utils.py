@@ -410,6 +410,7 @@ class EduPages(Charts):
         df_course = call_sheets("course").drop(columns=['번호']) # 시트 호출
         df_course.insert(4, column='월', value=None) # 네번째 컬럼에 [월] 컬럼 추가
         df_course['월'] = [f"{pd.to_datetime(df_course.at[short, '교육일자'], format='%Y. %m. %d').month}월" for short in range(df_course.shape[0])] # [교육일자]에서 '월' 데이터만 추출하여 [월] 컬럼에 추가
+        df_course['년도'] = [f"{pd.to_datetime(df_course.at[short, '교육일자'], format='%Y. %m. %d').year}년" for short in range(df_course.shape[0])]
         df_course = df_course.drop(columns=['교육일자']) # 기존 교육일자 컬럼 삭제
         # df_course : | 과정코드 | 과정분류 | 과정명 | 보험사 | 월 | 과정형태 | 수강료 | 지역| 교육장소 | 정원 | 목표인원
         # ---------------------------------------------------------------------------------------------------------------

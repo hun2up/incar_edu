@@ -61,6 +61,7 @@ if authentication_status:
     )
 
     # ------------------------------------------          차트 제작          ---------------------------------------------
+    st.dataframe(df_all)
     # 첫번째 행 (집합 & 온라인 / 유료 & 무료 / 수료율 / IMO신청률)
     pie_line, pie_fee, pie_attend_rate, pie_imo_rate = st.columns(4)
     pie_line.plotly_chart(instance.make_piechart(
