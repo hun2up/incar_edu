@@ -325,7 +325,7 @@ class EduMain(Charts):
         # -------------------------------------------------------------------------------------------------------------------
         return pd.DataFrame({
             '구분':[label_chart[0],label_chart[1]],
-            '인원':[self.make_set_target(df=df,data_type=data_type)[label_chart[2]].sum(), self.make_set_target(df=df,data_type=data_type)[label_chart[3]].sum() - self.make_set_target(df=df,data_type=data_type)[label_chart[2]].sum()]
+            '인원':[self.make_set_target(apply=apply,target=target,data_type=data_type)[label_chart[2]].sum(), self.make_set_target(apply=apply,target=target,data_type=data_type)[label_chart[3]].sum() - self.make_set_target(apply=apply,target=target,data_type=data_type)[label_chart[2]].sum()]
         })
 
     # ------------------------------------------          원형차트 제작          ---------------------------------------------
