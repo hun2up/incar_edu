@@ -298,10 +298,10 @@ class EduMain(Charts):
         return df_target
     
     # ------------------------------------------          홍보효과 분석을 위한 신청현황 및 타겟홍보 데이터 병합          ---------------------------------------------
-    def make_set_target(self, df, data_type):
+    def make_set_target(self, apply, target, data_type):
         label_data = [['과정명','신청인원','유입인원'],['타겟명','타겟인원','반응인원']]
-        df_apply = self.target_set_apply(df)
-        df_target = self.target_set_target()
+        df_apply = apply
+        df_target = target
         # -------------------------------------------------------------------------------------------------------------------
         if data_type == '신청':
             number = 0
@@ -317,8 +317,8 @@ class EduMain(Charts):
         return pd.merge(df_all, df_selected, on=label_data[number][0])
 
     # ------------------------------------------          원형차트 제작          ---------------------------------------------
-    def make_pie_target(self, df, data_type):
-        self.make_set_target(df=df,data_type=data_type)
+    def make_pie_target(self, apply, target, data_type):
+        self.make_set_target(apply=apply,target=target,data_type=data_type)
         # -------------------------------------------------------------------------------------------------------------------
         if data_type == '신청': label_chart = ['타겟유입','직접신청','유입인원','신청인원']
         elif data_type =='타겟': label_chart = ['타겟반응','반응없음','반응인원','타겟인원']
