@@ -42,21 +42,25 @@ if authentication_status:
     hide_st_style()
     instance = EduMain()
     df_main = instance.call_data_main()
+    df_apply = instance.target_set_apply(df_main)
+    df_target = instance.target_set_target()
     st.header("당월 교육과정 신청현황")
 
     # --------------------------------------------          사이드바          ------------------------------------------------
     # 사이드바 헤더
     st.sidebar.header("원하는 옵션을 선택하세요")
     #사이드바 제작
+    channel = make_sidebar(df_main,'소속부문')
+    career = make_sidebar(df_main,'입사연차') # 입사연차 선택 사이드바
+    course = make_sidebar(df_main,'과정명')
+    target = make_sidebar(df_target, '타겟명')
     date_apply = make_sidebar(df_main,'신청일자') # 신청일자 선택 사이드바
     date_course = make_sidebar(df_main,'교육일자')
-    course = make_sidebar(df_main,'과정명')
-    channel = make_sidebar(df_main,'소속부문')
-    # career = make_sidebar(df_main,'입사연차') # 입사연차 선택 사이드바
     # 데이터와 사이드바 연결
     df_main = df_main.query(
-        "신청일자 == @date_apply & 교육일자 == @date_course & 소속부문 == @channel"
+        "소속부문 == @channel & 입사연차 == @career & 과정명 == @course & 신청일자 == @date_apply & 교육일자 == @date_course"
     )
+    st.sidebar.markdown('---')
 
     # -----------------------------------------------  당일 교육신청 현황  ---------------------------------------------------
     # 첫번째 행 (과정별 신청현황, 과정별 신청추이)
@@ -97,27 +101,7 @@ if authentication_status:
     chart_all.dataframe(df_main.drop(df_main[df_main.iloc[:,0] != df_main.iloc[-1,0]].index)[['신청일자','교육일자','과정명','소속부문','파트너','사원번호','성명','입사연차']].reset_index(drop=True), use_container_width=True) # 마지막 신청일자 제외한 나머지 신청내역 삭제
 
 
-    '''
-    def make_sidebar(df, column):
-    return st.sidebar.multiselect(
-        column,
-        options=df[column].unique(),
-        default=df[column].unique()
-    )
-    '''
-
-    slicer_apply, slicer_target = st.columns(2)
-    slicer_apply.multiselect(
-        '과정명',
-        options=instance.target_set_apply(df=df_main)['과정명'].unique(),
-        default=instance.target_set_apply(df=df_main)['과정명'].unique()
-    )
-    slicer_target.multiselect(
-        '타겟명',
-        options=instance.target_set_target()['타겟명'].unique(),
-        default=instance.target_set_target()['타겟명'].unique()
-    )
-
+    # -----------------------------------------------  타겟홍보 효과성 분석  ---------------------------------------------------
     # 네번째 행 (신청인원 기준 타겟홍보 유입현황)
     st.markdown('---')
     apply_by_target = st.columns((1,2))
