@@ -96,7 +96,7 @@ if authentication_status:
         yaxis='신청누계',
         title='소속부문별 신청인원 추이 (신청누계 기준)'), use_container_width=True)
     line_attend.plotly_chart(instance.make_linechart(
-        df=instance.make_set_trend(df_channel,'소속부문',*['년도''월','소속부문']),
+        df=instance.make_set_trend(df_channel,'소속부문',*['년도','월','소속부문']),
         category='소속부문',
         xaxis='월',
         yaxis='수료누계',
