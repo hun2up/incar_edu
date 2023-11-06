@@ -56,7 +56,7 @@ if authentication_status:
     channel = make_sidebar(df_channel,'소속부문') # 소속부문 선택 사이드바
     career = make_sidebar(df_channel,'입사연차') # 입사연차 선택 사이드바
     # 데이터와 사이드바 연결
-    df_channel = df_channel.query("년도 == @year 월 == @month & 지역 == @region & 보험사 == @partner & 과정형태 == @line & 과정분류 == @theme & 과정명 == @name & 소속부문 == @channel & 입사연차 == @career")
+    df_channel = df_channel.query("년도 == @year & 월 == @month & 지역 == @region & 보험사 == @partner & 과정형태 == @line & 과정분류 == @theme & 과정명 == @name & 소속부문 == @channel & 입사연차 == @career")
 
     # --------------------------------------------          차트제작          ------------------------------------------------
     # 첫번째 행 (신청인원)
