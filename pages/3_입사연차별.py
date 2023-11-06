@@ -46,6 +46,7 @@ if authentication_status:
     # 사이드바 헤더
     st.sidebar.header("원하는 옵션을 선택하세요")
     #사이드바 제작
+    year = make_sidebar(df_career,'년도')
     month = make_sidebar(df_career,'월') # 월도 선택 사이드바
     region = make_sidebar(df_career,'지역') # 지역 선택 사이드바
     partner = make_sidebar(df_career,'보험사') # 보험사 선택 사이드바
@@ -55,9 +56,7 @@ if authentication_status:
     channel = make_sidebar(df_career,'소속부문') # 입사연차 선택 사이드바
     career = make_sidebar(df_career,'입사연차') # 입사연차 선택 사이드바
     # 데이터와 사이드바 연결
-    df_career = df_career.query(
-        "월 == @month & 지역 == @region & 보험사 == @partner & 과정형태 == @line & 과정분류 == @theme & 과정명 == @name & 소속부문 == @channel & 입사연차 == @career"
-    )
+    df_career = df_career.query("년도 == @year & 월 == @month & 지역 == @region & 보험사 == @partner & 과정형태 == @line & 과정분류 == @theme & 과정명 == @name & 소속부문 == @channel & 입사연차 == @career")
 
     # --------------------------------------------          차트제작          ------------------------------------------------
     # 첫번째 행 (신청인원)
