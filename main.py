@@ -57,12 +57,9 @@ if authentication_status:
     date_apply = make_sidebar(df_main,'신청일자') # 신청일자 선택 사이드바
     date_course = make_sidebar(df_main,'교육일자')
     # 데이터와 사이드바 연결
-    df_main = df_main.query(
-        "소속부문 == @channel & 입사연차 == @career & 과정명 == @course & 신청일자 == @date_apply & 교육일자 == @date_course"
-    )
-    df_target = df_target.query(
-        "타겟명 == @target"
-    )
+    df_main = df_main.query("소속부문 == @channel & 입사연차 == @career & 과정명 == @course & 신청일자 == @date_apply & 교육일자 == @date_course")
+    df_apply = df_apply.query("과정명 == @course")
+    df_target = df_target.query("타겟명 == @target")
     st.sidebar.markdown('---')
 
     # -----------------------------------------------  당일 교육신청 현황  ---------------------------------------------------
